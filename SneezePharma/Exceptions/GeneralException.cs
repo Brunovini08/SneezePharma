@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SneezePharma.Exceptions
+{
+    public static class GeneralException
+    {
+        public static void VerificarTamanho(string valor, int limite, string msg)
+        {
+            if(valor.Length > limite)
+            {
+                throw new ArgumentException(msg);
+            }
+        }
+    }
+}
