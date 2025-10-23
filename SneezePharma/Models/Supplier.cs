@@ -143,7 +143,7 @@ namespace SneezePharma.Models
             Pais, DataAbertura,
             UltimoFornecimento, DataCadastro, Situacao));
         }
-
+        
         public Supplier Localizar(string )
         {
             return this.suppliers.Find(c => c.Cnpj == Cnpj);
@@ -156,6 +156,6 @@ namespace SneezePharma.Models
             var Supplier = Localizar();
 
         }
-
+        
     }
 }
