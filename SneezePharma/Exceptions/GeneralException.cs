@@ -15,5 +15,11 @@ namespace SneezePharma.Exceptions
                 throw new ArgumentException(msg);
             }
         }
+
+        public static void VerificarQuantidadeInvalidaInteiro(int valorMin, int valorMax, int valorInserido, string msg)
+        {
+            if (valorInserido < valorMin || valorInserido > valorMax)
+                throw new ArgumentException(msg);
+        } 
     }
 }
