@@ -47,7 +47,21 @@ namespace SneezePharma.Models
                 $"Total Item: {this.TotalItem:C}";
         }
 
-        /*
+        public string SalvarNoArquivo()
+        {
+            var id = this.Id.ToString();
+            id = id.PadLeft(5 - id.Length);
+
+            var idVenda = this.IdVenda.ToString();
+            idVenda = idVenda.PadLeft(5 - id.Length);
+
+            var quantidade = this.Quantidade.ToString();
+            return "";
+        }
+
+        /*using SneezePharma.Exceptions;
+using SneezePharma.Models;
+
 void PressioneEnterParaContinuar()
 {
     Console.WriteLine("Pressioner a tecla ENTER para continuar");
