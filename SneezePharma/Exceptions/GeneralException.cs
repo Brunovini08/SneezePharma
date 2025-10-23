@@ -8,9 +8,17 @@ namespace SneezePharma.Exceptions
 {
     public static class GeneralException
     {
-        public static void VerificarTamanho(string valor, int limite, string msg)
+        public static void VerificarTamanhoMenorString(string valor, int limite, string msg)
         {
             if(valor.Length > limite)
+            {
+                throw new ArgumentException(msg);
+            }
+        }
+
+        public static void VerificarTamanhoMaiorString(string valor, int limite, string msg)
+        {
+            if (valor.Length > limite)
             {
                 throw new ArgumentException(msg);
             }
@@ -20,6 +28,12 @@ namespace SneezePharma.Exceptions
         {
             if (valorInserido < valorMin || valorInserido > valorMax)
                 throw new ArgumentException(msg);
-        } 
+        }
+        
+        public static void VerificarTamanhoDiferente(string entrada, int tamanho, string msgDeErro)
+        {
+            if (entrada.Length != tamanho)
+                throw new ArgumentException(msgDeErro);
+        }
     }
 }
