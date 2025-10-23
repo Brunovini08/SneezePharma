@@ -59,19 +59,75 @@ namespace SneezePharma.Models
                 if (digitoVerificador == resultado[12])
                 {
                     Console.WriteLine("Código de Barra válido");
-                    Console.WriteLine($"Digito Verificador: {digitoVerificador}");
                     return true;
                 }
                 else
                 {
                     Console.WriteLine("Dígito verificador inválido.");
-                    Console.WriteLine($"Digito Verificador: {digitoVerificador}");
                     return false;
                 }
             }
         }
 
-        public 
+        public void CriarMedicamento()
+        {
+            bool validadeCDB = false, validadeNome = false, validadeCategoria = false;
+            string nome = "";
+            char categoria = ' ';
+
+            do
+            {
+                Console.WriteLine("Digite o código de barras do medicamento:");
+                string cdb = Console.ReadLine();
+                validadeCDB = ValidarCDB(cdb);
+            } while (!validadeCDB);
+            do
+            {
+                do
+                {
+                    Console.WriteLine("Digite o nome do medicamento:");
+                    nome = Console.ReadLine();
+                    validadeNome = nome.All(c => char.IsLetterOrDigit(c));
+                    if (validadeNome == false)
+                    {
+                        Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
+                    }
+                } while (!validadeNome);
+                try
+                {
+                    Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
+                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 0, "O nome do medicamento deve ter no mínimo 3 caracteres.");
+                    Nome = nome;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (Nome == "");
+
+            do
+            {
+                Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
+                validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
+
+                if (validadeCategoria == false)
+                {
+                    Console.WriteLine("O medicamento deve estar em uma das 4 categorias");
+                }
+            } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
+
+            do
+            {
+                Console.WriteLine("Digite o valor de Venda:");
+                decimal valorVenda = decimal.Parse(Console.ReadLine());
+                try
+                {
+                    Exceptions.GeneralException.
+                }
+            }while()
+
+
+        }
 
     }
 }
