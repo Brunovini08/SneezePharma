@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Supplier
 {
     public class Supplier
     {
@@ -21,13 +21,13 @@ namespace SneezePharma.Models
             string pais, DateOnly dataAbertura, 
             DateOnly ultimoFornecimento, DateOnly dataCadastro, char situacao)
         {
-            this.Cnpj = cnpj;
-            this.RazaoSocial = razaoSocial;
-            this.Pais = pais;
-            this.DataAbertura = dataAbertura;
-            this.UltimoFornecimento = ultimoFornecimento;
-            this.DataCadastro = dataCadastro;
-            this.Situacao = situacao;
+            Cnpj = cnpj;
+            RazaoSocial = razaoSocial;
+            Pais = pais;
+            DataAbertura = dataAbertura;
+            UltimoFornecimento = ultimoFornecimento;
+            DataCadastro = dataCadastro;
+            Situacao = situacao;
         }
 
         List<Supplier> suppliers = new List<Supplier>();
@@ -146,7 +146,7 @@ namespace SneezePharma.Models
 
         public Supplier Localizar(string )
         {
-            return this.suppliers.Find(c => c.Cnpj == Cnpj);
+            return suppliers.Find(c => c.Cnpj == Cnpj);
         }
 
         public Supplier atualizarRazaoSocial()
