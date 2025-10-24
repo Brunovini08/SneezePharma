@@ -65,7 +65,6 @@ namespace SneezePharma.Models
 
         }
 
-        }
 
         //CUSTOMER
 
@@ -330,6 +329,125 @@ namespace SneezePharma.Models
 
 
         #endregion
+
+
+        //Fornecedor CRUD
+        public void AdicionarFornecedor()
+        {
+            try
+            {
+                string cnpj;
+                string razaoSocial;
+                string pais;
+                DateOnly dataAbertura;
+                DateOnly ultimoFornecimento;
+                DateOnly dataCadastro;
+                do
+                {
+                    cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
+                } while (cnpj.Length != 14);
+                do
+                {
+                    razaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
+                } while (razaoSocial.Length >= 50 || razaoSocial.Length <= 0);
+                do
+                {
+                    pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
+                } while (pais.Length >= 20);
+                do
+                {
+                    dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
+                } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
+
+                do
+                {
+                    ultimoFornecimento = InputHelper.RetornarData("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):", "Data do ultimo fornecimento inválida");
+                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
+
+
+                do
+                {
+                    dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do ultimo cadastro inválida");
+                } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
+
+
+
+                this.Fornecedores.Add(new Supplier(cnpj, razaoSocial,
+                pais, dataAbertura,
+                ultimoFornecimento, dataCadastro));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public Supplier LocalizarFornecedor(string cnpj)
+        {
+            return Fornecedores.Find(c => c.Cnpj == cnpj);
+        }
+
+        public void AtualizarRazaoSocial()
+        {
+            Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
+            string cnpj = Console.ReadLine();
+            var fornecedor = this.LocalizarFornecedor(cnpj);
+
+            if (fornecedor is null)
+            {
+                Console.WriteLine("Fornecedor não encontrado");
+            }
+            else
+            {
+                Console.WriteLine("Digite a nova razão social: ");
+                var novaRazaoSocial = Console.ReadLine();
+                fornecedor.setRazaoSocial(novaRazaoSocial);
+                Console.WriteLine(novaRazaoSocial);
+            }
+        }
+        public void AlterarSituacaoFornecedor()
+        {
+
+            Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
+            var Cnpj = Console.ReadLine();
+            LocalizarFornecedor(Cnpj);
+
+            if (Cnpj != null)
+            {
+                string situacao;
+                do
+                {
+                    situacao = InputHelper.RetornarString("Informe a situação que deseja: ", "Situação inválida, digite novamente: ");
+
+                } while (situacao != "A" && situacao != "I");
+
+            }
+        }
+
+        public void AlterarDataUltimoFornecimento()
+        {
+            Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
+            var Cnpj = Console.ReadLine();
+            LocalizarFornecedor(Cnpj);
+
+            if (Cnpj != null)
+            {
+                DateOnly ultimoFornecimento;
+                do
+                {
+                    ultimoFornecimento = InputHelper.RetornarData("Digite a nova data de fornecimento no formato DDMMAAAA: ", "Data do ultimo fornecimento inválida");
+                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
+            }
+        }
+
+        public void ListarFornecedores()
+        {
+            foreach (var fornecedor in this.Fornecedores.ToList())
+            {
+                Console.WriteLine(fornecedor);
+            }
+        }
 
     }
 }
