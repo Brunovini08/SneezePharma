@@ -10,27 +10,29 @@ namespace SneezePharma.Helpers
     {
         public static void MenuPrincipal()
         {
-            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("-------------------------------------------");
             Console.WriteLine("1. MENU - CADASTROS");
             Console.WriteLine("2. MENU - VENDAS MEDICAMENTOS");
             Console.WriteLine("3. MENU - COMPRAS PRINCÍPIOS ATIVOS");
             Console.WriteLine("4. MENU - MANIPULAÇÃO DE MEDICAMENTOS");
+            Console.WriteLine("4. MENU - MANIPULAÇÃO DE CLIENTES");
+            Console.WriteLine("4. MENU - MANIPULAÇÃO DE FORNECEDORES");
+            Console.WriteLine("4. MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVOS");
             Console.WriteLine("5. MENU - RELATÓRIOS");
             Console.WriteLine("0. SAIR");
-            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("-------------------------------------------");
         }
 
         public static void MenuCadastros()
         {
-            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("---------------------------------------");
             Console.WriteLine("MENU - CADASTROS");
             Console.WriteLine("1. MENU - CADASTRO CLIENTE");
             Console.WriteLine("2. MENU - CADASTRO MEDICAMENTO");
             Console.WriteLine("3. MENU - CADASTRO PRINCÍPIOS ATIVOS");
             Console.WriteLine("4. MENU - CADASTRO FORNECEDOR");
-            Console.WriteLine("5. MENU - RELATÓRIOS");
             Console.WriteLine("0. SAIR");
-            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("---------------------------------------");
         }
 
         public static void MenuVendasMedicamentos()
@@ -52,6 +54,43 @@ namespace SneezePharma.Helpers
             Console.WriteLine("2. MENU - INATIVAR MEDICAMENTO");
             Console.WriteLine("3. MENU - LISTAR MEDICAMENTO POR ID");
             Console.WriteLine("4. MENU - LISTAR TODOS OS MEDICAMENTOS");
+            Console.WriteLine("0. SAIR");
+            Console.WriteLine("--------------------------------------");
+        }
+
+        public static void MenuManipulacaoCliente()
+        {
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("MENU - MANIPULAÇÃO DE CLIENTES");
+            Console.WriteLine("1. MENU - ALTERAR CLIENTE");
+            Console.WriteLine("2. MENU - INATIVAR CLIENTE");
+            Console.WriteLine("3. MENU - BLOQUEAR CLIENTE");
+            Console.WriteLine("4. MENU - LISTAR CLIENTE POR ID");
+            Console.WriteLine("5. MENU - LISTAR TODOS OS CLIENTES");
+            Console.WriteLine("0. SAIR");
+            Console.WriteLine("--------------------------------------");
+        }
+
+        public static void MenuManipulacaoPrincipioAtivo()
+        {
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVO");
+            Console.WriteLine("1. MENU - ALTERAR PRINCÍPIO ATIVO");
+            Console.WriteLine("2. MENU - INATIVAR PRINCÍPIO ATIVO");
+            Console.WriteLine("3. MENU - LISTAR PRINCÍPIO ATIVO POR ID");
+            Console.WriteLine("4. MENU - LISTAR TODOS OS PRINCÍPIOS ATIVOS");
+            Console.WriteLine("0. SAIR");
+            Console.WriteLine("--------------------------------------");
+        }
+
+        public static void MenuManipulacaoFornecedor()
+        {
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("MENU - MANIPULAÇÃO DE FORNECEDORES");
+            Console.WriteLine("1. MENU - ALTERAR FORNECEDOR");
+            Console.WriteLine("2. MENU - INATIVAR FORNECEDOR");
+            Console.WriteLine("3. MENU - LISTAR FORNECEDOR POR ID");
+            Console.WriteLine("4. MENU - LISTAR TODOS OS FORNECEDORES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }
