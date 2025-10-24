@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Supplier
 {
     public class Supplier
     {
@@ -152,7 +152,7 @@ namespace SneezePharma.Models
 
         public Supplier Localizar(string Cnpj)
         {
-            return this.suppliers.Find(c => c.Cnpj == Cnpj);
+            return suppliers.Find(c => c.Cnpj == Cnpj);
         }
 
         public void atualizarRazaoSocial()
