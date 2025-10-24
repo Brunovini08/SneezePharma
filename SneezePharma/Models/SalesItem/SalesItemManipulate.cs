@@ -1,5 +1,4 @@
-﻿using SneezePharma.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,31 +6,31 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
-    public class SalesItemManipulate
+    public static class SalesItemManipulate
     {
-        private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        private string FilePath { get; set; } = "SaleItems.data";
+        private static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
+        private static string FilePath { get; set; } = "SaleItems.data";
         
-        private string FullPath()
+        private static string FullPath()
         {
-            return Path.Combine(DirectoryPath, FilePath);
+            return Path.Combine(this.DirectoryPath, this.FilePath);
         }
 
-        private bool ChecarSeDiretorioNaoExiste()
+        private static bool ChecarSeDiretorioNaoExiste()
         {
-            return !Directory.Exists(DirectoryPath);
+            return !Directory.Exists(this.DirectoryPath);
         }
 
-        private bool ChecarSeArquivoNaoExiste()
+        private static bool ChecarSeArquivoNaoExiste()
         {
             return !Path.Exists(FullPath());
         }
 
-        public SalesItemManipulate()
+        public static void CriarArquivo()
         {
             if (ChecarSeDiretorioNaoExiste())
             {
-                Directory.CreateDirectory(DirectoryPath);
+                Directory.CreateDirectory(this.DirectoryPath);
             }
             if (ChecarSeArquivoNaoExiste())
             {
@@ -40,9 +39,9 @@ namespace SneezePharma.Models
             }
         }
 
-        public List<SalesItem> LerItensDeVenda()
+        public static List<SalesItemModel> LerItensDeVenda()
         {
-            var salesItemsLidos = new List<SalesItem>();
+            var salesItemsLidos = new List<SalesItemModel>();
             string fullPath = FullPath();
             var sr = new StreamReader(fullPath);
 
@@ -61,7 +60,7 @@ namespace SneezePharma.Models
                         var valorUtilitario = contentLine[26..33];
                         var totalItem = contentLine[33..41];
 
-                        salesItemsLidos.Add(new SalesItem(
+                        salesItemsLidos.Add(new SalesItemModel(
                             int.Parse(id),
                             int.Parse(idVenda),
                             medicamento,
@@ -77,7 +76,7 @@ namespace SneezePharma.Models
             return salesItemsLidos;
         }
 
-        public void GravarItensDeVenda(List<SalesItem> salesItems)
+        public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
         {
             var sw = new StreamWriter(FullPath());
             
@@ -85,7 +84,7 @@ namespace SneezePharma.Models
             {
                 foreach (var si in salesItems)
                 {
-                    sw.WriteLine(si.SalvarNoArquivo());
+                    sw.WriteLine(si.SalvarArquivo());
                 }
                 sw.Close();
             }
