@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,20 +118,11 @@ namespace SneezePharma.Models.Medicine
                 }
             } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
 
+            decimal valorVenda = 0;
             do
             {
-                Console.WriteLine("Digite o valor de Venda:");
-                decimal valorVenda = decimal.Parse(Console.ReadLine());
-                string msg = "O valor de venda deve ser maior que R$0,00 e menor que R$10000,00";
-                try
-                {
-                    Exceptions.GeneralException.VerificarQuantidadeInvalidaDecimal(0, 10000, valorVenda, msg);
-                }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            } while ();
+                valorVenda = InputHelper.RetornarNumeroDecimal("Digite o valor de Venda:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
+            } while (valorVenda <= 0 || valorVenda >= 10000);
 
             Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
             DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());

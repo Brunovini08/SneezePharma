@@ -19,5 +19,9 @@ namespace SneezePharma.Models.Purchases
             ValorTotal = valorTotal;
         }
 
+        public void CriarPurchase()
+        {
+            
+        }
     }
 }

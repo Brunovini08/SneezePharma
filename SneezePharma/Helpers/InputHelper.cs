@@ -57,7 +57,7 @@ namespace SneezePharma.Utils
             return numero;
         }
 
-        public static decimal RetornarNumeroDecimal(string msgDeInput)
+        public static decimal RetornarNumeroDecimal(string msgDeInput, string msgOutput)
         {
             var repetir = true;
             var numero = 0.0m;
@@ -69,7 +69,7 @@ namespace SneezePharma.Utils
 
                 if (!repetir)
                 {
-                    InputHelper.ExibirErro();
+                    InputHelper.ExibirErro(msgOutput);
                     InputHelper.PressioneEnterParaContinuar();
                 }
             }
@@ -77,7 +77,7 @@ namespace SneezePharma.Utils
             return numero;
         }
 
-        public static string RetornarString(string msgDeInput, string msgAviso)
+        public static string RetornarString(string msgDeInput, string msgOutput)
         {
             string nome;
             do
@@ -87,7 +87,7 @@ namespace SneezePharma.Utils
                 nome = Console.ReadLine();
                 if (nome == null || nome == string.Empty)
                 {
-                    InputHelper.ExibirErro();
+                    InputHelper.ExibirErro(msgOutput);
                     InputHelper.PressioneEnterParaContinuar();
                 }
             } while (nome == null || nome == string.Empty);
@@ -95,10 +95,10 @@ namespace SneezePharma.Utils
             return nome;
         }
 
-        public static void ExibirErro()
+        public static void ExibirErro(string msgOutput)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Entrada inválida! Tente novamente!");
+            Console.WriteLine(msgOutput);
             Console.ResetColor();
         }
 
