@@ -14,7 +14,7 @@ namespace SneezePharma.Models
     public class Pharma
     {
         public List<Customer> Clientes { get; private set; }
-        public List<Supplier> Fonecedores { get; private set; }
+        public List<Supplier> Fornecedores { get; private set; }
         public List<Medicine> Medicamentos { get; private set; }
         public List<ProduceItem> ItemProducao { get; private set; }
         public List<RestrictedCustomer> ClientesRestritos { get; private set; }
@@ -32,35 +32,38 @@ namespace SneezePharma.Models
 
         public void Cadastrar()
         {
-            
+
         }
+
         public void VendasMedicamento()
         {
 
         }
+
         public void ComprarPrincipioAtivo()
         {
 
         }
+
         public void ManipularMedicamentos()
         {
 
         }
+
         public void ManipularClientes()
         {
 
         }
+
         public void ManipularFornecedores()
         {
 
         }
+
         public void ManipularPrincipioAtivo()
         {
 
         }
-
-        public void Relatorios()
-        {
 
         }
 
@@ -149,6 +152,8 @@ namespace SneezePharma.Models
         }
         
         #endregion
+
+
 
         #region "Operações de CRUD do SalesItem"
 
