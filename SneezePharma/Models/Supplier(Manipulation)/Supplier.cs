@@ -1,4 +1,5 @@
-﻿using SneezePharma.Exceptions;
+﻿using SneezePharma.Enums;
+using SneezePharma.Exceptions;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,11 @@ namespace SneezePharma.Models
         public DateOnly DataAbertura { get; private set; }
         public DateOnly UltimoFornecimento { get; private set; }
         public DateOnly DataCadastro { get; private set; }
-        public char Situacao { get; private set; }
+        public  SituationSupplier Situacao { get; private set; } 
 
         public Supplier(string cnpj, string razaoSocial,
             string pais, DateOnly dataAbertura,
-            DateOnly ultimoFornecimento, DateOnly dataCadastro, char situacao)
+            DateOnly ultimoFornecimento, DateOnly dataCadastro)
         {
             int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -42,31 +43,11 @@ namespace SneezePharma.Models
             this.DataAbertura = dataAbertura;
             this.UltimoFornecimento = ultimoFornecimento;
             this.DataCadastro = dataCadastro;
-            this.Situacao = situacao;
+            this.Situacao = SituationSupplier.A;
         }
-
 
         List<Supplier> suppliers = new List<Supplier>();
 
-
-
-        public char PrincipioAtivo(char Situacao)
-        {
-            do
-            {
-                Console.WriteLine("Digite a situação: (A ou I)");
-                string TipoDaSituacao = Console.ReadLine();
-                if (TipoDaSituacao.Length == 1 && (TipoDaSituacao[0] == 'A' || TipoDaSituacao[0] == 'I'))
-                {
-                    Situacao = TipoDaSituacao[0];
-                }
-                else
-                {
-                    Situacao = ' ';
-                }
-            } while (Situacao != 'A' && Situacao != 'I');
-            return Situacao;
-        }
         public int[] TransformarCnpjEmInt(string Cnpj)
         {
             int[] numeros = new int[Cnpj.Length];
@@ -135,33 +116,42 @@ namespace SneezePharma.Models
         }
 
 
-        public void Adicionar(List<Supplier> suppliers)
+        public void AdicionarFornecedor(List<Supplier> suppliers)
         {
             try
             {
+                string cnpj;
+                string razaoSocial;
+                string pais;
+                DateOnly dataAbertura;
+                DateOnly ultimoFornecimento;
+                DateOnly dataCadastro;
                 do
                 {
-                    Cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
-                } while (Cnpj.Length != 14);
+                    cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
+                } while (cnpj.Length != 14);
                 do
                 {
-                    RazaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
-                } while (RazaoSocial.Length >= 50);
+                    razaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
+                } while (razaoSocial.Length >= 50 || razaoSocial.Length <= 0);
                 do
                 {
-                    Pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
-                } while (Pais.Length >= 20);
-                
-                    Console.WriteLine("Digite a data de abertura (no modelo: DDMMAAAA):");
-                    DateOnly DataAbertura = InputHelper.RetornarData("");
-               
-                Console.WriteLine("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):");
-                UltimoFornecimento = DateOnly.Parse(Console.ReadLine());
-                Console.WriteLine("Digite a data do cadastro (no modelo: DDMMAAAA):");
-                DataCadastro = DateOnly.Parse(Console.ReadLine());
+                    pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
+                } while (pais.Length >= 20);
+                do {
+                    dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
+                } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
+
+                do {
+                    ultimoFornecimento = InputHelper.RetornarData("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):", "Data do ultimo fornecimento inválida");
+                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
+
+
+                do {
+                    dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do ultimo cadastro inválida");
+                } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
+
                 char situacao = PrincipioAtivo(Situacao);
-
-
 
                 this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
                 Pais, DataAbertura,
@@ -174,17 +164,22 @@ namespace SneezePharma.Models
             }
         }
 
-        public Supplier Localizar(string Cnpj)
+        public Supplier LocalizarFornecedor(string Cnpj)
         {
             return suppliers.Find(c => c.Cnpj == Cnpj);
         }
 
-        public void atualizarRazaoSocial()
+        public void setRazaoSocial(string razaoSocial)
+        {
+            this.RazaoSocial = razaoSocial;
+        }
+
+        public void AtualizarRazaoSocial()
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
             var Cnpj = Console.ReadLine();
-            var Supplier = Localizar(Cnpj);
-
+            var Supplier = LocalizarFornecedor(Cnpj);
+            
             if (Supplier is null)
             {
                 Console.WriteLine("Fornecedor não encontrado");
@@ -203,13 +198,12 @@ namespace SneezePharma.Models
 
             Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
             var Cnpj = Console.ReadLine();
-            Localizar(Cnpj);
+            LocalizarFornecedor(Cnpj);
 
             if (Cnpj != null)
             {
                 Console.WriteLine("Digite a nova situação: ");
                 Situacao = char.Parse(Console.ReadLine());
-                PrincipioAtivo(Situacao);
             }
         }
 
@@ -217,7 +211,7 @@ namespace SneezePharma.Models
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
             var Cnpj = Console.ReadLine();
-            Localizar(Cnpj);
+            LocalizarFornecedor(Cnpj);
 
             if(Cnpj != null)
             {
