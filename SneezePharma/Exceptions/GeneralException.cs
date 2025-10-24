@@ -29,7 +29,13 @@ namespace SneezePharma.Exceptions
             if (valorInserido < valorMin || valorInserido > valorMax)
                 throw new ArgumentException(msg);
         }
-        
+
+        public static void VerificarQuantidadeInvalidaDecimal(decimal valorMin, decimal valorMax, decimal valorInserido, string msg)
+        {
+            if (valorInserido < valorMin || valorInserido > valorMax)
+                throw new ArgumentException(msg);
+        }
+
         public static void VerificarTamanhoDiferente(string entrada, int tamanho, string msgDeErro)
         {
             if (entrada.Length != tamanho)
