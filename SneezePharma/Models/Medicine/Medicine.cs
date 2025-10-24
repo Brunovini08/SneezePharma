@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Medicine
+namespace SneezePharma.Models
 {
     public class Medicine
     {
@@ -68,12 +69,12 @@ namespace SneezePharma.Models.Medicine
                 }
             }
         }
-        
+        /*
         public void CriarMedicamento()
         {
-            bool validadeCDB = false, validadeNome = false, validadeCategoria = false;
+            bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
             string nome = "";
-            char categoria = ' ';
+            char categoria = ' ', situacao = ' ';
 
             do
             {
@@ -92,11 +93,11 @@ namespace SneezePharma.Models.Medicine
                     {
                         Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
                     }
-                } while (!validadeNome);
+                } while (!validadeNome);               
                 try
                 {
                     Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
-                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 0, "O nome do medicamento deve ter no mínimo 3 caracteres.");
+                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
                     Nome = nome;
                 }
                 catch (ArgumentException ex)
@@ -120,16 +121,36 @@ namespace SneezePharma.Models.Medicine
             {
                 Console.WriteLine("Digite o valor de Venda:");
                 decimal valorVenda = decimal.Parse(Console.ReadLine());
+                string msg = "O valor de venda deve ser maior que R$0,00 e menor que R$10000,00";
                 try
                 {
-                    Exceptions.GeneralException.
+                    Exceptions.GeneralException.VerificarQuantidadeInvalidaDecimal(0, 10000, valorVenda, msg);
                 }
-            }while()
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while ();
 
+            Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
+            DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());
+
+            Console.WriteLine("Digite a data do cadastro do medicamento (DD/MM/AAAA): ");
+            DateOnly dataCadastro = DateOnly.Parse(Console.ReadLine());
+
+            do
+            {
+                Console.WriteLine("Digite a situação do medicamento (A, I): ");
+                validadeSituacao = char.TryParse(Console.ReadLine().ToUpper(), out situacao);
+                if (validadeSituacao == false)
+                {
+                    Console.WriteLine("");
+                }
+            } while (situacao != 'A' || situacao != 'I');
 
 
 
         }
-
+        */
     }
 }

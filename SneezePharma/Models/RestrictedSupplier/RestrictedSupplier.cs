@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SneezePharma.Models.RestrictedSupplier
 {
     public class RestrictedSupplier
-    {
+    {/*
         public List<Supplier> RestrictedSuppliers { get; } = new List<Supplier>();
         public void IncluirRestricted(Supplier fornecedor)
         {
@@ -29,7 +29,7 @@ namespace SneezePharma.Models.RestrictedSupplier
                 }
             } while (encontrado == null);
         }
-
+        
         public void RetirarDeBloqueados()
         {
             Supplier fornecedor;
@@ -52,5 +52,6 @@ namespace SneezePharma.Models.RestrictedSupplier
             } while (fornecedor == null);
         }
 
+        fornecedor.atualizarRazaoSocial();*/
     }
 }
