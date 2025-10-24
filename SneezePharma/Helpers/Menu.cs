@@ -89,8 +89,9 @@ namespace SneezePharma.Helpers
             Console.WriteLine("MENU - MANIPULAÇÃO DE FORNECEDORES");
             Console.WriteLine("1. MENU - ALTERAR FORNECEDOR");
             Console.WriteLine("2. MENU - INATIVAR FORNECEDOR");
-            Console.WriteLine("3. MENU - LISTAR FORNECEDOR POR ID");
-            Console.WriteLine("4. MENU - LISTAR TODOS OS FORNECEDORES");
+            Console.WriteLine("3. MENU - RESTRINGIR FORNECEDOR");
+            Console.WriteLine("4. MENU - LISTAR FORNECEDOR POR ID");
+            Console.WriteLine("5. MENU - LISTAR TODOS OS FORNECEDORES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }

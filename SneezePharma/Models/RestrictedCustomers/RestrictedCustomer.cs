@@ -13,12 +13,12 @@ namespace SneezePharma.Models.RestrictedCustomers
         }
 
 
-        public void AddCustomer(Customer customer)
+        public void AdicionarCliente(Customer customer)
         {
             Customers.Add(customer);
         }
 
-        public void RemoveCustomer(Customer customer)
+        public void RemoverCliente(Customer customer)
         {
             Customers.Remove(customer);
         }

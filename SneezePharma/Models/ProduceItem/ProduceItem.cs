@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.ProduceItem
+namespace SneezePharma.Models
 {
     public class ProduceItem
     {
-
-
-
-
 
     }
 }

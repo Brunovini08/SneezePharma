@@ -31,6 +31,17 @@ namespace SneezePharma.Models
             DataCadastro = new DateOnly();
             Situacao = SituationCustomer.A;
         }
+
+        public Customer(string CPF, string nome, DateOnly dataNascimento, string telefone, DateOnly? ultimaCompra, DateOnly dataCadastro, SituationCustomer situacao)
+        {
+            this.Nome = nome;
+            this.CPF = CPF;
+            this.Telefone = telefone;
+            this.UltimaCompra = ultimaCompra;
+            this.DataCadastro = dataCadastro;
+            this.Situacao = situacao;
+        }
+
         private void ValidarCPF(string CPF)
         {
             int[] verificadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -94,8 +105,6 @@ namespace SneezePharma.Models
             Console.WriteLine(CPF);
             Console.WriteLine(cpfValidado);
         }
-
-
         public void CriarCliente()
         {
             try
@@ -133,7 +142,6 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.Message);
             }
         }
-
         public void AtualizarCliente()
         {
             try
@@ -169,6 +177,10 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Você tem menos de 18 anos, por isso não poderá comprar na SneezePharma");
             }
+        }
+        public string SalvarArquivo()
+        {
+            return $"{this.CPF}{this.Nome.PadRight(50, ' ')}{this.DataNascimento}{this.Telefone}{this.UltimaCompra}{this.DataCadastro}{this.Situacao}";
         }
 
         //public Customer FindCustomerById(int id)
