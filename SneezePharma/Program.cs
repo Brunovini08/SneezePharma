@@ -18,8 +18,6 @@ string RetornarSomenteNumeros(string msgDeInput)
     }
     while (!repetir);
 
-    return stringDeRetorno;
-}
 
 int RetornarNumeroInteiro(string msgDeInput)
 {
@@ -43,76 +41,34 @@ decimal RetornarNumeroDecimal(string msgDeInput)
     var repetir = true;
     var numero = 0.0m;
 
-    do
-    {
-        Console.WriteLine(msgDeInput);
-        repetir = decimal.TryParse(Console.ReadLine(), out numero);
 
-        if (!repetir)
-            Console.WriteLine("Entrada inválida! Tente novamente!");
-    }
-    while (!repetir);
-    return numero;
-}
 
-SalesItem CadastrarItemDeVenda(int id)
+
+
+do
 {
-    try
-    {
-        int idVenda = RetornarNumeroInteiro("Digite o número do Id da Venda:");
+    Console.WriteLine("\n 1 - Cadastrar Manipulação");
+    Console.WriteLine("2 - Listar Manipulações");
+    Console.WriteLine("4 - Sair");
+    Console.WriteLine("\n Escolha uma opção: ");
+    opcao = int.Parse(Console.ReadLine());
 
-        string cbcMedicamento = RetornarSomenteNumeros("Digite o CBC do Medicamento:");
-        GeneralException.VerificarTamanhoDiferente(cbcMedicamento, 13, "O CBC precisa possuir 13 digitos");
+    switch (opcao) {
+        case 1:
+            var produce  = new Produce().CadastrarManipulacao();
+            if (produce != null)
+            {
+                listamanipulacoes.Add(produce);
+            }
+            break;
+        case 2:
+            
+            break;
 
-        int quantidade = RetornarNumeroInteiro("Digite a quantidade de medicamentos:");
-        GeneralException.VerificarQuantidadeInvalidaInteiro(1, 999, quantidade, "Quantidade inválida! A quantidade deve estar entre 0 e 999");
 
-        //TODO: Puxar o valor unitário direto do Medicamento (Medicamento)
-        decimal valorUnitario = RetornarNumeroDecimal("Digite o valor unitário do medicamento");
 
-        decimal totalItem = quantidade * valorUnitario;
-        GeneralException.VerificarQuantidadeMaximaDecimal(totalItem, 99999.99m, "Valor total ultrapassou limite máximo (R$ 99999,99)");
+} while (opcao != 5);
 
-        return new SalesItem(++id, idVenda, cbcMedicamento, quantidade, valorUnitario, totalItem);
-    }
-    catch (ArgumentException ex)
-    {
-        Console.WriteLine(ex.Message);
-        return null;
-    }
-}
-
-bool ExisteItensDeCompra(List<SalesItem> salesItems)
-{
-    if (salesItems.Count > 0)
-        return true;
-
-    return false;
-}
-
-void ListarItensDeVenda(List<SalesItem> salesItems)
-{
-    if (salesItems.Count > 0)
-    {
-        Console.WriteLine("===== Itens de Vendas =====");
-        foreach (var si in salesItems)
-        {
-            Console.WriteLine(si);
-            Console.WriteLine();
-        }
-    }
-    else
-    {
-        Console.WriteLine("Não há itens de venda cadastrados!");
-    }
-
-    InputHelper.PressioneEnterParaContinuar();
-}
-
-SalesItem ProcurarItemDeVendaPorId(int id, List<SalesItem> salesItems)
-{
-    return salesItems.FirstOrDefault(sl => sl.Id == id);
-}
 
 void AlterarQuantidadeItensVenda(SalesItem itemDeVenda)
 {
