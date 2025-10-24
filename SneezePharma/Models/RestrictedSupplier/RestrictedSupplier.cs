@@ -52,6 +52,5 @@ namespace SneezePharma.Models.RestrictedSupplier
             } while (fornecedor == null);
         }
 
-        fornecedor.atualizarRazaoSocial();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.SalesItem
 {
     public class SalesItemManipulate
     {
@@ -13,12 +13,12 @@ namespace SneezePharma.Models
         
         private string FullPath()
         {
-            return Path.Combine(this.DirectoryPath, this.FilePath);
+            return Path.Combine(DirectoryPath, FilePath);
         }
 
         private bool ChecarSeDiretorioNaoExiste()
         {
-            return !Directory.Exists(this.DirectoryPath);
+            return !Directory.Exists(DirectoryPath);
         }
 
         private bool ChecarSeArquivoNaoExiste()
@@ -30,7 +30,7 @@ namespace SneezePharma.Models
         {
             if (ChecarSeDiretorioNaoExiste())
             {
-                Directory.CreateDirectory(this.DirectoryPath);
+                Directory.CreateDirectory(DirectoryPath);
             }
             if (ChecarSeArquivoNaoExiste())
             {

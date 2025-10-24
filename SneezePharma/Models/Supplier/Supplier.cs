@@ -1,32 +1,42 @@
 ﻿using SneezePharma.Exceptions;
+using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Supplier
+namespace SneezePharma.Models
 {
     public class Supplier
     {
-        public string Cnpj { get; private set; } 
-        public string RazaoSocial { get; private set; } 
-        public string Pais { get; private set; } 
-        public DateOnly DataAbertura { get; private set; } 
-        public DateOnly UltimoFornecimento { get; private set; } 
+        public string Cnpj { get; private set; }
+        public string RazaoSocial { get; private set; }
+        public string Pais { get; private set; }
+        public DateOnly DataAbertura { get; private set; }
+        public DateOnly UltimoFornecimento { get; private set; }
         public DateOnly DataCadastro { get; private set; }
-        public char Situacao { get; private set; } 
+        public char Situacao { get; private set; }
 
-        public Supplier(string cnpj, string razaoSocial, 
-            string pais, DateOnly dataAbertura, 
+        public Supplier(string cnpj, string razaoSocial,
+            string pais, DateOnly dataAbertura,
             DateOnly ultimoFornecimento, DateOnly dataCadastro, char situacao)
         {
-            GeneralException.VerificarTamanhoDiferente(cnpj, 14, "O Cnpj deve ter 14 caracteres");
-            GeneralException.VerificarTamanhoMaiorString(razaoSocial, 50, "A razão social deve ter até 50 caracteres");
-            GeneralException.VerificarTamanhoMaiorString(pais, 50, "O país deve ter até 20 caracteres");
+            int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-            this.Cnpj = cnpj;
+            bool validar = this.ValidarCnpj(Cnpj, pesoVerificador1, pesoVerificador2);
+            if (validar)
+            {
+                this.Cnpj = cnpj;
+            }
+            else
+            {
+                GeneralException.VerificarTamanhoDiferente(Cnpj, 14, "Cnpj inválido");
+            }
+
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
             this.DataAbertura = dataAbertura;
@@ -38,8 +48,7 @@ namespace SneezePharma.Models.Supplier
 
         List<Supplier> suppliers = new List<Supplier>();
 
-        int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-        int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+
 
         public char PrincipioAtivo(char Situacao)
         {
@@ -58,7 +67,7 @@ namespace SneezePharma.Models.Supplier
             } while (Situacao != 'A' && Situacao != 'I');
             return Situacao;
         }
-        public int [] TransformarCnpjEmInt(string Cnpj)
+        public int[] TransformarCnpjEmInt(string Cnpj)
         {
             int[] numeros = new int[Cnpj.Length];
             for (int i = 0; i < numeros.Length; i++)
@@ -76,17 +85,17 @@ namespace SneezePharma.Models.Supplier
             int[] numeros = TransformarCnpjEmInt(Cnpj);
 
 
-            for (int i = 0; i < pesoVerificador1.Length ; i++)
+            for (int i = 0; i < pesoVerificador1.Length; i++)
             {
                 soma += numeros[i] * pesoVerificador1[i];
                 Console.WriteLine(soma);
             }
-    
+
             resto = soma % 11;
             int digitoVerificador1 = 0;
             int digitoVerificador2 = 0;
-            
-            if(resto == 0 || resto == 1)
+
+            if (resto == 0 || resto == 1)
             {
                 digitoVerificador1 = 0;
             }
@@ -128,26 +137,41 @@ namespace SneezePharma.Models.Supplier
 
         public void Adicionar(List<Supplier> suppliers)
         {
+            try
+            {
+                do
+                {
+                    Cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
+                } while (Cnpj.Length != 14);
+                do
+                {
+                    RazaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
+                } while (RazaoSocial.Length >= 50);
+                do
+                {
+                    Pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
+                } while (Pais.Length >= 20);
+                
+                    Console.WriteLine("Digite a data de abertura (no modelo: DDMMAAAA):");
+                    DateOnly DataAbertura = InputHelper.RetornarData("");
+               
+                Console.WriteLine("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):");
+                UltimoFornecimento = DateOnly.Parse(Console.ReadLine());
+                Console.WriteLine("Digite a data do cadastro (no modelo: DDMMAAAA):");
+                DataCadastro = DateOnly.Parse(Console.ReadLine());
+                char situacao = PrincipioAtivo(Situacao);
 
-            Console.WriteLine("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ");
-            Cnpj = Console.ReadLine();
-            Console.WriteLine("Digite a razão social (até 50 caracteres)");
-            RazaoSocial = Console.ReadLine();
-            Console.WriteLine("Digite o país: ");
-            Pais = Console.ReadLine();
-            Console.WriteLine("Digite a data de abertura (no modelo: DDMMAAAA):");
-            DataAbertura = DateOnly.Parse(Console.ReadLine());
-            Console.WriteLine("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):");
-            UltimoFornecimento = DateOnly.Parse(Console.ReadLine());
-            Console.WriteLine("Digite a data do cadastro (no modelo: DDMMAAAA):");
-            DataCadastro = DateOnly.Parse(Console.ReadLine());
-            PrincipioAtivo(Situacao);
 
 
+                this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
+                Pais, DataAbertura,
+                UltimoFornecimento, DataCadastro, Situacao));
 
-            this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
-            Pais, DataAbertura,
-            UltimoFornecimento, DataCadastro, Situacao));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public Supplier Localizar(string Cnpj)
@@ -161,7 +185,7 @@ namespace SneezePharma.Models.Supplier
             var Cnpj = Console.ReadLine();
             var Supplier = Localizar(Cnpj);
 
-            if(Supplier is null)
+            if (Supplier is null)
             {
                 Console.WriteLine("Fornecedor não encontrado");
             }
@@ -173,11 +197,40 @@ namespace SneezePharma.Models.Supplier
                 Console.WriteLine(novaRazaoSocial);
             }
         }
+
+        public void AlterarSituacao(List<Supplier> suppliers, char Situacao)
+        {
+
+            Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
+            var Cnpj = Console.ReadLine();
+            Localizar(Cnpj);
+
+            if (Cnpj != null)
+            {
+                Console.WriteLine("Digite a nova situação: ");
+                Situacao = char.Parse(Console.ReadLine());
+                PrincipioAtivo(Situacao);
+            }
+        }
+
+        public void AlterarDataUltimoFornecimento(List<Supplier> suppliers, DateOnly UltimoFornecimento)
+        {
+            Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
+            var Cnpj = Console.ReadLine();
+            Localizar(Cnpj);
+
+            if(Cnpj != null)
+            {
+                Console.WriteLine("Digite a nova data de fornecimento no formato DDMMAAAA: ");
+                UltimoFornecimento = DateOnly.Parse(Console.ReadLine());
+            }
+        }
+
         public override string ToString()
         {
             return $"Cnpj: {Cnpj},Razão social: {RazaoSocial},País: {Pais},Data abertura: {DataAbertura}," +
                 $"Ultimo fornecimento: {UltimoFornecimento},Data cadastro: {DataCadastro},Situação: {Situacao}";
         }
-        
+
     }
 }
