@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SneezePharma;
 
 namespace SneezePharma.Models
 {
@@ -28,7 +29,14 @@ namespace SneezePharma.Models
             DataCadastro = dataCadastro;
             Situacao = situacao;
         }
-
+        public void setNome(string nome)
+        {
+            Nome = nome;
+        }
+        public void setSituacao(char situacao)
+        {
+            Situacao = situacao;
+        }
         public bool ValidarCDB(string cdb)
         {
             int[] resultado = new int[13];
@@ -70,79 +78,15 @@ namespace SneezePharma.Models
                 }
             }
         }
-        /*
-        public void CriarMedicamento()
+
+        public override string ToString()
         {
-            bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
-            string nome = "";
-            char categoria = ' ', situacao = ' ';
-
-            do
-            {
-                Console.WriteLine("Digite o código de barras do medicamento:");
-                string cdb = Console.ReadLine();
-                validadeCDB = ValidarCDB(cdb);
-            } while (!validadeCDB);
-            do
-            {
-                do
-                {
-                    Console.WriteLine("Digite o nome do medicamento:");
-                    nome = Console.ReadLine();
-                    validadeNome = nome.All(c => char.IsLetterOrDigit(c));
-                    if (validadeNome == false)
-                    {
-                        Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
-                    }
-                } while (!validadeNome);               
-                try
-                {
-                    Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
-                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
-                    Nome = nome;
-                }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            } while (Nome == "");
-
-            do
-            {
-                Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
-                validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
-
-                if (validadeCategoria == false)
-                {
-                    Console.WriteLine("O medicamento deve estar em uma das 4 categorias");
-                }
-            } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
-
-            decimal valorVenda = 0;
-            do
-            {
-                valorVenda = InputHelper.RetornarNumeroDecimal("Digite o valor de Venda:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
-            } while (valorVenda <= 0 || valorVenda >= 10000);
-
-            Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
-            DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite a data do cadastro do medicamento (DD/MM/AAAA): ");
-            DateOnly dataCadastro = DateOnly.Parse(Console.ReadLine());
-
-            do
-            {
-                Console.WriteLine("Digite a situação do medicamento (A, I): ");
-                validadeSituacao = char.TryParse(Console.ReadLine().ToUpper(), out situacao);
-                if (validadeSituacao == false)
-                {
-                    Console.WriteLine("");
-                }
-            } while (situacao != 'A' || situacao != 'I');
-
-
-
+            return $"Código de Barras: {CDB}\nNome: {Nome}\nCategoria: {Categoria}\nValor da Venda: {ValorVenda}\nUltima Venda: {UltimaVenda}\nData de cadastro: {DataCadastro}\n Situação: {Situacao}";
         }
-        */
+
+        public string SalvarArquivo()
+        {
+            return $"{this.CDB}{this.Nome.PadRight(40, ' ')}{this.Categoria}{this.ValorVenda}{this.UltimaVenda}{this.DataCadastro}{this.Situacao}";
+        }
     }
 }
