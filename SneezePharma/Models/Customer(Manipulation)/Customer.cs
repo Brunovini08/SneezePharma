@@ -124,12 +124,13 @@ namespace SneezePharma.Models
                 } while (nome.Length > 50 || nome.Length <= 0);
 
                 Console.Clear();
+                DateOnly dataNascimento;
                 do
                 {
 
-                    DateOnly dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+                    dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
 
-                } while()
+                } while (dataNascimento != null || dataNascimento.ToString() != String.Empty);
 
                 Console.Clear();
                 string telefone;

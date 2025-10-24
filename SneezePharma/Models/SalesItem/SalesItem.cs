@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.SalesItem
+namespace SneezePharma.Models
 {
     public class SalesItem
     {

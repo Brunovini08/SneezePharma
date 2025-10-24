@@ -1,5 +1,5 @@
 using SneezePharma.Exceptions;
-using SneezePharma.Models.SalesItem;
+using SneezePharma.Models;
 using SneezePharma.Utils;
 
 string RetornarSomenteNumeros(string msgDeInput)
