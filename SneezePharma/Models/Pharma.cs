@@ -65,10 +65,9 @@ namespace SneezePharma.Models
         public void Relatorios()
         {
 
-        public void Relatorios()
-        {
-
         }
+
+
 
 
         #region "Operações de CRUD do SalesItem"
