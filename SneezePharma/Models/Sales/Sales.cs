@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Sales
 {
     public class Sales
     {
@@ -17,10 +17,10 @@ namespace SneezePharma.Models
 
         public Sales(string clienteCpf, decimal valorTotal)
         {
-            this.Id = Contador++;
-            this.DataVenda = DateOnly.FromDateTime(DateTime.Now);
-            this.Cliente = clienteCpf;
-            this.ValorTotal = valorTotal;
+            Id = Contador++;
+            DataVenda = DateOnly.FromDateTime(DateTime.Now);
+            Cliente = clienteCpf;
+            ValorTotal = valorTotal;
         }
 
     }

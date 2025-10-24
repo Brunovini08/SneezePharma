@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SneezePharma.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Supplier
 {
     public class Supplier
     {
@@ -21,6 +22,10 @@ namespace SneezePharma.Models
             string pais, DateOnly dataAbertura, 
             DateOnly ultimoFornecimento, DateOnly dataCadastro, char situacao)
         {
+            GeneralException.VerificarTamanhoDiferente(cnpj, 14, "O Cnpj deve ter 14 caracteres");
+            GeneralException.VerificarTamanhoMaiorString(razaoSocial, 50, "A razão social deve ter até 50 caracteres");
+            GeneralException.VerificarTamanhoMaiorString(pais, 50, "O país deve ter até 20 caracteres");
+
             this.Cnpj = cnpj;
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
@@ -29,6 +34,7 @@ namespace SneezePharma.Models
             this.DataCadastro = dataCadastro;
             this.Situacao = situacao;
         }
+
 
         List<Supplier> suppliers = new List<Supplier>();
 
@@ -49,7 +55,7 @@ namespace SneezePharma.Models
                 {
                     Situacao = ' ';
                 }
-            } while (Situacao != 'A' || Situacao != 'I');
+            } while (Situacao != 'A' && Situacao != 'I');
             return Situacao;
         }
         public int [] TransformarCnpjEmInt(string Cnpj)
@@ -88,7 +94,7 @@ namespace SneezePharma.Models
             {
                 digitoVerificador1 = 11 - resto;
             }
-            
+            numeros[12] = digitoVerificador1;
 
             soma = 0;
             resto = 0;
@@ -117,7 +123,7 @@ namespace SneezePharma.Models
             {
                 return false;
             }
- }
+        }
 
 
         public void Adicionar(List<Supplier> suppliers)
@@ -143,18 +149,34 @@ namespace SneezePharma.Models
             Pais, DataAbertura,
             UltimoFornecimento, DataCadastro, Situacao));
         }
-        
-        public Supplier Localizar(string )
+
+        public Supplier Localizar(string Cnpj)
         {
-            return this.suppliers.Find(c => c.Cnpj == Cnpj);
+            return suppliers.Find(c => c.Cnpj == Cnpj);
         }
 
-        public Supplier atualizarRazaoSocial()
+        public void atualizarRazaoSocial()
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
             var Cnpj = Console.ReadLine();
-            var Supplier = Localizar();
+            var Supplier = Localizar(Cnpj);
 
+            if(Supplier is null)
+            {
+                Console.WriteLine("Fornecedor não encontrado");
+            }
+            else
+            {
+                Console.WriteLine("Digite a nova razão social: ");
+                var novaRazaoSocial = Console.ReadLine();
+                Supplier.RazaoSocial = novaRazaoSocial;
+                Console.WriteLine(novaRazaoSocial);
+            }
+        }
+        public override string ToString()
+        {
+            return $"Cnpj: {Cnpj},Razão social: {RazaoSocial},País: {Pais},Data abertura: {DataAbertura}," +
+                $"Ultimo fornecimento: {UltimoFornecimento},Data cadastro: {DataCadastro},Situação: {Situacao}";
         }
         
     }
