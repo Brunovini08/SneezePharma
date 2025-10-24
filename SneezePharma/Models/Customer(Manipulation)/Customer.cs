@@ -13,7 +13,6 @@ namespace SneezePharma.Models
 {
     public class Customer
     {
-
         public string CPF { get; private set; }
         public string Nome { get; private set; }
         public DateOnly DataNascimento { get; private set; }
@@ -105,7 +104,7 @@ namespace SneezePharma.Models
             Console.WriteLine(CPF);
             Console.WriteLine(cpfValidado);
         }
-        public void CriarCliente()
+        public void RegistrarCliente()
         {
             try
             {
@@ -125,13 +124,19 @@ namespace SneezePharma.Models
                 } while (nome.Length > 50 || nome.Length <= 0);
 
                 Console.Clear();
-                DateOnly dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+                DateOnly dataNascimento;
+                do
+                {
+
+                    dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+
+                } while (dataNascimento != null || dataNascimento.ToString() != String.Empty);
 
                 Console.Clear();
                 string telefone;
                 do
                 {
-                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefon com DDD!");
+                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefone com DDD!");
                 } while (telefone.Length != 11);
                 Console.Clear();
 

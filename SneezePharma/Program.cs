@@ -1,79 +1,195 @@
-using SneezePharma;
+using SneezePharma.Exceptions;
 using SneezePharma.Models;
+using SneezePharma.Utils;
 
-
-
-
-List<Produce> listaManipulacoes = new List<Produce>();
-bool continuar = true;
-
-
-
-
-
-while (continuar)
+string RetornarSomenteNumeros(string msgDeInput)
 {
-    Console.WriteLine("\n1 - Cadastrar Manipulação");
-    Console.WriteLine("2 - Listar Manipulações");
-    Console.WriteLine("3 - Alterar Pedido de Manipulação");
-    Console.WriteLine("4 - Buscar manipulação pelo ID");
-    Console.WriteLine("5 - Cadastrar Item Manipulado");
-    Console.WriteLine("6 - Listar Itens manipulados");
-    Console.WriteLine("7 - Alterar registro de item manipulado");
-    Console.WriteLine("8 - Buscar item pelo ID");
-    Console.WriteLine("0 - Sair");
-    Console.Write("Escolha uma opção: ");
-    int opcao = int.Parse(Console.ReadLine());
-
-    switch (opcao)
+    var repetir = true;
+    var stringDeRetorno = "";
+    do
     {
+        Console.WriteLine(msgDeInput);
+        stringDeRetorno = Console.ReadLine();
+
+        repetir = long.TryParse(stringDeRetorno, out long x);
+
+        if (!repetir)
+            Console.WriteLine("Entrada inválida! Digite somente números!");
+    }
+    while (!repetir);
+
+
+int RetornarNumeroInteiro(string msgDeInput)
+{
+    var repetir = true;
+    var numero = 0;
+
+    do
+    {
+        Console.WriteLine(msgDeInput);
+        repetir = int.TryParse(Console.ReadLine(), out numero);
+
+        if (!repetir)
+            Console.WriteLine("Entrada inválida! Tente novamente!");
+    }
+    while (!repetir);
+    return numero;
+}
+
+decimal RetornarNumeroDecimal(string msgDeInput)
+{
+    var repetir = true;
+    var numero = 0.0m;
+
+
+
+
+
+do
+{
+    Console.WriteLine("\n 1 - Cadastrar Manipulação");
+    Console.WriteLine("2 - Listar Manipulações");
+    Console.WriteLine("4 - Sair");
+    Console.WriteLine("\n Escolha uma opção: ");
+    opcao = int.Parse(Console.ReadLine());
+
+    switch (opcao) {
         case 1:
-            var manipulacao = new Produce().CadastrarManipulacao();
-            if (manipulacao is not null)
+            var produce  = new Produce().CadastrarManipulacao();
+            if (produce != null)
             {
-                listaManipulacoes.Add(manipulacao);
-                Console.WriteLine("\nManipulação salva com sucesso!");
+                listamanipulacoes.Add(produce);
             }
             break;
-
         case 2:
-            Produce.MostrarManipulacao(listaManipulacoes);
+            
             break;
 
-        case 3:
-            Produce.AlterarManipulacao(listaManipulacoes);
-            break;
-        case 4:
-            Produce.LocalizarManipulacao(listaManipulacoes);
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        case 8:
-            break;
-        case 0:
-            continuar = false;
-            break;
 
-        default:
-            Console.WriteLine("Opção inválida.");
-            break;
+
+} while (opcao != 5);
+
+
+void AlterarQuantidadeItensVenda(SalesItem itemDeVenda)
+{
+    var quantidade = 0;
+    try
+    {
+        quantidade = RetornarNumeroInteiro("Digite a quantidade de medicamentos:");
+        GeneralException.VerificarQuantidadeInvalidaInteiro(1, 999, quantidade, "Quantidade inválida! A quantidade deve estar entre 0 e 999");
+
+        itemDeVenda.SetQuantidade(quantidade);
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine(ex.Message);
     }
 }
 
+void AlterarPropriedadesDoItemDeVendas(SalesItem salesItem)
+{
+    var repetir = true;
+    do
+    {
+        Console.Clear();
+        Console.WriteLine(salesItem);
+        Console.WriteLine();
 
+        Console.WriteLine("1 - Alterar Id da venda");
+        Console.WriteLine("2 - Alterar CBC de Medicamento");
+        Console.WriteLine("3 - Quantidade de itens");
+        Console.WriteLine("0 - Sair e salvar");
+        var opcao = Console.ReadLine();
 
+        switch (opcao)
+        {
+            case "3":
+                AlterarQuantidadeItensVenda(salesItem);
+                InputHelper.PressioneEnterParaContinuar();
+                break;
+            case "0":
+                Console.WriteLine("Alterações realizadas com sucesso!");
+                repetir = false;
+                break;
+            default:
+                Console.WriteLine("Opção inválida! Tente novamente!");
+                break;
+        }
+    }
+    while (repetir);
+}
 
+void AtualizarItemDaVenda(List<SalesItem> salesItems)
+{
+    if (ExisteItensDeCompra(salesItems))
+    {
+        ListarItensDeVenda(salesItems);
+        var id = RetornarNumeroInteiro("Digite o Id do item de venda que deseja atualizar:");
 
+        var salesItem = ProcurarItemDeVendaPorId(id, salesItems);
 
+        if (salesItem != null)
+        {
+            AlterarPropriedadesDoItemDeVendas(salesItem);
+        }
+        else
+        {
+            Console.WriteLine("Item de venda não foi localizado!");
+            InputHelper.PressioneEnterParaContinuar();
+            return;
+        }
+    }
+    else
+    {
+        Console.WriteLine("Não há itens de venda cadastrados!");
+    }
+    InputHelper.PressioneEnterParaContinuar();
+}
 
+void MenuSalesItem()
+{
+    SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
+    var salesItemsList = salesItemManipulate.LerItensDeVenda();
+    var repetir = true;
+    do
+    {
+        Console.Clear();
 
+        Console.WriteLine("1 - Cadastrar Item de Venda");
+        Console.WriteLine("2 - Listar Itens de Venda");
+        Console.WriteLine("3 - Alterar um Item de Venda");
+        Console.WriteLine("0 - Retornar para o próximo menu");
+        var opcao = Console.ReadLine() ?? "-1";
 
+        switch (opcao)
+        {
+            case "1":
+                var idDoItemDeVenda = salesItemsList.LastOrDefault()?.Id ?? 0;
+                var itemDaVenda = CadastrarItemDeVenda(idDoItemDeVenda);
+                if (itemDaVenda is not null)
+                {
+                    Console.WriteLine("Item de venda cadastrado com sucesso!");
+                    salesItemsList.Add(itemDaVenda);
+                }
+                InputHelper.PressioneEnterParaContinuar();
+                break;
+            case "2":
+                ListarItensDeVenda(salesItemsList);
+                break;
+            case "3":
+                AtualizarItemDaVenda(salesItemsList);
+                break;
+            case "0":
+                repetir = false;
+                break;
+            default:
 
+                break;
+        }
+    }
+    while (repetir);
 
+    salesItemManipulate.GravarItensDeVenda(salesItemsList);
+}
 
-
-
+MenuSalesItem();
