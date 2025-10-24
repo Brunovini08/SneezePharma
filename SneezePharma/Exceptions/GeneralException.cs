@@ -41,5 +41,11 @@ namespace SneezePharma.Exceptions
             if (entrada.Length != tamanho)
                 throw new ArgumentException(msgDeErro);
         }
+
+        public static void VerificarQuantidadeMaximaDecimal(decimal entrada, decimal compMax, string msgDeErro)
+        {
+            if (entrada > compMax)
+                throw new ArgumentException(msgDeErro);
+        }
     }
 }

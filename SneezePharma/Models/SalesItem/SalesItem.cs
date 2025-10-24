@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.SalesItem
+namespace SneezePharma.Models
 {
     public class SalesItem
     {
@@ -16,20 +16,21 @@ namespace SneezePharma.Models.SalesItem
         public decimal ValorUnitario { get; private set; }
         public decimal TotalItem { get; set; }
 
-        private static int Contador = 1;
-
-        public SalesItem(int idVenda,
+        public SalesItem(
+            int id,
+            int idVenda,
             string cdbMedicamento,
             int quantidade,
-            decimal valorUnitario
+            decimal valorUnitario,
+            decimal totalItem
         )
         {
-            Id = Contador++;
+            Id = id;
             IdVenda = idVenda;
             Medicamento = cdbMedicamento;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
-            TotalItem = Quantidade * ValorUnitario;
+            TotalItem = totalItem;
         }
 
         public void SetQuantidade(int quantidade)
@@ -49,14 +50,21 @@ namespace SneezePharma.Models.SalesItem
 
         public string SalvarNoArquivo()
         {
-            var id = Id.ToString();
-            id = id.PadLeft(5 - id.Length);
+            var id = Id.ToString();            
+            id = id.PadLeft(5, '0');
 
             var idVenda = IdVenda.ToString();
-            idVenda = idVenda.PadLeft(5 - id.Length);
+            idVenda = idVenda.PadLeft(5, '0');
 
             var quantidade = Quantidade.ToString();
-            return "";
-        }
+            quantidade = quantidade.PadLeft(3, '0');
+
+            var valorUnitario = ValorUnitario.ToString();
+            valorUnitario = valorUnitario.PadLeft(7, '0');
+
+            var totalItem = TotalItem.ToString();
+            totalItem = totalItem.PadLeft(8, '0');
+            return $"{id}{idVenda}{Medicamento}{quantidade}{valorUnitario}{totalItem}";
+        }        
     }
 }

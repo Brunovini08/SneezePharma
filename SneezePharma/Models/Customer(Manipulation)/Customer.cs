@@ -13,7 +13,6 @@ namespace SneezePharma.Models
 {
     public class Customer
     {
-
         public string CPF { get; private set; }
         public string Nome { get; private set; }
         public DateOnly DataNascimento { get; private set; }
@@ -31,6 +30,17 @@ namespace SneezePharma.Models
             DataCadastro = new DateOnly();
             Situacao = SituationCustomer.A;
         }
+
+        public Customer(string CPF, string nome, DateOnly dataNascimento, string telefone, DateOnly? ultimaCompra, DateOnly dataCadastro, SituationCustomer situacao)
+        {
+            this.Nome = nome;
+            this.CPF = CPF;
+            this.Telefone = telefone;
+            this.UltimaCompra = ultimaCompra;
+            this.DataCadastro = dataCadastro;
+            this.Situacao = situacao;
+        }
+
         private void ValidarCPF(string CPF)
         {
             int[] verificadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -94,9 +104,7 @@ namespace SneezePharma.Models
             Console.WriteLine(CPF);
             Console.WriteLine(cpfValidado);
         }
-
-
-        public void CriarCliente()
+        public void RegistrarCliente()
         {
             try
             {
@@ -116,13 +124,19 @@ namespace SneezePharma.Models
                 } while (nome.Length > 50 || nome.Length <= 0);
 
                 Console.Clear();
-                DateOnly dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+                DateOnly dataNascimento;
+                do
+                {
+
+                    dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+
+                } while (dataNascimento != null || dataNascimento.ToString() != String.Empty);
 
                 Console.Clear();
                 string telefone;
                 do
                 {
-                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefon com DDD!");
+                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefone com DDD!");
                 } while (telefone.Length != 11);
                 Console.Clear();
 
@@ -133,7 +147,6 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.Message);
             }
         }
-
         public void AtualizarCliente()
         {
             try
@@ -169,6 +182,10 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Você tem menos de 18 anos, por isso não poderá comprar na SneezePharma");
             }
+        }
+        public string SalvarArquivo()
+        {
+            return $"{this.CPF}{this.Nome.PadRight(50, ' ')}{this.DataNascimento}{this.Telefone}{this.UltimaCompra}{this.DataCadastro}{this.Situacao}";
         }
 
         //public Customer FindCustomerById(int id)

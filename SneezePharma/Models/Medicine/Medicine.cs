@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Medicine
+namespace SneezePharma.Models
 {
     public class Medicine
     {
@@ -70,7 +70,7 @@ namespace SneezePharma.Models.Medicine
                 }
             }
         }
-        
+        /*
         public void CriarMedicamento()
         {
             bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
@@ -143,6 +143,6 @@ namespace SneezePharma.Models.Medicine
 
 
         }
-
+        */
     }
 }

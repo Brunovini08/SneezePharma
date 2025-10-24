@@ -105,17 +105,21 @@ namespace SneezePharma.Utils
         public static DateOnly RetornarData(string msgDeInput, string msgAviso)
         {
             DateOnly data;
+            bool verificar;
             do
             {
                 Console.WriteLine();
                 Console.WriteLine(msgDeInput);
-                data = DateOnly.Parse(Console.ReadLine());
+                verificar = DateOnly.TryParse(Console.ReadLine(), out data);
+                if (!verificar)
+                {
+                    throw new Exception("Data inválida!");
+                }
                 if (data == null || Convert.ToString(data) == string.Empty)
                 {
-                    InputHelper.ExibirErro();
                     InputHelper.PressioneEnterParaContinuar();
                 }
-            } while (data == null || Convert.ToString(data) == string.Empty);
+            } while (data == null || Convert.ToString(data) == string.Empty || !verificar);
 
             return data;
         }
