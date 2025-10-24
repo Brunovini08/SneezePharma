@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SneezePharma.Models.RestrictedCustomers
+namespace SneezePharma.Models
 {
     public class RestrictedCustomer
     {
