@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Medicine
 {
     public class Medicine
     {
@@ -51,8 +51,8 @@ namespace SneezePharma.Models
                         somaPar += resultado[i];
                     }
                 }
-                int somaTotal = somaImpar + (somaPar * 3);
-                int digitoVerificador = 10 - (somaTotal % 10);
+                int somaTotal = somaImpar + somaPar * 3;
+                int digitoVerificador = 10 - somaTotal % 10;
                 if (digitoVerificador == 10)
                 {
                     digitoVerificador = 0;
@@ -69,7 +69,7 @@ namespace SneezePharma.Models
                 }
             }
         }
-
+        
         public void CriarMedicamento()
         {
             bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
