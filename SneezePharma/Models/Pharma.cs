@@ -197,5 +197,31 @@ namespace SneezePharma.Models
         }
 
         #endregion
+
+        #region Compra CRUD
+
+        public void CriarPurchase()
+        {
+            string cnpj;
+            do
+            {
+                cnpj = InputHelper.RetornarString("Digite o CNPJ do fornecedor:", "O CNPJ é inválido.");
+                var fornecedor = this.Fonecedores.Find(f => f.Cnpj == cnpj);
+                if(fornecedor != null)
+                {
+                    
+                    Purchases compra = new Purchases(fornecedor.Cnpj);
+                }
+            }
+            while (cnpj.Length != 14);
+            decimal valorTotal = 0;
+            do
+            {
+                valorTotal = InputHelper.RetornarNumeroDecimal("Digite o valor de Total da Compra:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
+            } while (valorTotal <= 0 || valorTotal >= 10000);
+
+        }
+
+        #endregion
     }
 }

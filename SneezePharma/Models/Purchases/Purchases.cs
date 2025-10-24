@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Purchases
+namespace SneezePharma.Models
 {
     public class Purchases
     {
@@ -21,6 +21,12 @@ namespace SneezePharma.Models.Purchases
             DataCompra = dataCompra;
             Fornecedor = fornecedor;
             ValorTotal = valorTotal;
+        }
+
+        public Purchases(string fornecedor)
+        {
+            Fornecedor = fornecedor;
+            DataCompra = new DateOnly();
         }
 
         public void CriarPurchase()
