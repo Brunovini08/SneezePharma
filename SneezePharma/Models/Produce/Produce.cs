@@ -12,13 +12,13 @@ namespace SneezePharma.Models
     {
         private static int ultimoID = 1;
 
-        public string ID { get; private set; }
+        public int ID { get; private set; }
         public DateOnly DataProducao { get; private set; }
         public string Medicamento { get; private set; }
         public int Quantidade { get; private set; }
         List<Produce> listaManipulacoes = new List<Produce>();
 
-        public Produce(string id, DateOnly dataproducao, int quantidade)
+        public Produce(int id, DateOnly dataproducao, int quantidade)
         {
 
             ID = id;
@@ -36,7 +36,7 @@ namespace SneezePharma.Models
         public void ValidarID()
         {
 
-            ID = ultimoID.ToString().PadLeft(5, '0');
+            ID = ultimoID;
             Console.WriteLine($"ID: " + ID);
             ultimoID++;
         }
@@ -104,7 +104,7 @@ namespace SneezePharma.Models
 
                 ValidarID();
                 Console.WriteLine("Manipulação Cadastrada!");
-                Console.WriteLine($"ID: {ID}, Data: {data:dd/MM/yyyy}, Quantidade: {quantidade}");
+                Console.WriteLine($"ID: {ID.ToString().PadLeft(5, '0')}, Data: {data:dd/MM/yyyy}, Quantidade: {quantidade}");
                 return new Produce(ID, data, quantidade);
 
 
@@ -123,6 +123,7 @@ namespace SneezePharma.Models
 
         public static void MostrarManipulacao(List<Produce> listaManipulacoes)
         {
+           
             if (listaManipulacoes.Count == 0)
             {
                 Console.WriteLine("Nenhuma manipulação cadastrada.");
@@ -131,11 +132,12 @@ namespace SneezePharma.Models
             Console.WriteLine("Manipulações cadastradas: ");
             foreach (var item in listaManipulacoes)
             {
-                Console.WriteLine($"ID: {item.ID}, Data: {item.DataProducao: dd/MM/yyyy}, Quantidade: {item.Quantidade}");
+                //Console.WriteLine($"ID: {item.ID}, Data: {item.DataProducao: dd/MM/yyyy}, Quantidade: {item.Quantidade}");
+                Console.WriteLine(item);
             }
         }
 
-        public Produce LocalizarIDmanipulacao(string id)
+        public Produce LocalizarIDmanipulacao(int id)
         {
 
             return listaManipulacoes.Find(m => m.ID == id);
@@ -145,7 +147,7 @@ namespace SneezePharma.Models
         public static void AlterarManipulacao(List<Produce> lista)
         {
             Console.WriteLine("Informe o ID que quer alterar: ");
-            string id = Console.ReadLine() ?? "";
+            int id = int.Parse(Console.ReadLine() ?? "");
             Produce alterar = lista.Find(m => m.ID == id);
 
             if (alterar is not null)
@@ -167,7 +169,7 @@ namespace SneezePharma.Models
         public static void LocalizarManipulacao(List<Produce> lista)
         {
             Console.WriteLine("Digite o ID que gostaria de localizar: ");
-            string id = Console.ReadLine() ?? "";
+            int id = int.Parse(Console.ReadLine() ?? "");
 
             Produce encontrado = lista.Find(m => m.ID == id);
             if (encontrado is not null)
@@ -182,8 +184,13 @@ namespace SneezePharma.Models
         }
         public override string ToString()
         {
-            return $"ID: {ID}, Data: {DataProducao:dd/MM/yyyy}, Quantidade: {Quantidade}";
+            return $"ID: {ID.ToString().PadLeft(5, '0')}, Data: {DataProducao:dd/MM/yyyy}, Quantidade: {Quantidade}";
         }
+        public string SalvarArquivo()
+        {
+            return $"{this.ID:D5} {this.DataProducao:ddMMyyyy} {this.Quantidade:D4}";
+        }
+
 
     }
 }
