@@ -69,7 +69,7 @@ namespace SneezePharma.Models
                 }
             }
         }
-        
+        /*
         public void CriarMedicamento()
         {
             bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
@@ -151,6 +151,6 @@ namespace SneezePharma.Models
 
 
         }
-
+        */
     }
 }
