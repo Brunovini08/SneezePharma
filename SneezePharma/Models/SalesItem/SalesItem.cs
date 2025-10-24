@@ -25,17 +25,22 @@ namespace SneezePharma.Models
             decimal totalItem
         )
         {
-            Id = id;
-            IdVenda = idVenda;
-            Medicamento = cdbMedicamento;
-            Quantidade = quantidade;
-            ValorUnitario = valorUnitario;
-            TotalItem = totalItem;
+            this.Id = id;
+            this.IdVenda = idVenda;
+            this.Medicamento = cdbMedicamento;
+            this.Quantidade = quantidade;
+            this.ValorUnitario = valorUnitario;
+            this.TotalItem = totalItem;
         }
 
         public void SetQuantidade(int quantidade)
         {
-            Quantidade = quantidade;
+            this.Quantidade = quantidade;
+        }
+
+        public void SetTotalItem(decimal totalItem)
+        {
+            this.TotalItem = totalItem;
         }
 
         public override string ToString()
