@@ -721,6 +721,48 @@ namespace SneezePharma.Models
             }
 
         }
+        #region Medicamento CRUD
+        /*Medicamento CRUD*/
+        public void CriarMedicamento()
+        {
+            bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
+            string cdb, nome = "";
+            char categoria = ' ', situacao = ' ';
+
+            do
+            {
+                Console.WriteLine("Digite o código de barras do medicamento:");
+                cdb = Console.ReadLine();
+                validadeCDB = Medicine.ValidarCDB(cdb);
+            } while (!validadeCDB);
+            do
+            {
+                do
+                {
+                    Console.WriteLine("Digite o nome do medicamento:");
+                    nome = Console.ReadLine();
+                    validadeNome = nome.All(c => char.IsLetterOrDigit(c));
+                    if (validadeNome == false)
+                    {
+                        Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
+                    }
+                } while (!validadeNome);
+                try
+                {
+                    Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
+                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
+                    Nome = nome;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (Nome == "");
+
+            do
+            {
+                Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
+                validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
 
         public static void LocalizarItemManipulado(List<ProduceItem> listaitem)
         {
