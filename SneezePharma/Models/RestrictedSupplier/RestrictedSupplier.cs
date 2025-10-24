@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace SneezePharma.Models.RestrictedSupplier
 {
     public class RestrictedSupplier
-    {/*
+    {
         public List<Supplier> RestrictedSuppliers { get; } = new List<Supplier>();
-        public void IncluirRestricted(Supplier fornecedor)
+        public void AdicionarFornecedorRestrito(Supplier fornecedor)
         {
             Supplier encontrado;
             do
             {
             Console.WriteLine("Digite o Cnpj de fornecedores bloqueados: ");
             string cnpj = Console.ReadLine();
-            encontrado = fornecedor.Localizar(cnpj);
+            encontrado = fornecedor.LocalizarFornecedor(cnpj);
 
                 if (encontrado != null)
                 {
@@ -30,7 +30,7 @@ namespace SneezePharma.Models.RestrictedSupplier
             } while (encontrado == null);
         }
         
-        public void RetirarDeBloqueados()
+        public void RetirarFornecedorDeBloqueados()
         {
             Supplier fornecedor;
             do
@@ -52,6 +52,5 @@ namespace SneezePharma.Models.RestrictedSupplier
             } while (fornecedor == null);
         }
 
-        fornecedor.atualizarRazaoSocial();*/
     }
 }
