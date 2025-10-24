@@ -449,5 +449,22 @@ namespace SneezePharma.Models
             }
         }
 
+            ProduceItem itemencontrado = listaitem.Find(m => m.IDproducao == id);
+            if (itemencontrado is not null)
+            {
+                Console.WriteLine("ID Encontrado!");
+                Console.WriteLine(itemencontrado);
+            }
+            else
+            {
+                Console.WriteLine("ID não encontrado.");
+            }
+        }
+        public override string ToString()
+        {
+            return $"ID: {IDproducao}, Quantidade: {QuantidadeItens}";
+        }
+        */
+        #endregion
     }
 }

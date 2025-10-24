@@ -1,81 +1,57 @@
-using SneezePharma.Exceptions;
+using SneezePharma;
 using SneezePharma.Models;
-using SneezePharma.Models.SalesItem;
-using SneezePharma.Utils;
 
-void MenuSalesItem()
+
+
+var manipulador = new FileProduce();
+List<Produce> listaManipulacoes = new List<Produce>();
+bool continuar = true;
+
+
+
+
+
+while (continuar)
 {
-    var sneezePharma = new Pharma();
-    var repetir = true;
-    do
+    Console.WriteLine("\n1 - Cadastrar Manipulação");
+    Console.WriteLine("2 - Listar Manipulações");
+    Console.WriteLine("3 - Alterar Pedido de Manipulação");
+    Console.WriteLine("4 - Buscar pelo ID");
+    Console.WriteLine("0 - Sair");
+    Console.Write("Escolha uma opção: ");
+    int opcao = int.Parse(Console.ReadLine());
+
+    switch (opcao)
     {
-        Console.Clear();
+        case 1:
+            var manipulacao = new Produce().CadastrarManipulacao();
+            if (manipulacao is not null)
+            {
+                listaManipulacoes.Add(manipulacao);
+                Console.WriteLine("\nManipulação salva com sucesso!");
+            }
+            break;
 
-        Console.WriteLine("1 - Cadastrar Item de Venda");
-        Console.WriteLine("2 - Listar Itens de Venda");
-        Console.WriteLine("3 - Alterar um Item de Venda");
-        Console.WriteLine("0 - Retornar para o próximo menu");
-        var opcao = Console.ReadLine() ?? "-1";
+        case 2:
+            //var produtos = manipulador.LerManipulacao();
+            manipulador.GravarManipulacao(listaManipulacoes);
+            Produce.MostrarManipulacao(listaManipulacoes);
+            break;
 
-        switch (opcao)
-        {
-            case "1":
-                var idDoItemDeVenda = sneezePharma.ItensDeVenda.LastOrDefault()?.Id ?? 0;
-                sneezePharma.CadastrarItemDeVenda(idDoItemDeVenda);
-                InputHelper.PressioneEnterParaContinuar();
-                break;
-            case "2":
-                sneezePharma.ListarItensDeVenda();
-                break;
-            case "3":
-                sneezePharma.AtualizarItemDaVenda();
-                break;
-            case "0":
-                repetir = false;
-                break;
-            default:
+        case 3:
 
-                break;
-        }
+            Produce.AlterarManipulacao(listaManipulacoes);
+            break;
+        case 4:
+            Produce.LocalizarManipulacao(listaManipulacoes);
+            break;
+        case 0:
+            manipulador.GravarManipulacao(listaManipulacoes);
+            continuar = false;
+            break;
+
+        default:
+            Console.WriteLine("Opção inválida.");
+            break;
     }
-    while (repetir);
-
-    SalesItemManipulate.GravarItensDeVenda(sneezePharma.ItensDeVenda);
-}
-
-//MenuSalesItem();
-
-void MenuSales()
-{
-    var sneezePharma = new Pharma();
-    var repetir = true;
-    do
-    {
-        Console.Clear();
-
-        Console.WriteLine("1 - Realizar venda de medicamento");
-        Console.WriteLine("2 - Listar vendas");
-        Console.WriteLine("3 - Buscar uma venda por id e mostrar itens da venda");
-        Console.WriteLine("0 - Retornar para o próximo menu");
-        var opcao = Console.ReadLine() ?? "-1";
-
-        switch (opcao)
-        {
-            case "1":
-                break;
-            case "2":
-                break;
-            case "3":
-                break;
-            case "0":
-                repetir = false;
-                break;
-            default:
-
-                break;
-        }
-    }
-    while (repetir);
-
-    SalesItemManipulate.GravarItensDeVenda(sneezePharma.ItensDeVenda);
 }
