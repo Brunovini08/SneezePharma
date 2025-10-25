@@ -6,9 +6,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Produce
 {
-    public class Produce
+    public class ProduceModel
     {
         private static int ultimoID = 1;
 
@@ -16,9 +16,9 @@ namespace SneezePharma.Models
         public DateOnly DataProducao { get; private set; }
         public string Medicamento { get; private set; }
         public int Quantidade { get; private set; }
-        List<Produce> listaManipulacoes = new List<Produce>();
+        List<ProduceModel> listaManipulacoes = new List<ProduceModel>();
 
-        public Produce(int id, DateOnly dataproducao, int quantidade)
+        public ProduceModel(int id, DateOnly dataproducao, int quantidade)
         {
 
             ID = id;
@@ -27,7 +27,7 @@ namespace SneezePharma.Models
             Quantidade = quantidade;
         }
 
-        public Produce()
+        public ProduceModel()
         {
 
         }
@@ -35,7 +35,6 @@ namespace SneezePharma.Models
 
         public void ValidarID()
         {
-
             ID = ultimoID;
             Console.WriteLine($"ID: " + ID);
             ultimoID++;
@@ -62,7 +61,7 @@ namespace SneezePharma.Models
             return true;
         }
 
-        public Produce CadastrarManipulacao()
+        public ProduceModel CadastrarManipulacao()
         {
             try
             {
@@ -105,7 +104,7 @@ namespace SneezePharma.Models
                 ValidarID();
                 Console.WriteLine("Manipulação Cadastrada!");
                 Console.WriteLine($"ID: {ID.ToString().PadLeft(5, '0')}, Data: {data:dd/MM/yyyy}, Quantidade: {quantidade}");
-                return new Produce(ID, data, quantidade);
+                return new ProduceModel(ID, data, quantidade);
 
 
 
@@ -121,7 +120,7 @@ namespace SneezePharma.Models
         }
 
 
-        public static void MostrarManipulacao(List<Produce> listaManipulacoes)
+        public static void MostrarManipulacao(List<ProduceModel> listaManipulacoes)
         {
            
             if (listaManipulacoes.Count == 0)
@@ -137,18 +136,18 @@ namespace SneezePharma.Models
             }
         }
 
-        public Produce LocalizarIDmanipulacao(int id)
+        public ProduceModel LocalizarIDmanipulacao(int id)
         {
 
             return listaManipulacoes.Find(m => m.ID == id);
 
         }
 
-        public static void AlterarManipulacao(List<Produce> lista)
+        public static void AlterarManipulacao(List<ProduceModel> lista)
         {
             Console.WriteLine("Informe o ID que quer alterar: ");
             int id = int.Parse(Console.ReadLine() ?? "");
-            Produce alterar = lista.Find(m => m.ID == id);
+            ProduceModel alterar = lista.Find(m => m.ID == id);
 
             if (alterar is not null)
             {
@@ -166,12 +165,12 @@ namespace SneezePharma.Models
 
         }
 
-        public static void LocalizarManipulacao(List<Produce> lista)
+        public static void LocalizarManipulacao(List<ProduceModel> lista)
         {
             Console.WriteLine("Digite o ID que gostaria de localizar: ");
             int id = int.Parse(Console.ReadLine() ?? "");
 
-            Produce encontrado = lista.Find(m => m.ID == id);
+            ProduceModel encontrado = lista.Find(m => m.ID == id);
             if (encontrado is not null)
             {
                 Console.WriteLine("ID Encontrado!");
@@ -188,7 +187,7 @@ namespace SneezePharma.Models
         }
         public string SalvarArquivo()
         {
-            return $"{this.ID:D5} {this.DataProducao:ddMMyyyy} {this.Quantidade:D4}";
+            return $"{this.ID:D5}{this.DataProducao:ddMMyyyy}{this.Quantidade:D4}";
         }
 
 
