@@ -10,7 +10,7 @@ namespace SneezePharma.Exceptions
     {
         public static void VerificarTamanhoMenorString(string valor, int limite, string msg)
         {
-            if(valor.Length > limite)
+            if(valor.Length < limite)
             {
                 throw new ArgumentException(msg);
             }

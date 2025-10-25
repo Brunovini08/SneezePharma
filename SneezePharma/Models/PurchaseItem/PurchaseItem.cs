@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SneezePharma.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,20 @@ namespace SneezePharma.Models.PurchaseItem
         public decimal ValorUnitario { get; private set; }
         public decimal TotalItem { get; private set; }
 
-        public PurchaseItem(string idCompra, string ingrediente, int quantidade, decimal valorUnitario, decimal totalItem)
+        public static int Contador { get; private set; } = 1;
+
+        public PurchaseItem(string ingrediente, int quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
         {
-            IdCompra = idCompra;
             Ingrediente = ingrediente;
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
             TotalItem = totalItem;
+            IdCompra = idCompra.ToString().PadLeft(5, '0');
         }
+
+       
+
+
+
     }
 }
