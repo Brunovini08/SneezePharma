@@ -1,4 +1,4 @@
-﻿using SneezePharma.Models.ArchiveManipulate;
+﻿using SneezePharma.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +18,12 @@ namespace SneezePharma.Models.SalesItem
             CriarArquivo(DirectoryPath, FilePath);
         }
 
-        private string FullPath()
-        {
-            return Path.Combine(DirectoryPath, FilePath);
-        }
-
         public override List<SalesItemModel> Ler()
         {
 
 
             var salesItemsLidos = new List<SalesItemModel>();
-            string fullPath = FullPath();
+            string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
             using (sr)
@@ -64,7 +59,7 @@ namespace SneezePharma.Models.SalesItem
 
         public override void Gravar(List<SalesItemModel> salesItems)
         {
-            var sw = new StreamWriter(FullPath());
+            var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
 
             using (sw)
             {
