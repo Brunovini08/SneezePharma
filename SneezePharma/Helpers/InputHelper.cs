@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -102,7 +103,7 @@ namespace SneezePharma.Utils
             Console.ResetColor();
         }
 
-        public static DateOnly RetornarData(string msgDeInput, string msgAviso)
+        public static string RetornarData(string msgDeInput, string msgAviso)
         {
             DateOnly data;
             bool verificar;
@@ -121,8 +122,74 @@ namespace SneezePharma.Utils
                 }
             } while (data == null || Convert.ToString(data) == string.Empty || !verificar);
 
-            return data;
+            return data.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
         }
 
+        public static bool ValidarCpf(string CPF)
+        {
+            int[] verificadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] verificadores2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int soma = 0;
+            int digito1;
+            int digito2;
+            string cpfValidado = CPF.Substring(0, CPF.Length - 2);
+           if(CPF.Distinct().Count() == 1)
+            {
+                return false;
+            }
+            for (int i = 0; i < verificadores1.Length; i++)
+            {
+                soma += (int)Char.GetNumericValue(cpfValidado[i]) * verificadores1[i];
+            }
+
+            int resto = soma % 11;
+
+            if (resto < 2)
+            {
+                digito1 = 0;
+                cpfValidado = cpfValidado + digito1.ToString();
+            }
+            else if (resto >= 2)
+            {
+                digito1 = 11 - resto;
+                cpfValidado = cpfValidado + digito1.ToString();
+            }
+
+            soma = 0;
+            resto = 0;
+
+            for (int i = 0; i < verificadores2.Length; i++)
+            {
+                soma += (int)Char.GetNumericValue(cpfValidado[i]) * verificadores2[i];
+            }
+            resto = soma % 11;
+            if (resto < 2)
+            {
+                digito2 = 0;
+                cpfValidado = cpfValidado + digito2.ToString();
+            }
+            else if (resto >= 2)
+            {
+                digito2 = 11 - resto;
+                cpfValidado = cpfValidado + digito2.ToString();
+                if (CPF != cpfValidado)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            if (CPF != cpfValidado)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

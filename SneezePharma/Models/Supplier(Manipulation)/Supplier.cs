@@ -22,9 +22,10 @@ namespace SneezePharma.Models
         public  SituationSupplier Situacao { get; private set; } 
 
         public Supplier(string cnpj, string razaoSocial,
-            string pais, DateOnly dataAbertura,
-            DateOnly ultimoFornecimento, DateOnly dataCadastro)
+            string pais, DateOnly dataAbertura)
         {
+            this.DataCadastro = new DateOnly();
+            this.UltimoFornecimento = new DateOnly();
             int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
 
@@ -41,8 +42,6 @@ namespace SneezePharma.Models
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
             this.DataAbertura = dataAbertura;
-            this.UltimoFornecimento = ultimoFornecimento;
-            this.DataCadastro = dataCadastro;
             this.Situacao = SituationSupplier.A;
         }
 
@@ -124,8 +123,6 @@ namespace SneezePharma.Models
                 string razaoSocial;
                 string pais;
                 DateOnly dataAbertura;
-                DateOnly ultimoFornecimento;
-                DateOnly dataCadastro;
                 do
                 {
                     cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
@@ -139,23 +136,10 @@ namespace SneezePharma.Models
                     pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
                 } while (pais.Length >= 20);
                 do {
-                    dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
+                    dataAbertura = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida"));
                 } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
-
-                do {
-                    ultimoFornecimento = InputHelper.RetornarData("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):", "Data do ultimo fornecimento inválida");
-                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
-
-
-                do {
-                    dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do ultimo cadastro inválida");
-                } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
-
-                char situacao = PrincipioAtivo(Situacao);
-
                 this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
-                Pais, DataAbertura,
-                UltimoFornecimento, DataCadastro, Situacao));
+                Pais, DataAbertura));
 
             }
             catch (Exception e)
