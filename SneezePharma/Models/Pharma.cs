@@ -24,7 +24,7 @@ namespace SneezePharma.Models
         public Pharma()
         {
             // Realização da leitura de Itens de Venda
-            SalesItemManipulate.CriarArquivo();
+            SalesItemManipulate.CriarArquivo(SalesItemManipulate.DirectoryPath, SalesItemManipulate.FilePath);
             this.ItensDeVenda = SalesItemManipulate.LerItensDeVenda();
         }
 

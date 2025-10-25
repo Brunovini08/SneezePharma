@@ -1,46 +1,50 @@
-﻿using System;
+﻿using SneezePharma.Models.ArchiveManipulate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SneezePharma.Models.SalesItem
 {
-    public static class SalesItemManipulate
+    public class SalesItemManipulate : ArchiveManipulator
     {
-        private static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        private static string FilePath { get; set; } = "SaleItems.data";
-        
+        public static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
+        public static string FilePath { get; set; } = "SaleItems.data";
+
         private static string FullPath()
         {
             return Path.Combine(DirectoryPath, FilePath);
         }
 
-        private static bool ChecarSeDiretorioNaoExiste()
-        {
-            return !Directory.Exists(DirectoryPath);
-        }
+        //private static bool ChecarSeDiretorioNaoExiste()
+        //{
+        //    return !Directory.Exists(DirectoryPath);
+        //}
 
-        private static bool ChecarSeArquivoNaoExiste()
-        {
-            return !Path.Exists(FullPath());
-        }
+        //private static bool ChecarSeArquivoNaoExiste()
+        //{
+        //    return !Path.Exists(FullPath());
+        //}
 
-        public static void CriarArquivo()
-        {
-            if (ChecarSeDiretorioNaoExiste())
-            {
-                Directory.CreateDirectory(DirectoryPath);
-            }
-            if (ChecarSeArquivoNaoExiste())
-            {
-                StreamWriter sw = new StreamWriter(FullPath());
-                sw.Close();
-            }
-        }
-
+        //public static void CriarArquivo()
+        //{
+        //    if (ChecarSeDiretorioNaoExiste())
+        //    {
+        //        Directory.CreateDirectory(DirectoryPath);
+        //    }
+        //    if (ChecarSeArquivoNaoExiste())
+        //    {
+        //        StreamWriter sw = new StreamWriter(FullPath());
+        //        sw.Close();
+        //    }
+        //}
+        
         public static List<SalesItemModel> LerItensDeVenda()
         {
+            
+
             var salesItemsLidos = new List<SalesItemModel>();
             string fullPath = FullPath();
             var sr = new StreamReader(fullPath);
@@ -79,7 +83,7 @@ namespace SneezePharma.Models.SalesItem
         public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
         {
             var sw = new StreamWriter(FullPath());
-            
+
             using (sw)
             {
                 foreach (var si in salesItems)
