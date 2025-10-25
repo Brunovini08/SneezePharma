@@ -29,6 +29,9 @@ namespace SneezePharma.Models
         
         private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Pharma()
         {
             this.Clientes = new List<Customer>();
@@ -276,7 +279,7 @@ namespace SneezePharma.Models
         }
         #endregion
 
-        #region Operações de CRUD da classe Sales
+        #region "Operações de CRUD da classe Sales"
 
         public void RegistrarVenda()
         {
@@ -320,14 +323,14 @@ namespace SneezePharma.Models
 
             do
             {
-                
+
             }
             while (contadorDeItensDaVenda < 3);
         }
 
         #endregion
 
-        #region Operações de CRUD do SalesItem
+        #region "Operações de CRUD do SalesItem"
 
         public void CadastrarItemDeVenda()
         {
@@ -366,7 +369,7 @@ namespace SneezePharma.Models
                 var quantidade = ConfirmacaoQuantidade();
 
                 //TODO: Puxar o valor unitário direto do Medicamento (Medicamento)
-                decimal valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário do medicamento", "Valor digitado é inválido");
+                decimal valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário do medicamento");
 
                 decimal totalItem = quantidade * valorUnitario;
                 GeneralException.VerificarQuantidadeMaximaDecimal(totalItem, 99999.99m, "Valor total ultrapassou limite máximo (R$ 99999,99)");
@@ -504,6 +507,7 @@ namespace SneezePharma.Models
 
 
         #endregion
+
 
         #region Operações de CRUD da classe Supplier
         //Fornecedor CRUD
