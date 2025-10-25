@@ -107,20 +107,27 @@ namespace SneezePharma.Utils
         {
             DateOnly data;
             bool verificar;
-            do
+            try
             {
-                Console.WriteLine();
-                Console.WriteLine(msgDeInput);
-                verificar = DateOnly.TryParse(Console.ReadLine(), out data);
-                if (!verificar)
+                do
                 {
-                    throw new Exception("Data inválida!");
-                }
-                if (data == null || Convert.ToString(data) == string.Empty)
-                {
-                    InputHelper.PressioneEnterParaContinuar();
-                }
-            } while (data == null || Convert.ToString(data) == string.Empty || !verificar);
+                    Console.WriteLine();
+                    Console.WriteLine(msgDeInput);
+                    verificar = DateOnly.TryParse(Console.ReadLine(), out data);
+                    if (verificar == false)
+                    {
+                        throw new Exception("Data inválida!");
+                        InputHelper.PressioneEnterParaContinuar();
+                    }
+                    if (data == null || Convert.ToString(data) == string.Empty)
+                    {
+                        InputHelper.PressioneEnterParaContinuar();
+                    }
+                } while (data == null || Convert.ToString(data) == string.Empty || verificar == false);
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
             return data.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
         }
@@ -189,6 +196,73 @@ namespace SneezePharma.Utils
             else
             {
                 return true;
+            }
+        }
+
+        public static int[] TransformarCnpjEmInt(string Cnpj)
+        {
+            int[] numeros = new int[Cnpj.Length];
+            for (int i = 0; i < numeros.Length; i++)
+            {
+                numeros[i] = int.Parse(Cnpj[i].ToString());
+            }
+            return numeros;
+        }
+        public static bool ValidarCnpj(string Cnpj)
+        {
+            int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int soma = 0;
+            int resto = 0;
+            int[] numeros = TransformarCnpjEmInt(Cnpj);
+
+
+            for (int i = 0; i < pesoVerificador1.Length; i++)
+            {
+                soma += numeros[i] * pesoVerificador1[i];
+                Console.WriteLine(soma);
+            }
+            resto = soma % 11;
+
+            int digitoVerificador1 = 0;
+            int digitoVerificador2 = 0;
+
+            if (resto == 0 || resto == 1)
+            {
+                digitoVerificador1 = 0;
+            }
+            else
+            {
+                digitoVerificador1 = 11 - resto;
+            }
+            numeros[12] = digitoVerificador1;
+
+            soma = 0;
+            resto = 0;
+
+            for (int i = 0; i < pesoVerificador2.Length; i++)
+            {
+                soma += numeros[i] * pesoVerificador2[i];
+            }
+
+            resto = soma % 11;
+
+            if (resto == 0 || resto == 1)
+            {
+                digitoVerificador2 = 0;
+            }
+            else
+            {
+                digitoVerificador2 = 11 - resto;
+            }
+
+            if (numeros[12] == digitoVerificador1 && numeros[13] == digitoVerificador2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
