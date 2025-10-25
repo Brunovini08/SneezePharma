@@ -2,7 +2,9 @@
 using SneezePharma.Helpers;
 using SneezePharma.Models;
 using SneezePharma.Models;
+using SneezePharma.Models.Ingredient;
 using SneezePharma.Models.Sales;
+using SneezePharma.Models.SalesItem;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
@@ -26,12 +28,11 @@ namespace SneezePharma.Models
         public List<RestrictedSupplier> FornecedoresRestritos { get; private set; }
         public List<SalesModel> Venda { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
+        public List<Ingredient> Ingredientes { get; private set; }
+        public List<PurchaseItem> ItemDaCompra { get; private set; }
         
         private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
 
-        /// <summary>
-        /// 
-        /// </summary>
         public Pharma()
         {
             this.Clientes = new List<Customer>();
@@ -52,6 +53,9 @@ namespace SneezePharma.Models
                 {
                     case 1:
                         RegistrarCliente();
+                        break;
+                    case 3:
+                        RegistrarMedicamento();
                         break;
                 }
             } while (validar == false);
@@ -1082,142 +1086,141 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD da classe Medicine
         /*Medicamento CRUD*/
-        //public void CriarMedicamento()
-        //{
-        //    bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
-        //    string cdb, nome = "";
-        //    char categoria = ' ', situacao = ' ';
+        public void RegistrarMedicamento()
+        {
+            bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
+            string cdb, nome = "";
+            char categoria = ' ', situacao = ' ';
 
-        //    do
-        //    {
-        //        Console.WriteLine("Digite o código de barras do medicamento:");
-        //        cdb = Console.ReadLine();
-        //    } while (!validadeCDB);
-        //    do
-        //    {
-        //        do
-        //        {
-        //            Console.WriteLine("Digite o nome do medicamento:");
-        //            nome = Console.ReadLine();
-        //            validadeNome = nome.All(c => char.IsLetterOrDigit(c));
-        //            if (validadeNome == false)
-        //            {
-        //                Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
-        //            }
-        //        } while (!validadeNome);
-        //        try
-        //        {
-        //            Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
-        //            Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
-        //            Nome = nome;
-        //        }
-        //        catch (ArgumentException ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //    } while (Nome == "");
+            do
+            {
+                Console.WriteLine("Digite o código de barras do medicamento:");
+                cdb = Console.ReadLine();
+            } while (!validadeCDB);
+            do
+            {
+                do
+                {
+                    nome = InputHelper.RetornarString("Digite o nome do medicamento", "O campo de nome deve ser preenchido")
+                    validadeNome = nome.All(c => char.IsLetterOrDigit(c));
+                    if (validadeNome == false)
+                    {
+                        Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
+                    }
+                } while (!validadeNome );
+                try
+                {
+                    Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
+                    Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
 
-        //    do
-        //    {
-        //        Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
-        //        validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (nome is null);
 
-        //        if (validadeCategoria == false)
-        //        {
-        //            Console.WriteLine("O medicamento deve estar em uma das 4 categorias");
-        //        }
-        //    } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
+            do
+            {
+                Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
+                validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
 
-        //    decimal valorVenda = 0;
-        //    do
-        //    {
-        //        valorVenda = InputHelper.RetornarNumeroDecimal("Digite o valor de Venda:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
-        //    } while (valorVenda <= 0 || valorVenda >= 10000);
+                if (validadeCategoria == false)
+                {
+                    Console.WriteLine("O medicamento deve estar em uma das 4 categorias");
+                }
+            } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
 
-        //    Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
-        //    DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());
+            decimal valorVenda = 0;
+            do
+            {
+                valorVenda = InputHelper.RetornarNumeroDecimal("Digite o valor de Venda:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
+            } while (valorVenda <= 0 || valorVenda >= 10000);
 
-        //    Console.WriteLine("Digite a data do cadastro do medicamento (DD/MM/AAAA): ");
-        //    DateOnly dataCadastro = DateOnly.Parse(Console.ReadLine());
+            Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
+            DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());
 
-        //    do
-        //    {
-        //        Console.WriteLine("Digite a situação do medicamento (A, I): ");
-        //        validadeSituacao = char.TryParse(Console.ReadLine().ToUpper(), out situacao);
-        //        if (validadeSituacao == false)
-        //        {
-        //            Console.WriteLine("");
-        //        }
-        //    } while (situacao != 'A' || situacao != 'I');
+            Console.WriteLine("Digite a data do cadastro do medicamento (DD/MM/AAAA): ");
+            DateOnly dataCadastro = DateOnly.Parse(Console.ReadLine());
 
-        //    Medicine medicamento = new Medicine(cdb, nome, categoria, valorVenda, ultimaVenda, dataCadastro, situacao);
+            do
+            {
+                Console.WriteLine("Digite a situação do medicamento (A, I): ");
+                validadeSituacao = char.TryParse(Console.ReadLine().ToUpper(), out situacao);
+                if (validadeSituacao == false)
+                {
+                    Console.WriteLine("");
+                }
+            } while (situacao != 'A' || situacao != 'I');
 
-        //    this.Medicamentos.Add(medicamento);
+            Medicine medicamento = new Medicine(cdb, nome, categoria, valorVenda, ultimaVenda, dataCadastro, situacao);
 
-        //}
+            this.Medicamentos.Add(medicamento);
 
-        //public Medicine LocalizarMedicamento(string id)
-        //{
-        //    Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
-        //    string localizar = Console.ReadLine();
-        //    return Medicamentos.Find(m => m.CDB == localizar);
-        //}
+        }
 
-        //public Medicine AlterarMedicamento()
-        //{
-        //    Console.WriteLine("Digite o código de barras do medicamento que deseja alterar:");
-        //    string alterar = Console.ReadLine() ?? "";
+        public Medicine LocalizarMedicamento(string id)
+        {
+            Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
+            string localizar = Console.ReadLine();
+            return Medicamentos.Find(m => m.CDB == localizar);
+        }
+
+        public Medicine AlterarMedicamento()
+        {
+            Console.WriteLine("Digite o código de barras do medicamento que deseja alterar:");
+            string alterar = Console.ReadLine() ?? "";
 
 
-        //    Medicine medicine = LocalizarMedicamento(alterar);
+            Medicine medicine = LocalizarMedicamento(alterar);
 
-        //    Console.WriteLine("Deseja alterar o nome do medicamento? (S , N):");
-        //    char escolha = char.Parse(Console.ReadLine().ToUpper());
+            Console.WriteLine("Deseja alterar o nome do medicamento? (S , N):");
+            char escolha = char.Parse(Console.ReadLine().ToUpper());
 
-        //    if (escolha == 'S')
-        //    {
-        //        if (medicine is not null)
-        //        {
-        //            Console.WriteLine("Digite o nome que deseja atribuir ao remédio: ");
-        //            medicine.setNome(Console.ReadLine());
+            if (escolha == 'S')
+            {
+                if (medicine is not null)
+                {
+                    Console.WriteLine("Digite o nome que deseja atribuir ao remédio: ");
+                    medicine.setNome(Console.ReadLine());
 
-        //            Console.WriteLine("Nome atualizado com sucesso.");
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("Não existe esse medicamento.");
-        //        }
+                    Console.WriteLine("Nome atualizado com sucesso.");
+                }
+                else
+                {
+                    Console.WriteLine("Não existe esse medicamento.");
+                }
 
-        //        return medicine;
-        //    }
-        //    Console.WriteLine("Deseja alterar a situação do medicamento? (S , N):");
-        //    escolha = char.Parse(Console.ReadLine().ToUpper());
-        //    if (escolha == 'S')
-        //    {
-        //        if (medicine is not null)
-        //        {
-        //            if (medicine.Situacao == 'A')
-        //                medicine.setSituacao('I');
-        //            else
-        //                medicine.setSituacao('A');
+                return medicine;
+            }
+            Console.WriteLine("Deseja alterar a situação do medicamento? (S , N):");
+            escolha = char.Parse(Console.ReadLine().ToUpper());
+            if (escolha == 'S')
+            {
+                if (medicine is not null)
+                {
+                    if (medicine.Situacao == 'A')
+                        medicine.setSituacao('I');
+                    else
+                        medicine.setSituacao('A');
 
-        //        }
-        //        return medicine;
-        //    }
-        //    else
-        //    {
-        //        return medicine;
-        //    }
-        //}
+                }
+                return medicine;
+            }
+            else
+            {
+                return medicine;
+            }
+        }
 
-        //public void ListarMedicamentos()
-        //{
-        //    Console.WriteLine("===Lista de medicamentos ===");
-        //    foreach (var medicine in Medicamentos)
-        //    {
-        //        Console.WriteLine(medicine);
-        //    }
-        //}
+        public void ListarMedicamentos()
+        {
+            Console.WriteLine("===Lista de medicamentos ===");
+            foreach (var medicine in Medicamentos)
+            {
+                Console.WriteLine(medicine);
+            }
+        }
 
         #endregion
 
@@ -1232,7 +1235,6 @@ namespace SneezePharma.Models
                 var fornecedor = this.Fornecedores.Find(f => f.Cnpj == cnpj);
                 if (fornecedor != null)
                 {
-
                     Purchases compra = new Purchases(fornecedor.Cnpj);
                 }
             }
@@ -1249,31 +1251,110 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD da classe PurchaseItem
 
-        //public void CriarItemCompra()
-        //{
-        //    do
-        //    {
-        //        Console.WriteLine("Digite o ID do princípio ativo que deseja comprar: ");
-        //        string ingrediente = Console.ReadLine();
+        public void CriarItemCompra()
+        {
+            int opcao = 0;
+            int contador = 0;
+            do
+            {
+                Console.WriteLine("Digite o ID do princípio ativo que deseja comprar: ");
+                string ingrediente = Console.ReadLine();
+
+                bool localizarIngrediente = false;
+                do
+                {
+                    Console.WriteLine("Digite o ID do principio ativo da compra: ");
+                    int idCompra = int.Parse(Console.ReadLine());
+
+                    localizarIngrediente = LocalizarIngrediente(idCompra);
+
+                    if (!localizarIngrediente)
+                    {
+                        Console.WriteLine("O ID digitado não existe no sistema");
+                    }
+
+                } while (localizarIngrediente == false);
+
+                decimal quantidade = 0;
+                do
+                {
+                    quantidade = InputHelper.RetornarNumeroDecimal("Digite a quantidade de itens em gramas (máx: 999,99): ", "O valor deve ser maior que 0 e menor que 10000");
+                } while (quantidade <= 0 || quantidade >= 10000);
+
+                decimal valorUnitario = 0;
+                do
+                {
+                    valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário por grama (máx: 999,99):", "O valor digitado deve ser maior que 0 e menor que 1000");
+                } while (valorUnitario <= 0 || valorUnitario >= 1000);
+
+                decimal totalItem = quantidade * valorUnitario;
+
+                Console.WriteLine("Deseja adicionar comprar outro item? (1 - Sim, 2 - Não): ");
+                opcao = int.Parse(Console.ReadLine());
+                contador++;
+                if (contador == 3)
+                {
+                    Console.WriteLine("O limite de compras (3 itens) foi atingido!");
+                }
+            } while (opcao != 2 || contador == 3);
+        }
+            
+        public PurchaseItem LocalizarItemCompra()
+        {
+            Console.WriteLine("Digite o ID da compra que deseja procurar: ");
+            string localizar = Console.ReadLine();
+            return ItemDaCompra.Find(i => i.IdCompra == localizar);
+        }
+
+        public PurchaseItem AlterarItemCompra()
+        {
+            Console.WriteLine("Digite o ID da compra que deseja alterar:");
+            string alterarItemCompra = Console.ReadLine() ?? "";
 
 
-        //        decimal quantidade = 0;
-        //        do
-        //        {
-        //            quantidade = InputHelper.RetornarNumeroDecimal("Digite a quantidade de itens em gramas (máx: 999,99): ", "O valor deve ser maior que 0 e menor que 10000");
-        //        } while (quantidade <= 0 || quantidade >= 10000);
+            PurchaseItem itemCompra = LocalizarItemCompra(alterarItemCompra);
 
-        //        decimal valorUnitario = 0;
-        //        do
-        //        {
-        //            valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário por grama (máx: 999,99):", "O valor digitado deve ser maior que 0 e menor que 1000");
-        //        } while (valorUnitario <= 0 || valorUnitario >= 1000);
+            Console.WriteLine("Deseja alterar a quantidade de item? (S , N):");
+            char escolha = char.Parse(Console.ReadLine().ToUpper());
 
-        //        decimal totalItem = quantidade * valorUnitario;
-        //    } while (opcao)
+            if (escolha == 'S')
+            {
+                if (itemCompra is not null)
+                {
+                    do
+                    {
 
+                        Console.WriteLine("Digite a quantidade que deseja alterar em gramas (máx: 9999,99): ");
+                        itemCompra.setQuantidade(decimal.Parse(Console.ReadLine()));
+                    } while (itemCompra.Quantidade <= 0 || itemCompra.Quantidade >= 10000);
+                    
+                    Console.WriteLine("Quantidade alterada com sucesso.");
+                }
+                else
+                {
+                    Console.WriteLine("Não existe esse item da compra.");
+                }
 
-        //}
+                return itemCompra;
+            }
+            else
+            {
+                return itemCompra;
+            }
+        }
+        public void ListarItemCompra()
+        {
+            Console.WriteLine("===Lista de Itens da Compra ===");
+            foreach (var itemCompra in ItemDaCompra)
+            {
+                Console.WriteLine(itemCompra);
+            }
+        }
+
+        public DateOnly BuscarDataUltimaCompra(int id)
+        {
+            return this.ItemDaCompra.FindAll(i => i.Ingrediente == id);
+        }
 
         #endregion
     }

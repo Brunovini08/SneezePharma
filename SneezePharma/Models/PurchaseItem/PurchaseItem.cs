@@ -3,21 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.PurchaseItem
+namespace SneezePharma.Models
 {
     public class PurchaseItem
     {
         public string IdCompra { get; private set; }
-        public string Ingrediente { get; private set; }
-        public int Quantidade { get; private set; }
+        public int Ingrediente { get; private set; }
+        public decimal Quantidade { get; private set; }
         public decimal ValorUnitario { get; private set; }
         public decimal TotalItem { get; private set; }
 
         public static int Contador { get; private set; } = 1;
 
-        public PurchaseItem(string ingrediente, int quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
+        public PurchaseItem(int ingrediente, decimal quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
         {
             Ingrediente = ingrediente;
             Quantidade = quantidade;
@@ -26,9 +27,14 @@ namespace SneezePharma.Models.PurchaseItem
             IdCompra = idCompra.ToString().PadLeft(5, '0');
         }
 
-       
+        public void setQuantidade(decimal quantidade)
+        {
+            Quantidade = quantidade;
+        }
 
-
-
+        public void setValorUnitario(decimal valorUnitario)
+        {
+            ValorUnitario = valorUnitario;
+        }
     }
 }

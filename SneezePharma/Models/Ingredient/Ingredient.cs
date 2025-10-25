@@ -1,5 +1,5 @@
 ﻿using SneezePharma.Enums;
-using SneezePharma.Models.RestrictedSupplier;
+using SneezePharma.Models;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Ingredient
+namespace SneezePharma.Models
 {
     public class Ingredient
     {
@@ -70,11 +70,6 @@ namespace SneezePharma.Models.Ingredient
             {
                 ultimaCompra = InputHelper.RetornarData("Digite a data da ultima compra de ingredientes (DDMMAAAA): ", "Data inválida da ultima compra de ingredientes, digite outra:");
             } while (ultimaCompra == null || ultimaCompra.ToString() == string.Empty);
-
-            do
-            {
-                dataCadastro = InputHelper.RetornarData("Digite a data do cadastro de ingredientes (DDMMAAAA): ", "Data inválida de cadastro de ingredientes, digite outra:");
-            } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
 
             ingredientes.Add(new Ingredient(id, nome,
              ultimaCompra,
