@@ -13,13 +13,17 @@ namespace SneezePharma.Models.Sales
         public string Cliente { get; private set; }
         public decimal ValorTotal { get; private set; }
 
-        public SalesModel(int id, string clienteCpf, decimal valorTotal)
+        // Construtor de cadastro da Venda
+        public SalesModel(int id, string clienteCpf)
         {
-            this.Id = id++;
+            this.Id = id;
             this.DataVenda = DateOnly.FromDateTime(DateTime.Now);
             this.Cliente = clienteCpf;
-            this.ValorTotal = valorTotal;
+            this.ValorTotal = 0;
         }
+
+        // Construtor para leitura do arquivo
+        
 
         public override string ToString()
         {
