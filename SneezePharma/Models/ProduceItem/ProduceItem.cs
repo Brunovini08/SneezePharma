@@ -13,7 +13,6 @@ namespace SneezePharma.Models
         private static int ultimoID = 1;
 
         public string IDproducao { get; set; }
-
         public string Principio { get; set; }
         public int QuantidadeItens { get; set; }
          List<ProduceItem> listaitens = new List<ProduceItem>();
@@ -61,6 +60,13 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.Message);
                 return null;
             }
+            //var manipulacao = new Produce().CadastrarManipulacao();
+            //if (manipulacao is not null)
+            //{
+             //   listaManipulacoes.Add(manipulacao);
+              //  Console.WriteLine("\nManipulação salva com sucesso!");
+            //}
+
         }
         public static void MostrarItensManipulados(List<ProduceItem> listaitens)
         {

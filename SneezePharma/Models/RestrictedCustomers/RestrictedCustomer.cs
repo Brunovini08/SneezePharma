@@ -5,22 +5,11 @@ namespace SneezePharma.Models
 {
     public class RestrictedCustomer
     {
-        List<Customer> Customers { get; set; }
+        public string CPF { get; set; }
 
-        public RestrictedCustomer()
+        public RestrictedCustomer(string cpf)
         {
-            Customers = new List<Customer>();
-        }
-
-
-        public void AdicionarCliente(Customer customer)
-        {
-            Customers.Add(customer);
-        }
-
-        public void RemoverCliente(Customer customer)
-        {
-            Customers.Remove(customer);
+            this.CPF = cpf;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -57,7 +58,7 @@ namespace SneezePharma.Utils
             return numero;
         }
 
-        public static decimal RetornarNumeroDecimal(string msgDeInput)
+        public static decimal RetornarNumeroDecimal(string msgDeInput, string msgOutput)
         {
             var repetir = true;
             var numero = 0.0m;
@@ -69,7 +70,7 @@ namespace SneezePharma.Utils
 
                 if (!repetir)
                 {
-                    InputHelper.ExibirErro();
+                    InputHelper.ExibirErro(msgOutput);
                     InputHelper.PressioneEnterParaContinuar();
                 }
             }
@@ -77,7 +78,7 @@ namespace SneezePharma.Utils
             return numero;
         }
 
-        public static string RetornarString(string msgDeInput, string msgAviso)
+        public static string RetornarString(string msgDeInput, string msgOutput)
         {
             string nome;
             do
@@ -87,7 +88,7 @@ namespace SneezePharma.Utils
                 nome = Console.ReadLine();
                 if (nome == null || nome == string.Empty)
                 {
-                    InputHelper.ExibirErro();
+                    InputHelper.ExibirErro(msgOutput);
                     InputHelper.PressioneEnterParaContinuar();
                 }
             } while (nome == null || nome == string.Empty);
@@ -95,34 +96,174 @@ namespace SneezePharma.Utils
             return nome;
         }
 
-        public static void ExibirErro()
+        public static void ExibirErro(string msgOutput)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Entrada inválida! Tente novamente!");
+            Console.WriteLine(msgOutput);
             Console.ResetColor();
         }
 
-        public static DateOnly RetornarData(string msgDeInput, string msgAviso)
+        public static string RetornarData(string msgDeInput, string msgAviso)
         {
             DateOnly data;
             bool verificar;
-            do
+            try
             {
-                Console.WriteLine();
-                Console.WriteLine(msgDeInput);
-                verificar = DateOnly.TryParse(Console.ReadLine(), out data);
-                if (!verificar)
+                do
                 {
-                    throw new Exception("Data inválida!");
-                }
-                if (data == null || Convert.ToString(data) == string.Empty)
-                {
-                    InputHelper.PressioneEnterParaContinuar();
-                }
-            } while (data == null || Convert.ToString(data) == string.Empty || !verificar);
+                    Console.WriteLine();
+                    Console.WriteLine(msgDeInput);
+                    verificar = DateOnly.TryParse(Console.ReadLine(), out data);
+                    if (verificar == false)
+                    {
+                        throw new Exception("Data inválida!");
+                        InputHelper.PressioneEnterParaContinuar();
+                    }
+                    if (data == null || Convert.ToString(data) == string.Empty)
+                    {
+                        InputHelper.PressioneEnterParaContinuar();
+                    }
+                } while (data == null || Convert.ToString(data) == string.Empty || verificar == false);
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
-            return data;
+            return data.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
         }
 
+        public static bool ValidarCpf(string CPF)
+        {
+            int[] verificadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] verificadores2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int soma = 0;
+            int digito1;
+            int digito2;
+            string cpfValidado = CPF.Substring(0, CPF.Length - 2);
+           if(CPF.Distinct().Count() == 1)
+            {
+                return false;
+            }
+            for (int i = 0; i < verificadores1.Length; i++)
+            {
+                soma += (int)Char.GetNumericValue(cpfValidado[i]) * verificadores1[i];
+            }
+
+            int resto = soma % 11;
+
+            if (resto < 2)
+            {
+                digito1 = 0;
+                cpfValidado = cpfValidado + digito1.ToString();
+            }
+            else if (resto >= 2)
+            {
+                digito1 = 11 - resto;
+                cpfValidado = cpfValidado + digito1.ToString();
+            }
+
+            soma = 0;
+            resto = 0;
+
+            for (int i = 0; i < verificadores2.Length; i++)
+            {
+                soma += (int)Char.GetNumericValue(cpfValidado[i]) * verificadores2[i];
+            }
+            resto = soma % 11;
+            if (resto < 2)
+            {
+                digito2 = 0;
+                cpfValidado = cpfValidado + digito2.ToString();
+            }
+            else if (resto >= 2)
+            {
+                digito2 = 11 - resto;
+                cpfValidado = cpfValidado + digito2.ToString();
+                if (CPF != cpfValidado)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            if (CPF != cpfValidado)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static int[] TransformarCnpjEmInt(string Cnpj)
+        {
+            int[] numeros = new int[Cnpj.Length];
+            for (int i = 0; i < numeros.Length; i++)
+            {
+                numeros[i] = int.Parse(Cnpj[i].ToString());
+            }
+            return numeros;
+        }
+        public static bool ValidarCnpj(string Cnpj)
+        {
+            int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int soma = 0;
+            int resto = 0;
+            int[] numeros = TransformarCnpjEmInt(Cnpj);
+
+
+            for (int i = 0; i < pesoVerificador1.Length; i++)
+            {
+                soma += numeros[i] * pesoVerificador1[i];
+                Console.WriteLine(soma);
+            }
+            resto = soma % 11;
+
+            int digitoVerificador1 = 0;
+            int digitoVerificador2 = 0;
+
+            if (resto == 0 || resto == 1)
+            {
+                digitoVerificador1 = 0;
+            }
+            else
+            {
+                digitoVerificador1 = 11 - resto;
+            }
+            numeros[12] = digitoVerificador1;
+
+            soma = 0;
+            resto = 0;
+
+            for (int i = 0; i < pesoVerificador2.Length; i++)
+            {
+                soma += numeros[i] * pesoVerificador2[i];
+            }
+
+            resto = soma % 11;
+
+            if (resto == 0 || resto == 1)
+            {
+                digitoVerificador2 = 0;
+            }
+            else
+            {
+                digitoVerificador2 = 11 - resto;
+            }
+
+            if (numeros[12] == digitoVerificador1 && numeros[13] == digitoVerificador2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
