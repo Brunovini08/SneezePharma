@@ -52,5 +52,20 @@ namespace SneezePharma.Models.RestrictedSupplier
             } while (fornecedor == null);
         }
 
+        public void ListarrForncedoresRestritos()
+        {
+            if(RestrictedSuppliers.Count == 0)
+            {
+                Console.WriteLine("Não há nenhum fornecedor bloqueado no momento");
+            }
+            else
+            {
+                Console.WriteLine("Lista de fornecedores bloqueados: ");
+                foreach (var fornecedor in RestrictedSuppliers)
+                {
+                    Console.WriteLine(fornecedor.ToString());
+                }
+            }
+        }
     }
 }

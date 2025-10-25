@@ -151,11 +151,11 @@ namespace SneezePharma.Models
                     dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do ultimo cadastro inválida");
                 } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
 
-                char situacao = PrincipioAtivo(Situacao);
+
 
                 this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
                 Pais, DataAbertura,
-                UltimoFornecimento, DataCadastro, Situacao));
+                UltimoFornecimento, DataCadastro));
 
             }
             catch (Exception e)
