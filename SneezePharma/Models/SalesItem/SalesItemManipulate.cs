@@ -1,47 +1,49 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace SneezePharma.Models
-//{
-//    public static class SalesItemManipulate
-//    {
-        
-//        private static string FullPath(string directoryPath, string filePath)
-//        {
-//            return Path.Combine(directoryPath, filePath);
-//        }
+namespace SneezePharma.Models.SalesItem
+{
+    public class SalesItemManipulate : ArchiveManipulator<SalesItemModel>
+    {
+        private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
+        private string FilePath { get; set; } = "SaleItems.data";
 
-//        private static bool ChecarSeDiretorioNaoExiste(string directoryPath)
-//        {
-//            return !Directory.Exists(directoryPath);
-//        }
+        public SalesItemManipulate()
+        {
+            CriarArquivo(DirectoryPath, FilePath);
+        }
 
-//        private static bool ChecarSeArquivoNaoExiste()
-//        {
-//            return !Path.Exists(FullPath());
-//        }
+        private static bool ChecarSeDiretorioNaoExiste()
+        {
+            return !Directory.Exists(DirectoryPath);
+        }
 
-//        public static void CriarArquivo()
-//        {
-//            if (ChecarSeDiretorioNaoExiste())
-//            {
-//                Directory.CreateDirectory(this.DirectoryPath);
-//            }
-//            if (ChecarSeArquivoNaoExiste())
-//            {
-//                StreamWriter sw = new StreamWriter(FullPath());
-//                sw.Close();
-//            }
-//        }
+        private static bool ChecarSeArquivoNaoExiste()
+        {
+            return !Path.Exists(FullPath());
+        }
 
-//        public static List<SalesItemModel> LerItensDeVenda()
-//        {
-//            var salesItemsLidos = new List<SalesItemModel>();
-//            string fullPath = FullPath();
-//            var sr = new StreamReader(fullPath);
+        public static void CriarArquivo()
+        {
+            if (ChecarSeDiretorioNaoExiste())
+            {
+                Directory.CreateDirectory(DirectoryPath);
+            }
+            if (ChecarSeArquivoNaoExiste())
+            {
+                StreamWriter sw = new StreamWriter(FullPath());
+                sw.Close();
+            }
+        }
+
+        public static List<SalesItemModel> LerItensDeVenda()
+        {
+            var salesItemsLidos = new List<SalesItemModel>();
+            string fullPath = FullPath();
+            var sr = new StreamReader(fullPath);
 
 //            using (sr)
 //            {
@@ -74,18 +76,18 @@
 //            return salesItemsLidos;
 //        }
 
-//        public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
-//        {
-//            var sw = new StreamWriter(FullPath());
+        public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
+        {
+            var sw = new StreamWriter(FullPath());
             
-//            using (sw)
-//            {
-//                foreach (var si in salesItems)
-//                {
-//                    sw.WriteLine(si.SalvarArquivo());
-//                }
-//                sw.Close();
-//            }
-//        }
-//    }
-//}
+            using (sw)
+            {
+                foreach (var si in salesItems)
+                {
+                    sw.WriteLine(si.SalvarArquivo());
+                }
+                sw.Close();
+            }
+        }
+    }
+}

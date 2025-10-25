@@ -5,4 +5,8 @@ Pharma farmacia = new Pharma();
 do
 {
     farmacia.Cadastrar();
-} while (true);
+} while (true);    }
+    while (repetir);
+
+    SalesItemManipulate.GravarItensDeVenda(sneezePharma.ItensDeVenda);
+}
