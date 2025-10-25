@@ -26,19 +26,7 @@ namespace SneezePharma.Models
         {
             this.DataCadastro = new DateOnly();
             this.UltimoFornecimento = new DateOnly();
-            int[] pesoVerificador1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-            int[] pesoVerificador2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-
-            bool validar = this.ValidarCnpj(Cnpj, pesoVerificador1, pesoVerificador2);
-            if (validar)
-            {
-                this.Cnpj = cnpj;
-            }
-            else
-            {
-                GeneralException.VerificarTamanhoDiferente(Cnpj, 14, "Cnpj inválido");
-            }
-
+            this.Cnpj = cnpj;
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
             this.DataAbertura = dataAbertura;
@@ -56,64 +44,6 @@ namespace SneezePharma.Models
             }
             return numeros;
         }
-
-
-        public bool ValidarCnpj(string Cnpj, int[] pesoVerificador1, int[] pesoVerificador2)
-        {
-            int soma = 0;
-            int resto = 0;
-            int[] numeros = TransformarCnpjEmInt(Cnpj);
-
-
-            for (int i = 0; i < pesoVerificador1.Length; i++)
-            {
-                soma += numeros[i] * pesoVerificador1[i];
-                Console.WriteLine(soma);
-            }
-
-            resto = soma % 11;
-            int digitoVerificador1 = 0;
-            int digitoVerificador2 = 0;
-
-            if (resto == 0 || resto == 1)
-            {
-                digitoVerificador1 = 0;
-            }
-            else
-            {
-                digitoVerificador1 = 11 - resto;
-            }
-            numeros[12] = digitoVerificador1;
-
-            soma = 0;
-            resto = 0;
-
-            for (int i = 0; i < pesoVerificador2.Length; i++)
-            {
-                soma += numeros[i] * pesoVerificador2[i];
-            }
-
-            resto = soma % 11;
-
-            if (resto == 0 || resto == 1)
-            {
-                digitoVerificador2 = 0;
-            }
-            else
-            {
-                digitoVerificador2 = 11 - resto;
-            }
-
-            if (numeros[12] == digitoVerificador1 && numeros[13] == digitoVerificador2)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         public void AdicionarFornecedor(List<Supplier> suppliers)
         {

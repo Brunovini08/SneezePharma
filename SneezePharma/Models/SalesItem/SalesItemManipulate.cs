@@ -8,7 +8,7 @@
 //{
 //    public static class SalesItemManipulate
 //    {
-        
+
 //        private static string FullPath(string directoryPath, string filePath)
 //        {
 //            return Path.Combine(directoryPath, filePath);
@@ -77,7 +77,7 @@
 //        public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
 //        {
 //            var sw = new StreamWriter(FullPath());
-            
+
 //            using (sw)
 //            {
 //                foreach (var si in salesItems)

@@ -15,10 +15,10 @@ namespace SneezePharma.Helpers
             Console.WriteLine("2. MENU - VENDAS MEDICAMENTOS");
             Console.WriteLine("3. MENU - COMPRAS PRINCÍPIOS ATIVOS");
             Console.WriteLine("4. MENU - MANIPULAÇÃO DE MEDICAMENTOS");
-            Console.WriteLine("4. MENU - MANIPULAÇÃO DE CLIENTES");
-            Console.WriteLine("4. MENU - MANIPULAÇÃO DE FORNECEDORES");
-            Console.WriteLine("4. MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVOS");
-            Console.WriteLine("5. MENU - RELATÓRIOS");
+            Console.WriteLine("5. MENU - MANIPULAÇÃO DE CLIENTES");
+            Console.WriteLine("6. MENU - MANIPULAÇÃO DE FORNECEDORES");
+            Console.WriteLine("7. MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVOS");
+            Console.WriteLine("8. MENU - RELATÓRIOS");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("-------------------------------------------");
         }
@@ -28,9 +28,9 @@ namespace SneezePharma.Helpers
             Console.WriteLine("---------------------------------------");
             Console.WriteLine("MENU - CADASTROS");
             Console.WriteLine("1. MENU - CADASTRO CLIENTE");
-            Console.WriteLine("2. MENU - CADASTRO MEDICAMENTO");
-            Console.WriteLine("3. MENU - CADASTRO PRINCÍPIOS ATIVOS");
-            Console.WriteLine("4. MENU - CADASTRO FORNECEDOR");
+            Console.WriteLine("2. MENU - CADASTRO FORNECEDOR");
+            Console.WriteLine("3. MENU - CADASTRO MEDICAMENTO");
+            Console.WriteLine("4. MENU - CADASTRO PRINCÍPIOS ATIVOS");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("---------------------------------------");
         }
@@ -65,8 +65,9 @@ namespace SneezePharma.Helpers
             Console.WriteLine("1. MENU - ALTERAR CLIENTE");
             Console.WriteLine("2. MENU - INATIVAR CLIENTE");
             Console.WriteLine("3. MENU - BLOQUEAR CLIENTE");
-            Console.WriteLine("4. MENU - LISTAR CLIENTE POR ID");
-            Console.WriteLine("5. MENU - LISTAR TODOS OS CLIENTES");
+            Console.WriteLine("4. MENU - DESBLOQUEAR CLIENTE");
+            Console.WriteLine("5. MENU - LISTAR CLIENTE POR ID");
+            Console.WriteLine("6. MENU - LISTAR TODOS OS CLIENTES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }
@@ -89,9 +90,10 @@ namespace SneezePharma.Helpers
             Console.WriteLine("MENU - MANIPULAÇÃO DE FORNECEDORES");
             Console.WriteLine("1. MENU - ALTERAR FORNECEDOR");
             Console.WriteLine("2. MENU - INATIVAR FORNECEDOR");
-            Console.WriteLine("3. MENU - RESTRINGIR FORNECEDOR");
-            Console.WriteLine("4. MENU - LISTAR FORNECEDOR POR ID");
-            Console.WriteLine("5. MENU - LISTAR TODOS OS FORNECEDORES");
+            Console.WriteLine("3. MENU - BLOQUEAR FORNECEDOR");
+            Console.WriteLine("4. MENU - DESBLOQUEAR FORNECEDOR");
+            Console.WriteLine("5. MENU - LISTAR FORNECEDOR POR ID");
+            Console.WriteLine("6. MENU - LISTAR TODOS OS FORNECEDORES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }

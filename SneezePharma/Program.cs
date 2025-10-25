@@ -4,5 +4,5 @@ Pharma farmacia = new Pharma();
 
 do
 {
-    farmacia.Cadastrar();
+    farmacia.ManipularFornecedores();
 } while (true);
