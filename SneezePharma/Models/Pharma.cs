@@ -20,12 +20,12 @@ namespace SneezePharma.Models
         public List<RestrictedCustomer> ClientesRestritos { get; private set; }
         public List<SalesModel> Venda { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
+        
+        private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
 
         public Pharma()
         {
-            // Realização da leitura de Itens de Venda
-            SalesItemManipulate.CriarArquivo(SalesItemManipulate.DirectoryPath, SalesItemManipulate.FilePath);
-            this.ItensDeVenda = SalesItemManipulate.LerItensDeVenda();
+            this.ItensDeVenda = salesItemManipulate.Ler();
         }
 
         
@@ -145,16 +145,58 @@ namespace SneezePharma.Models
         
         public void RegistrarVenda()
         {
-            Console.WriteLine("Digite o ");
+            string DigitarCpf()
+            {
+                const int TAMANHOCPF = 11;
+                var cpf = "";
+
+                do
+                {
+                    try
+                    {
+                        cpf = InputHelper.RetornarSomenteNumeros("Digite o CPF do Cliente:");
+                        GeneralException.VerificarTamanhoDiferente(cpf, TAMANHOCPF, "Total de dígitos do CPF não bate! (CPF possui 11 dígitos)");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        InputHelper.PressioneEnterParaContinuar();
+                    }
+                }
+                while (true);
+
+                return cpf;
+            }
+
+            bool ClienteValidoNoSistema(string cpf)
+            {
+                return BuscarPorId(cpf) != null;
+            }
+
+            var cpf = DigitarCpf();
+
+            if (ClienteValidoNoSistema(cpf) is false)
+            {
+                Console.WriteLine("Este cliente não está cadastrado no sistema");
+                return;
+            }
+
+            var contadorDeItensDaVenda = 0;
+
+            do
+            {
+                
+            }
+            while (contadorDeItensDaVenda < 3);
         }
         
         #endregion
 
         #region "Operações de CRUD do SalesItem"
 
-        public void CadastrarItemDeVenda(int id)
+        public void CadastrarItemDeVenda()
         {
-
+            var id = this.ItensDeVenda.LastOrDefault()?.Id ?? 0;
             int ConfirmacaoQuantidade()
             {
                 var quantidade = 0;
@@ -203,6 +245,7 @@ namespace SneezePharma.Models
                     totalItem
                  ));
                 Console.WriteLine("Cadastro de item de venda realizado com sucesso!");
+                salesItemManipulate.Gravar(this.ItensDeVenda);
             }
             catch (ArgumentException ex)
             {
@@ -288,6 +331,7 @@ namespace SneezePharma.Models
                             break;
                         case "0":
                             Console.WriteLine("Alterações realizadas com sucesso!");
+                            salesItemManipulate.Gravar(this.ItensDeVenda);
                             repetir = false;
                             break;
                         default:

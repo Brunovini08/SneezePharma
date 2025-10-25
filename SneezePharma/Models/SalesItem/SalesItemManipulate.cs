@@ -8,40 +8,22 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.SalesItem
 {
-    public class SalesItemManipulate : ArchiveManipulator
+    public class SalesItemManipulate : ArchiveManipulator<SalesItemModel>
     {
-        public static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        public static string FilePath { get; set; } = "SaleItems.data";
+        private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
+        private string FilePath { get; set; } = "SaleItems.data";
 
-        private static string FullPath()
+        public SalesItemManipulate()
+        {
+            CriarArquivo(DirectoryPath, FilePath);
+        }
+
+        private string FullPath()
         {
             return Path.Combine(DirectoryPath, FilePath);
         }
 
-        //private static bool ChecarSeDiretorioNaoExiste()
-        //{
-        //    return !Directory.Exists(DirectoryPath);
-        //}
-
-        //private static bool ChecarSeArquivoNaoExiste()
-        //{
-        //    return !Path.Exists(FullPath());
-        //}
-
-        //public static void CriarArquivo()
-        //{
-        //    if (ChecarSeDiretorioNaoExiste())
-        //    {
-        //        Directory.CreateDirectory(DirectoryPath);
-        //    }
-        //    if (ChecarSeArquivoNaoExiste())
-        //    {
-        //        StreamWriter sw = new StreamWriter(FullPath());
-        //        sw.Close();
-        //    }
-        //}
-        
-        public static List<SalesItemModel> LerItensDeVenda()
+        public override List<SalesItemModel> Ler()
         {
             
 
@@ -80,7 +62,7 @@ namespace SneezePharma.Models.SalesItem
             return salesItemsLidos;
         }
 
-        public static void GravarItensDeVenda(List<SalesItemModel> salesItems)
+        public override void Gravar(List<SalesItemModel> salesItems)
         {
             var sw = new StreamWriter(FullPath());
 

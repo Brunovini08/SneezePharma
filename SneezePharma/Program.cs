@@ -20,8 +20,7 @@ void MenuSalesItem()
         switch (opcao)
         {
             case "1":
-                var idDoItemDeVenda = sneezePharma.ItensDeVenda.LastOrDefault()?.Id ?? 0;
-                sneezePharma.CadastrarItemDeVenda(idDoItemDeVenda);
+                sneezePharma.CadastrarItemDeVenda();
                 InputHelper.PressioneEnterParaContinuar();
                 break;
             case "2":
@@ -39,11 +38,9 @@ void MenuSalesItem()
         }
     }
     while (repetir);
-
-    SalesItemManipulate.GravarItensDeVenda(sneezePharma.ItensDeVenda);
 }
 
-//MenuSalesItem();
+MenuSalesItem();
 
 void MenuSales()
 {
@@ -76,6 +73,4 @@ void MenuSales()
         }
     }
     while (repetir);
-
-    SalesItemManipulate.GravarItensDeVenda(sneezePharma.ItensDeVenda);
 }

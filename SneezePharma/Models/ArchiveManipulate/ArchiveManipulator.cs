@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.ArchiveManipulate
 {
-    public abstract class ArchiveManipulator
+    public abstract class ArchiveManipulator <T>
     {
-        public static void CriarArquivo(string diretorio, string arquivo)
+        public void CriarArquivo(string diretorio, string arquivo)
         {
             var caminhoCompleto = Path.Combine(diretorio, arquivo);
 
@@ -22,5 +22,8 @@ namespace SneezePharma.Models.ArchiveManipulate
                 sw.Close();
             }
         }
+
+        public abstract List<T> Ler();
+        public abstract void Gravar(List<T> lista);
     }
 }
