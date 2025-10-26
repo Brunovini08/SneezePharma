@@ -8,35 +8,35 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SneezePharma.Models
 {
-    public class ProduceItem
+    public class ProduceItemModel
     {
         private static int ultimoID = 1;
 
-        public string IDproducao { get; set; }
+        public int IDproducao { get; set; }
         public string Principio { get; set; }
         public int QuantidadeItens { get; set; }
-         List<ProduceItem> listaitens = new List<ProduceItem>();
+         List<ProduceItemModel> listaitens = new List<ProduceItemModel>();
 
-    public ProduceItem(string IDprod, int quantidade) {
+    public ProduceItemModel(int IDprod, int quantidade) {
         
 
             IDproducao = IDprod;
             QuantidadeItens = quantidade;
         }
-        public ProduceItem ()
+        public ProduceItemModel()
         {
 
         }
     public void ValidarID()
         {
-
-            IDproducao = ultimoID.ToString().PadLeft(5, '0');
+            
+            IDproducao = ultimoID;
             Console.WriteLine($"ID: " + IDproducao);
             ultimoID++;
         }
 
 
-        public ProduceItem CadastrarItemProducao()
+        public ProduceItemModel CadastrarItemProducao()
         {
             try
             {
@@ -52,8 +52,8 @@ namespace SneezePharma.Models
 
                 ValidarID();
                 Console.WriteLine("Item Cadastrado!");
-                Console.WriteLine($"ID: {IDproducao}, Quantidade: {quantidade}");
-                return new ProduceItem(IDproducao, quantidade);
+                Console.WriteLine($"ID: {IDproducao.ToString().PadLeft(5, '0')}, Quantidade: {quantidade}");
+                return new ProduceItemModel(IDproducao, quantidade);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace SneezePharma.Models
             //}
 
         }
-        public static void MostrarItensManipulados(List<ProduceItem> listaitens)
+        public static void MostrarItensManipulados(List<ProduceItemModel> listaitens)
         {
             if (listaitens.Count == 0)
             {
@@ -78,20 +78,20 @@ namespace SneezePharma.Models
             Console.WriteLine("Manipulações cadastradas: ");
             foreach (var item in listaitens)
             {
-                Console.WriteLine($"ID: {item.IDproducao},Quantidade: {item.QuantidadeItens}");
+                Console.WriteLine(item);
             }
         }
-        public ProduceItem LocalizarIDitens(string id)
+        public ProduceItemModel LocalizarIDitens(int idprod)
         {
 
-            return listaitens.Find(i => i.IDproducao == id);
+            return listaitens.Find(i => i.IDproducao == idprod);
         }
 
-        public static void AlterarItemManipulado(List<ProduceItem> listaitem)
+        public static void AlterarItemManipulado(List<ProduceItemModel> listaitem)
         {
             Console.WriteLine("Informe o ID do item que quer alterar: ");
-            string id = Console.ReadLine() ?? "";
-            ProduceItem alterar = listaitem.Find(m => m.IDproducao == id);
+            int idprod = int.Parse(Console.ReadLine() ?? "");
+            ProduceItemModel alterar = listaitem.Find(m => m.IDproducao == idprod);
 
             if (alterar is not null)
             {
@@ -109,12 +109,12 @@ namespace SneezePharma.Models
 
         }
 
-        public static void LocalizarItemManipulado(List<ProduceItem> listaitem)
+        public static void LocalizarItemManipulado(List<ProduceItemModel> listaitem)
         {
             Console.WriteLine("Digite o ID que gostaria de localizar: ");
-            string id = Console.ReadLine() ?? "";
+            int idprod = int.Parse(Console.ReadLine() ?? "");
 
-            ProduceItem itemencontrado = listaitem.Find(m => m.IDproducao == id);
+            ProduceItemModel itemencontrado = listaitem.Find(m => m.IDproducao == idprod);
             if (itemencontrado is not null)
             {
                 Console.WriteLine("ID Encontrado!");
@@ -128,6 +128,10 @@ namespace SneezePharma.Models
         public override string ToString()
         {
             return $"ID: {IDproducao}, Quantidade: {QuantidadeItens}";
+        }
+        public string SalvarArquivo()
+        {
+            return $"{this.IDproducao:D5}{this.QuantidadeItens:D4}";
         }
     }
 }
