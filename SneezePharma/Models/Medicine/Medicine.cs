@@ -18,6 +18,15 @@ namespace SneezePharma.Models
         public DateOnly UltimaVenda { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public char Situacao { get; private set; }
+        public Medicine(string cdb, string nome, char categoria, decimal valorVenda)
+        {
+            CDB= cdb;
+            Nome = nome;
+            Categoria = categoria;
+            ValorVenda = valorVenda;
+            DataCadastro = DateOnly.FromDateTime(new DateTime());
+            Situacao = 'A';
+        }
 
         public Medicine(string cdb, string nome, char categoria, decimal valorVenda, DateOnly ultimaVenda, DateOnly dataCadastro, char situacao)
         {
@@ -29,6 +38,7 @@ namespace SneezePharma.Models
             DataCadastro = dataCadastro;
             Situacao = situacao;
         }
+
         public void setNome(string nome)
         {
             Nome = nome;
@@ -81,7 +91,7 @@ namespace SneezePharma.Models
 
         public override string ToString()
         {
-            return $"Código de Barras: {CDB}\nNome: {Nome}\nCategoria: {Categoria}\nValor da Venda: {ValorVenda}\nUltima Venda: {UltimaVenda}\nData de cadastro: {DataCadastro}\n Situação: {Situacao}";
+            return $"Código de Barras: {CDB}\nNome: {Nome}\nCategoria: {Categoria}\nValor da Venda: {ValorVenda}\nUltima Venda: {UltimaVenda}\nData de cadastro: {DataCadastro}\nSituação: {Situacao}";
         }
 
         public string SalvarArquivo()

@@ -1,19 +1,12 @@
 ﻿using SneezePharma.Exceptions;
 using SneezePharma.Helpers;
-using SneezePharma.Models;
+using SneezePharma.Models.Ingredient;
 using SneezePharma.Models.Produce;
 using SneezePharma.Models.Sales;
 using SneezePharma.Models.SalesItem;
 using SneezePharma.Models.Supplier_Manipulation_;
 using SneezePharma.Utils;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
@@ -28,7 +21,7 @@ namespace SneezePharma.Models
         public List<RestrictedSupplier> FornecedoresRestritos { get; private set; }
         public List<SalesModel> Venda { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
-        public List<Ingredient> Ingredientes { get; private set; }
+        public List<IngredientModel> Ingredientes { get; private set; }
         public List<Purchases> Compra {  get; private set; }
         public List<PurchaseItem> ItemDaCompra { get; private set; }
 
@@ -45,6 +38,8 @@ namespace SneezePharma.Models
             this.Fornecedores = new List<Supplier>();
             this.FornecedoresRestritos = new List<RestrictedSupplier>();
             this.Ingredientes= new List<IngredientModel>();
+            this.Medicamentos = new List<Medicine>();
+            this.ItemDaCompra = new List<PurchaseItem>();
             this.Fornecedores = supplierManipulate.Ler();
             this.Ingredientes = ingredientManipulation.Ler();
             this.FornecedoresRestritos = restrictedManipulation.Ler();
@@ -67,6 +62,7 @@ namespace SneezePharma.Models
                         AdicionarFornecedor();
                         break;
                     case 3:
+                        RegistrarMedicamento();
                         break;
                     case 4:
                         IncluirIngrediente();
@@ -85,25 +81,32 @@ namespace SneezePharma.Models
 
         }
 
-        //public void ManipularMedicamentos()
-        //{
-        //    int opcao;
-        //    bool validar;
-        //    Menu.MenuManipulacaoMedicamentos();
-        //    validar = int.TryParse(Console.ReadLine(), out opcao);
-        //    switch (opcao)
-        //    {
-        //        case 1:
-        //            CadastrarManipulacao();
-        //            break;
-        //        case 2:
-        //            AlterarMedicamento();
-        //            break;
-        //        case 3:
-                    
-        //            break;
-        //    }
-        //}
+        public void ManipularMedicamentos()
+        {
+            int opcao;
+            bool validar;
+            Menu.MenuManipulacaoMedicamentos();
+            validar = int.TryParse(Console.ReadLine(), out opcao);
+            switch (opcao)
+            {
+                case 1:
+                    AlterarMedicamento();
+                    break;
+                case 2:
+                    AlterarSituacaoMedicamento();
+                    break;
+                case 3:
+                    LocalizarMedicamento();
+                    break;
+                case 4:
+                    ListarMedicamentos();
+                    break;
+                case 0:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void ManipularClientes()
         {
@@ -195,7 +198,7 @@ namespace SneezePharma.Models
         }
         public void IncluirIngrediente()
         {
-            int novoId = GerarProximoId(Ingredientes);
+            int novoId = GerarProximoId(this.Ingredientes);
             string nome;
             DateOnly ultimaCompra;
             do
@@ -1382,6 +1385,8 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Digite o código de barras do medicamento:");
                 cdb = Console.ReadLine();
+
+                validadeCDB = InputHelper.ValidarCDB(cdb);
             } while (!validadeCDB);
             do
             {
@@ -1411,11 +1416,7 @@ namespace SneezePharma.Models
                 Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
                 validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
 
-                if (validadeCategoria == false)
-                {
-                    Console.WriteLine("O medicamento deve estar em uma das 4 categorias");
-                }
-            } while (categoria != 'A' || categoria != 'B' || categoria != 'I' || categoria != 'V');
+            } while (categoria != 'A' && categoria != 'B' && categoria != 'I' && categoria != 'V');
 
             decimal valorVenda = 0;
             do
@@ -1423,42 +1424,27 @@ namespace SneezePharma.Models
                 valorVenda = InputHelper.RetornarNumeroDecimal("Digite o valor de Venda:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
             } while (valorVenda <= 0 || valorVenda >= 10000);
 
-            Console.WriteLine("Digite a data da ultima venda (DD/MM/AAAA): ");
-            DateOnly ultimaVenda = DateOnly.Parse(Console.ReadLine());
-
-            Console.WriteLine("Digite a data do cadastro do medicamento (DD/MM/AAAA): ");
-            DateOnly dataCadastro = DateOnly.Parse(Console.ReadLine());
-
-            do
-            {
-                Console.WriteLine("Digite a situação do medicamento (A, I): ");
-                validadeSituacao = char.TryParse(Console.ReadLine().ToUpper(), out situacao);
-                if (validadeSituacao == false)
-                {
-                    Console.WriteLine("");
-                }
-            } while (situacao != 'A' || situacao != 'I');
-
-            Medicine medicamento = new Medicine(cdb, nome, categoria, valorVenda, ultimaVenda, dataCadastro, situacao);
+            Medicine medicamento = new Medicine(cdb, nome, categoria, valorVenda);
 
             this.Medicamentos.Add(medicamento);
 
         }
 
-        public Medicine LocalizarMedicamento(string id)
+        public Medicine LocalizarMedicamento()
         {
             Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
             string localizar = Console.ReadLine();
-            return Medicamentos.Find(m => m.CDB == localizar);
+
+            Medicine medicamento = Medicamentos.Find(m => m.CDB == localizar);
+
+            Console.WriteLine(medicamento);
+
+            return medicamento;
         }
 
         public void AlterarMedicamento()
         {
-            Console.WriteLine("Digite o código de barras do medicamento que deseja alterar:");
-            string alterar = Console.ReadLine() ?? "";
-
-
-            Medicine medicine = LocalizarMedicamento(alterar);
+            Medicine medicine = LocalizarMedicamento();
 
             Console.WriteLine("Deseja alterar o nome do medicamento? (S , N):");
             char escolha = char.Parse(Console.ReadLine().ToUpper());
@@ -1481,10 +1467,7 @@ namespace SneezePharma.Models
 
         public void AlterarSituacaoMedicamento()
         {
-            Console.WriteLine("Digite o código de barras do medicamento que deseja alterar:");
-            string alterar = Console.ReadLine() ?? "";
-
-            Medicine medicineSituacao = LocalizarMedicamento(alterar);
+            Medicine medicineSituacao = LocalizarMedicamento();
 
             Console.WriteLine("Deseja alterar a situação do medicamento? (S , N):");
             char escolhaSituacao = char.Parse(Console.ReadLine().ToUpper());
@@ -1544,110 +1527,102 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD da classe PurchaseItem
 
-        //public void CriarItemCompra()
-        //{
-        //    int opcao = 0;
-        //    int contador = 0;
-        //    do
-        //    {
-        //        Console.WriteLine("Digite o ID do princípio ativo que deseja comprar: ");
-        //        string ingrediente = Console.ReadLine();
+        public void CriarItemCompra()
+        {
+            int opcao = 0;
+            int contador = 0;
+            int idIngrediente = 0;
+            do
+            {
+                IngredientModel localizar ;
+                do
+                {
+                    Console.WriteLine("Digite o ID do principio ativo da compra: ");
+                    idIngrediente = int.Parse(Console.ReadLine());
 
-        //        bool localizarIngrediente = false;
-        //        do
-        //        {
-        //            Console.WriteLine("Digite o ID do principio ativo da compra: ");
-        //            int idCompra = int.Parse(Console.ReadLine());
+                    localizar = LocalizarIngrediente(idIngrediente);
 
-        //            localizarIngrediente = LocalizarIngrediente(idCompra);
+                    if (localizar is null)
+                    {
+                        Console.WriteLine("O ID digitado não existe no sistema");
+                    }
 
-        //            if (!localizarIngrediente)
-        //            {
-        //                Console.WriteLine("O ID digitado não existe no sistema");
-        //            }
+                } while (localizar == null);
 
-        //        } while (localizarIngrediente == false);
+                decimal quantidade = 0;
+                do
+                {
+                    quantidade = InputHelper.RetornarNumeroDecimal("Digite a quantidade de itens em gramas (máx: 999,99): ", "O valor deve ser maior que 0 e menor que 10000");
+                } while (quantidade <= 0 || quantidade >= 10000);
 
-        //        decimal quantidade = 0;
-        //        do
-        //        {
-        //            quantidade = InputHelper.RetornarNumeroDecimal("Digite a quantidade de itens em gramas (máx: 999,99): ", "O valor deve ser maior que 0 e menor que 10000");
-        //        } while (quantidade <= 0 || quantidade >= 10000);
+                decimal valorUnitario = 0;
+                do
+                {
+                    valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário por grama (máx: 999,99):", "O valor digitado deve ser maior que 0 e menor que 1000");
+                } while (valorUnitario <= 0 || valorUnitario >= 1000);
 
-        //        decimal valorUnitario = 0;
-        //        do
-        //        {
-        //            valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário por grama (máx: 999,99):", "O valor digitado deve ser maior que 0 e menor que 1000");
-        //        } while (valorUnitario <= 0 || valorUnitario >= 1000);
+                decimal totalItem = quantidade * valorUnitario;
 
-        //        decimal totalItem = quantidade * valorUnitario;
+                Console.WriteLine("Deseja adicionar comprar outro item? (1 - Sim, 2 - Não): ");
+                opcao = int.Parse(Console.ReadLine());
+                contador++;
+                if (contador == 3)
+                {
+                    Console.WriteLine("O limite de compras (3 itens) foi atingido!");
+                }
+                PurchaseItem itemDaCompra = new PurchaseItem(idIngrediente, quantidade, valorUnitario, totalItem, 5);
 
-        //        Console.WriteLine("Deseja adicionar comprar outro item? (1 - Sim, 2 - Não): ");
-        //        opcao = int.Parse(Console.ReadLine());
-        //        contador++;
-        //        if (contador == 3)
-        //        {
-        //            Console.WriteLine("O limite de compras (3 itens) foi atingido!");
-        //        }
-        //    } while (opcao != 2 || contador == 3);
-        //}
+                ItemDaCompra.Add(itemDaCompra);
 
-        //public PurchaseItem LocalizarItemCompra()
-        //{
-        //    Console.WriteLine("Digite o ID da compra que deseja procurar: ");
-        //    string localizar = Console.ReadLine();
-        //    return ItemDaCompra.Find(i => i.IdCompra == localizar);
-        //}
-
-        //public PurchaseItem AlterarItemCompra()
-        //{
-        //    Console.WriteLine("Digite o ID da compra que deseja alterar:");
-        //    string alterarItemCompra = Console.ReadLine() ?? "";
+            } while (opcao != 2 || contador == 3);
 
 
-        //    PurchaseItem itemCompra = LocalizarItemCompra(alterarItemCompra);
+        }
 
-        //    Console.WriteLine("Deseja alterar a quantidade de item? (S , N):");
-        //    char escolha = char.Parse(Console.ReadLine().ToUpper());
+        public PurchaseItem LocalizarItemCompra()
+        {
 
-        //    if (escolha == 'S')
-        //    {
-        //        if (itemCompra is not null)
-        //        {
-        //            do
-        //            {
+            var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
+            var localizadoItemCompra = ItemDaCompra.Find(i => i.IdCompra == localizar);
 
-        //                Console.WriteLine("Digite a quantidade que deseja alterar em gramas (máx: 9999,99): ");
-        //                itemCompra.setQuantidade(decimal.Parse(Console.ReadLine()));
-        //            } while (itemCompra.Quantidade <= 0 || itemCompra.Quantidade >= 10000);
+            return localizadoItemCompra;
+        }
 
-        //            Console.WriteLine("Quantidade alterada com sucesso.");
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("Não existe esse item da compra.");
-        //        }
+        public PurchaseItem AlterarItemCompra()
+        {
+            PurchaseItem itemCompra = LocalizarItemCompra();
 
-        //        return itemCompra;
-        //    }
-        //    else
-        //    {
-        //        return itemCompra;
-        //    }
-        //}
-        //public void ListarItemCompra()
-        //{
-        //    Console.WriteLine("===Lista de Itens da Compra ===");
-        //    foreach (var itemCompra in ItemDaCompra)
-        //    {
-        //        Console.WriteLine(itemCompra);
-        //    }
-        //}
+            Console.WriteLine("Deseja alterar a quantidade de item? (S , N):");
+            char escolha = char.Parse(Console.ReadLine().ToUpper());
 
-        //public DateOnly BuscarDataUltimaCompra(string id)
-        //{
-        //    return this.ItemDaCompra.FindAll(i => i.Ingrediente == id);
-        //}
+            if (escolha == 'S')
+            {
+                if (itemCompra is not null)
+                {
+                    do
+                    {
+                        Console.WriteLine("Digite a quantidade que deseja alterar em gramas (máx: 9999,99): ");
+                        itemCompra.setQuantidade(decimal.Parse(Console.ReadLine()));
+                    } while (itemCompra.Quantidade <= 0 || itemCompra.Quantidade >= 10000);
+
+                    Console.WriteLine("Quantidade alterada com sucesso.");
+                }
+                else
+                {
+                    Console.WriteLine("Não existe esse item da compra.");
+                }
+
+            }
+                return itemCompra;
+        }
+        public void ListarItemCompra()
+        {
+            Console.WriteLine("===Lista de Itens da Compra ===");
+            foreach (var itemCompra in ItemDaCompra)
+            {
+                Console.WriteLine(itemCompra);
+            }
+        }
 
         #endregion
     }

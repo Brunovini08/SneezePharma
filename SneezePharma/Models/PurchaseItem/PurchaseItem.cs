@@ -10,7 +10,7 @@ namespace SneezePharma.Models
 {
     public class PurchaseItem
     {
-        public string IdCompra { get; private set; }
+        public int IdCompra { get; private set; }
         public int Ingrediente { get; private set; }
         public decimal Quantidade { get; private set; }
         public decimal ValorUnitario { get; private set; }
@@ -24,7 +24,7 @@ namespace SneezePharma.Models
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
             TotalItem = totalItem;
-            IdCompra = idCompra.ToString().PadLeft(5, '0');
+            IdCompra = idCompra;
         }
 
         public void setQuantidade(decimal quantidade)
@@ -35,6 +35,11 @@ namespace SneezePharma.Models
         public void setValorUnitario(decimal valorUnitario)
         {
             ValorUnitario = valorUnitario;
+        }
+
+        public override string ToString()
+        {
+            return $"Id Ingrediente: {this.Ingrediente}\nQuantidade: {this.Quantidade}\nValor Unitário: {this.ValorUnitario}\nTotal dos itens: {this.TotalItem}\nID Compra: {this.IdCompra}";
         }
     }
 }
