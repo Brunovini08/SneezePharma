@@ -27,13 +27,40 @@ namespace SneezePharma.Models.Purchases
             {
                 if(File.ReadAllLines(fullPath).Length > 0)
                 {
-                    while(sr.Peek() != -1)
+                    while (sr.Peek() != -1)
                     {
                         var contentLine = sr.ReadLine();
 
-                        var idPurchase = contentLine[0..]
+                        var idPurchase = contentLine[0..5];
+                        var dataCompra = contentLine[5..19];
+                        var fornecedor = contentLine[19..27];
+                        var valorTotal = contentLine[27..38];
+
+                        purchasesLidos.Add(new PurchasesModel(
+                            int.Parse(idPurchase),
+                            fornecedor,
+                            DateOnly.Parse(dataCompra),
+                            decimal.Parse(valorTotal)
+                            ));
                     }
+
                 }
+                sr.Close();
+            }
+            return purchasesLidos;
+        }
+
+        public override void Gravar(List<PurchasesModel> purchases)
+        {
+            var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
+
+            using (sw)
+            {
+                foreach(var p in purchases)
+                {
+                    sw.WriteLine(p.SalvarArquivo());
+                }
+                sw.Close();
             }
         }
     }

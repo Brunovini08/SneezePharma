@@ -14,23 +14,36 @@ namespace SneezePharma.Models
 {
     public class IngredientModel
     {
-        public int Id { get; private set; }
+        public string Id { get; private set; }
         public string Nome { get; private set; }
         public DateOnly UltimaCompra { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public SituationIngredient Situacao { get; private set; }
 
 
-        int GerarProximoId(List<IngredientModel> ingrediente)
+        string GerarProximoId(List<IngredientModel> ingrediente)
         {
-            var ingredientes = ingrediente.OrderBy(p => p.Id).ToList();
-            if (ingredientes.Count == 0)
-                return 1;
-            return ingredientes.Last().Id + 1;
+            //var ingredientes = ingrediente.OrderBy(p => p.Id).ToList();
+            //if (ingredientes.Count == 0)
+            //    return 1;
+            //return ingredientes.Last().Id + 1;
+            var id = ingrediente.LastOrDefault()?.Id ?? "";
+            if(id  == "")
+            {
+                return "AI0001";
+            }
+            else
+            {
+                var numero = id[2..6];
+                var numeroConvertido = int.Parse(numero);
+                numeroConvertido++;
+
+                return $"AI{numeroConvertido.ToString().PadLeft(4, '0')}";
+            }
         }
 
 
-        public IngredientModel(int id,
+        public IngredientModel(string id,
             string nome, DateOnly ultimaCompra)
         {
             this.Id = id;
@@ -59,14 +72,14 @@ namespace SneezePharma.Models
             return true;
         }
 
-        public IngredientModel LocalizarIngrediente(int Id)
+        public IngredientModel LocalizarIngrediente(string Id)
         {
             return ingredientes.Find(i => i.Id == Id);
         }
 
         public void IncluirIngrediente()
         {          
-            int novoId = GerarProximoId(ingredientes);
+            string novoId = GerarProximoId(ingredientes);
             string nome;
             DateOnly ultimaCompra;
             do
@@ -114,7 +127,7 @@ namespace SneezePharma.Models
         public void AlterarDataUltimaCompra()
         {
             Console.WriteLine("Digite o Id da ultima compra feita: ");
-            var Id = int.Parse(Console.ReadLine());
+            var Id = Console.ReadLine();
             IngredientModel localizado = LocalizarIngrediente(Id);
 
             if (Id != null)
@@ -137,7 +150,7 @@ namespace SneezePharma.Models
         {
 
             Console.WriteLine("Digite o Id que deseja alterar a Situacao: ");
-            var Id = int.Parse(Console.ReadLine());
+            var Id = Console.ReadLine();
             LocalizarIngrediente(Id);
 
             if (Id != null)

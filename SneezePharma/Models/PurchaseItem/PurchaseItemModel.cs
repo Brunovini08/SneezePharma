@@ -11,14 +11,14 @@ namespace SneezePharma.Models
     public class PurchaseItemModel
     {
         public int IdCompra { get; private set; }
-        public int Ingrediente { get; private set; }
+        public string Ingrediente { get; private set; }
         public decimal Quantidade { get; private set; }
         public decimal ValorUnitario { get; private set; }
         public decimal TotalItem { get; private set; }
 
         public static int Contador { get; private set; } = 1;
 
-        public PurchaseItemModel(int id, int ingrediente, decimal quantidade, decimal valorUnitario, decimal totalItem)
+        public PurchaseItemModel(int id, string ingrediente, decimal quantidade, decimal valorUnitario, decimal totalItem)
         {
             IdCompra = id;
             Ingrediente = ingrediente;
