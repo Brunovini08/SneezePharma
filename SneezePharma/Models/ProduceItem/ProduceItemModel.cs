@@ -15,10 +15,10 @@ namespace SneezePharma.Models
         public int IDproducao { get; set; }
         public string Principio { get; set; }
         public int QuantidadeItens { get; set; }
-         List<ProduceItemModel> listaitens = new List<ProduceItemModel>();
+        List<ProduceItemModel> listaitens = new List<ProduceItemModel>();
+        public ProduceItemModel(int IDprod, int quantidade)
+        {
 
-    public ProduceItemModel(int IDprod, int quantidade) {
-        
 
             IDproducao = IDprod;
             QuantidadeItens = quantidade;
@@ -27,15 +27,13 @@ namespace SneezePharma.Models
         {
 
         }
-    public void ValidarID()
+        public void ValidarID()
         {
-            
+
             IDproducao = ultimoID;
             Console.WriteLine($"ID: " + IDproducao);
             ultimoID++;
         }
-
-
         public ProduceItemModel CadastrarItemProducao()
         {
             try
@@ -63,8 +61,8 @@ namespace SneezePharma.Models
             //var manipulacao = new Produce().CadastrarManipulacao();
             //if (manipulacao is not null)
             //{
-             //   listaManipulacoes.Add(manipulacao);
-              //  Console.WriteLine("\nManipulação salva com sucesso!");
+            //   listaManipulacoes.Add(manipulacao);
+            //  Console.WriteLine("\nManipulação salva com sucesso!");
             //}
 
         }

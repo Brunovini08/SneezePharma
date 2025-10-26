@@ -19,7 +19,7 @@ namespace SneezePharma.Models.Produce
         {
 
 
-            var manipulationLidos = new List<ProduceModel>();
+            var producaoLista = new List<ProduceModel>();
             string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
@@ -36,7 +36,7 @@ namespace SneezePharma.Models.Produce
                         var medicamento = contentLine[14..23];
                         var quantidade = contentLine[23..26];
 
-                        manipulacaolida.Add(new Produce (
+                        producaoLista.Add(new ProduceModel(
                             int.Parse(id),
                             DateOnly.Parse(dataProd),
                             int.Parse(quantidade)
@@ -46,36 +46,26 @@ namespace SneezePharma.Models.Produce
                 sr.Close();
             }
 
-            return manipulationLidos;
+            return producaoLista;
         }
 
-        public void GravarManipulacao(List<Produce> manipulacao)
+        public void GravarManipulacao(List<ProduceModel> manipulacao)
         {
             var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
 
             using (sw)
             {
-                foreach (var si in manipulation)
+                foreach (var si in manipulacao)
                 {
                     sw.WriteLine(si.SalvarArquivo());
                 }
                 sw.Close();
             }
         }
-        public int GerarProximoID()
+
+        public override void Gravar(List<ProduceModel> lista)
         {
-            var lista = Ler();
-
-            if (lista.Count == 0)
-                return 1;
-
-            int maiorId = 0;
-            foreach (var si in lista)
-            {
-                if (si.ID > maiorId)
-                    maiorId = si.ID;
-            }
-            return maiorId + 1;
+            throw new NotImplementedException();
         }
     }
 }

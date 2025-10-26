@@ -16,9 +16,8 @@ namespace SneezePharma.Models
 
         public string SalvarArquivo()
         {
-            var cnpj = this.Cnpj;
             
-            return $"{cnpj}";
+            return $"{this.Cnpj}";
         }
     }
 }

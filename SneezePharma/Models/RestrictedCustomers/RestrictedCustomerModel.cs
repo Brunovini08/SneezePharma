@@ -11,5 +11,10 @@ namespace SneezePharma.Models
         {
             this.CPF = cpf;
         }
+
+        public string SalvarArquivo()
+        {
+            return $"{this.CPF}";
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace SneezePharma.Models
 
         public static int Contador { get; private set; } = 1;
 
-        public PurchaseItem(int ingrediente, decimal quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
+        public PurchaseItemModel(int ingrediente, decimal quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
         {
             Ingrediente = ingrediente;
             Quantidade = quantidade;

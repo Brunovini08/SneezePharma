@@ -61,7 +61,7 @@ namespace SneezePharma.Models.Produce
             return true;
         }
 
-        public ProduceModel CadastrarManipulacao()
+        public void CadastrarManipulacao()
         {
             try
             {
@@ -80,13 +80,11 @@ namespace SneezePharma.Models.Produce
                     else
                     {
                         Console.WriteLine("Falha ao validar a data");
-                        return null;
                     }
                 }
                 else
                 {
                     Console.WriteLine("Formato de data errado. Use o DDMMAAAA");
-                    return null;
                 }
 
 
@@ -97,7 +95,6 @@ namespace SneezePharma.Models.Produce
                 if (!int.TryParse(Qntd, out int quantidade))
                 {
                     Console.WriteLine("Quantidade invalida. Digite um numero inteiro");
-                    return null;
                 }
                 GeneralException.VerificarQuantidadeInvalidaInteiro(1, 999, quantidade, "Quantidade de medicamento excedida");
 
@@ -122,7 +119,7 @@ namespace SneezePharma.Models.Produce
 
         public static void MostrarManipulacao(List<ProduceModel> listaManipulacoes)
         {
-           
+
             if (listaManipulacoes.Count == 0)
             {
                 Console.WriteLine("Nenhuma manipulação cadastrada.");
