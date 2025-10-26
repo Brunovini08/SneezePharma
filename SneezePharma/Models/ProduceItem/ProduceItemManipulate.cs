@@ -31,14 +31,17 @@ namespace SneezePharma.Models.Produce
                     {
                         var contentLine = sr.ReadLine();
 
-                        var idprod = contentLine[0..5];
-                        // var medicamento = contentLine[14..23];
-                        var quantidade = contentLine[23..26];
+                        var id = contentLine[0..5];
+                        var idprod = contentLine[5..10];
+                        var medicamento = contentLine[10..16];
+                        var quantidade = contentLine[16..20];
 
                         manipulationitensLidos.Add(new ProduceItemModel(
+                            int.Parse(id),
                             int.Parse(idprod),
+                            medicamento,
                             int.Parse(quantidade)
-                            ));
+                        ));
                     }
                 }
                 sr.Close();

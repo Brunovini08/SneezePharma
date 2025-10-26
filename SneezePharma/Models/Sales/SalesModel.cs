@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace SneezePharma.Models.Sales
             var id = this.Id.ToString();
             id = id.PadLeft(5, '0');
 
-            var dataVenda = this.DataVenda.ToString("ddMMyyyy");
+            var dataVenda = this.DataVenda.ToString("ddMMyyyy", CultureInfo.InvariantCulture);
 
             var cpfCliente = this.Cliente;
 

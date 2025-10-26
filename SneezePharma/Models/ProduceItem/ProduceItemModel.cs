@@ -32,7 +32,10 @@ namespace SneezePharma.Models
         }
         public string SalvarArquivo()
         {
-            return $"{this.IdProducao:D5}{this.QuantidadeItens:D4}";
+            return $"{this.Id.ToString().PadLeft(5, '0')}" +
+                $"{this.IdProducao.ToString().PadLeft(5, '0')}" +
+                $"{this.Principio}" +
+                $"{this.QuantidadeItens.ToString().PadLeft(4, '0')}";
         }
     }
 }
