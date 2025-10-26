@@ -265,5 +265,47 @@ namespace SneezePharma.Utils
                 return false;
             }
         }
+
+        public static bool ValidarCDB(string cdb)
+        {
+            int[] resultado = new int[13];
+            resultado = cdb.Select(c => int.Parse(c.ToString())).ToArray();
+            if (resultado[0] != 7 || resultado[1] != 8 || resultado[2] != 9)
+            {
+                Console.WriteLine("Os três primeiros dígitos devem ser especificamente: 789");
+                return false;
+            }
+            else
+            {
+                int somaImpar = 0, somaPar = 0;
+                for (int i = 0; i < 12; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        somaImpar += resultado[i];
+                    }
+                    else
+                    {
+                        somaPar += resultado[i];
+                    }
+                }
+                int somaTotal = somaImpar + somaPar * 3;
+                int digitoVerificador = 10 - somaTotal % 10;
+                if (digitoVerificador == 10)
+                {
+                    digitoVerificador = 0;
+                }
+                if (digitoVerificador == resultado[12])
+                {
+                    Console.WriteLine("Código de Barra válido");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Dígito verificador inválido.");
+                    return false;
+                }
+            }
+        }
     }
 }

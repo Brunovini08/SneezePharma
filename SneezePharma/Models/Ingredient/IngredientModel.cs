@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Ingredient
+namespace SneezePharma.Models
 {
     public class IngredientModel
     {
@@ -42,7 +42,7 @@ namespace SneezePharma.Models.Ingredient
 
         List<IngredientModel> ingredientes = new List<IngredientModel>();
 
-        public void setUltimaCompra (DateOnly ultimaCompra)
+        public void setUltimaCompra(DateOnly ultimaCompra)
         {
             this.UltimaCompra = ultimaCompra;
         }
@@ -50,9 +50,9 @@ namespace SneezePharma.Models.Ingredient
         {
             foreach (var caractere in nome)
             {
-                if(!char.IsLetterOrDigit(caractere))
+                if (!char.IsLetterOrDigit(caractere))
                 {
-                    
+
                     return false;
                 }
             }
@@ -107,7 +107,7 @@ namespace SneezePharma.Models.Ingredient
             nome = nome.PadRight(20, ' ');
             var ultimaCompra = this.UltimaCompra.ToString();
             var dataCadastro = this.DataCadastro.ToString();
-            
+
             return $"AI{id}{nome}{ultimaCompra}{dataCadastro}";
         }
 
