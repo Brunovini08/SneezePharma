@@ -1158,7 +1158,6 @@ namespace SneezePharma.Models
                 string cnpj;
                 string razaoSocial;
                 string pais;
-                DateOnly dataAbertura;
                 do
                 {
                     cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
@@ -1171,10 +1170,13 @@ namespace SneezePharma.Models
                 {
                     pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
                 } while (pais.Length >= 20);
+                DateOnly dataAbertura;
                 do
                 {
                     dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
-                } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
+                } while (dataAbertura == null);
+
+                
                 this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial,
                 pais, dataAbertura));
                 supplierManipulate.Gravar(this.Fornecedores);
@@ -1492,7 +1494,7 @@ namespace SneezePharma.Models
 
             var producao = new ProduceModel(++id, medicamento.CDB, quantidade);
 
-            var idItemDeProducao = ItensProducao.LastOrDefault()?.IdProducao ?? 0; 
+            var idItemDeProducao = ItensProducao.LastOrDefault()?.IdProducao ?? 0;
             var ingredientesAtivos = Ingredientes.FindAll(i => i.Situacao == SituationIngredient.A);
             var repetir = true;
             do
@@ -1565,7 +1567,7 @@ namespace SneezePharma.Models
             }
 
             //TODO: Salvar no arquivo
-            
+
         }
 
         private void BuscarProducaoPorId()
