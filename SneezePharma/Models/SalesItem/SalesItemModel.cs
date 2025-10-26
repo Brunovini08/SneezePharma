@@ -50,7 +50,7 @@ public class SalesItemModel
             $"Medicamento: {Medicamento}\n" +
             $"Quantidade: {this.Quantidade.ToString().PadLeft(3, '0')}\n" +
             $"Valor Unitário: {this.ValorUnitario.ToString().PadLeft(7, '0')}\n" +
-            $"Total Item: {this.TotalItem.ToString().PadLeft(8, '0'):C}";
+            $"Total Item: {this.TotalItem.ToString().PadLeft(11, '0'):C}";
     }
 
     public string SalvarArquivo()
@@ -68,7 +68,7 @@ public class SalesItemModel
         valorUnitario = valorUnitario.PadLeft(7, '0');
 
         var totalItem = TotalItem.ToString();
-        totalItem = totalItem.PadLeft(8, '0');
-        return $"{id}{idVenda}{Medicamento}{quantidade}{valorUnitario}{totalItem}";
+        totalItem = totalItem.PadLeft(11, '0');
+        return $"{id}{idVenda}{this.Medicamento}{quantidade}{valorUnitario}{totalItem}";
     }        
 }

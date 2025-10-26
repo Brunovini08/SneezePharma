@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Produce
+namespace SneezePharma.Models.Produce.Produce
 {
     public class FileProduce
     {

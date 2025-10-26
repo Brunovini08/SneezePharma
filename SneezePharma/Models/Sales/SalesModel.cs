@@ -23,11 +23,27 @@ namespace SneezePharma.Models.Sales
         }
 
         // Construtor para leitura do arquivo
-        
+        public SalesModel(
+            int id,
+            DateOnly dataVenda,
+            string clienteCpf,
+            decimal valorTotal
+        )
+        {
+            this.Id= id;
+            this.DataVenda = dataVenda;
+            this.Cliente = clienteCpf;
+            this.ValorTotal = valorTotal;
+        }
+
+        public void setValorTotal(decimal valorTotal)
+        {
+            this.ValorTotal = valorTotal;
+        }
 
         public override string ToString()
         {
-            return $"$Id: {this.Id.ToString().PadLeft(5, '0')}\n" +
+            return $"Id: {this.Id.ToString().PadLeft(5, '0')}\n" +
                 $"Data de venda: {this.DataVenda.ToString()}\n" +
                 $"CPF do cliente: {this.Cliente}\n" +
                 $"Valor total: {this.ValorTotal.ToString().PadLeft(8, '0'):C}";
@@ -38,12 +54,12 @@ namespace SneezePharma.Models.Sales
             var id = this.Id.ToString();
             id = id.PadLeft(5, '0');
 
-            var dataVenda = this.DataVenda.ToString();
+            var dataVenda = this.DataVenda.ToString("ddMMyyyy");
 
             var cpfCliente = this.Cliente;
 
             var valorTotal = this.ValorTotal.ToString();
-            valorTotal = valorTotal.PadLeft(8, '0');
+            valorTotal = valorTotal.PadLeft(11, '0');
             return $"{id}{dataVenda}{cpfCliente}{valorTotal}";
         }
     }
