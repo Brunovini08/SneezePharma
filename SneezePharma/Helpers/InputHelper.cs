@@ -77,7 +77,6 @@ namespace SneezePharma.Utils
             while (!repetir);
             return numero;
         }
-
         public static string RetornarString(string msgDeInput, string msgOutput)
         {
             string nome;
@@ -95,14 +94,12 @@ namespace SneezePharma.Utils
 
             return nome;
         }
-
         public static void ExibirErro(string msgOutput)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(msgOutput);
             Console.ResetColor();
         }
-
         public static DateOnly RetornarData(string msgDeInput, string msgAviso)
         {
             DateOnly data;
@@ -131,7 +128,6 @@ namespace SneezePharma.Utils
 
             return data;
         }
-
         public static bool ValidarCpf(string CPF)
         {
             int[] verificadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -198,7 +194,6 @@ namespace SneezePharma.Utils
                 return true;
             }
         }
-
         public static int[] TransformarCnpjEmInt(string Cnpj)
         {
             int[] numeros = new int[Cnpj.Length];
@@ -281,6 +276,47 @@ namespace SneezePharma.Utils
                 return false;
             }
             return true;
+        }
+        public static bool ValidarCDB(string cdb)
+        {
+            int[] resultado = new int[13];
+            resultado = cdb.Select(c => int.Parse(c.ToString())).ToArray();
+            if (resultado[0] != 7 || resultado[1] != 8 || resultado[2] != 9)
+            {
+                Console.WriteLine("Os três primeiros dígitos devem ser especificamente: 789");
+                return false;
+            }
+            else
+            {
+                int somaImpar = 0, somaPar = 0;
+                for (int i = 0; i < 12; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        somaImpar += resultado[i];
+                    }
+                    else
+                    {
+                        somaPar += resultado[i];
+                    }
+                }
+                int somaTotal = somaImpar + somaPar * 3;
+                int digitoVerificador = 10 - somaTotal % 10;
+                if (digitoVerificador == 10)
+                {
+                    digitoVerificador = 0;
+                }
+                if (digitoVerificador == resultado[12])
+                {
+                    Console.WriteLine("Código de Barra válido");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Dígito verificador inválido.");
+                    return false;
+                }
+            }
         }
     }
 }

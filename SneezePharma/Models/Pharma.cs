@@ -7,6 +7,7 @@ using SneezePharma.Models.Produce;
 using SneezePharma.Models.RestrictedCustomers;
 using SneezePharma.Models.Sales;
 using SneezePharma.Models.SalesItem;
+using SneezePharma.Models.Supplier_Manipulation_;
 using SneezePharma.Utils;
 using System.Text.RegularExpressions;
 
@@ -45,14 +46,14 @@ namespace SneezePharma.Models
         /// </summary>
         public Pharma()
         {
-            this.Clientes = new List<Customer>();
-            this.ClientesRestritos = new List<RestrictedCustomer>();
-            this.Fornecedores = new List<Supplier>();
-            this.FornecedoresRestritos = new List<RestrictedSupplier>();
+            this.Clientes = new List<CustomerModel>();
+            this.ClientesRestritos = new List<RestrictedCustomerModel>();
+            this.Fornecedores = new List<SupplierModel>();
+            this.FornecedoresRestritos = new List<RestrictedSupplierModel>();
             this.Ingredientes= new List<IngredientModel>();
             this.Medicamentos = new List<MedicineModel>();
             this.ItemDaCompra = new List<PurchaseItemModel>();
-            this.Compra = new List<PurchasesModel>();
+            this.Compra = new List<PurchaseModel>();
             this.Clientes = customerManipulate.Ler();
 
             this.ClientesRestritos = new List<RestrictedCustomerModel>();
