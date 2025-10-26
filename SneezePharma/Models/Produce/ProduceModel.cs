@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models
+namespace SneezePharma.Models.Produce
 {
     public class ProduceModel
     {
@@ -35,7 +35,6 @@ namespace SneezePharma.Models
 
         public void ValidarID()
         {
-
             ID = ultimoID;
             Console.WriteLine($"ID: " + ID);
             ultimoID++;
@@ -188,7 +187,7 @@ namespace SneezePharma.Models
         }
         public string SalvarArquivo()
         {
-            return $"{this.ID:D5} {this.DataProducao:ddMMyyyy} {this.Quantidade:D4}";
+            return $"{this.ID:D5}{this.DataProducao:ddMMyyyy}{this.Quantidade:D4}";
         }
 
 

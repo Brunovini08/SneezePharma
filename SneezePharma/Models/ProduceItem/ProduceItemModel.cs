@@ -12,25 +12,25 @@ namespace SneezePharma.Models
     {
         private static int ultimoID = 1;
 
-        public string IDproducao { get; set; }
+        public int IDproducao { get; set; }
         public string Principio { get; set; }
         public int QuantidadeItens { get; set; }
          List<ProduceItemModel> listaitens = new List<ProduceItemModel>();
 
-    public ProduceItemModel(string IDprod, int quantidade) {
+    public ProduceItemModel(int IDprod, int quantidade) {
         
 
             IDproducao = IDprod;
             QuantidadeItens = quantidade;
         }
-        public ProduceItemModel ()
+        public ProduceItemModel()
         {
 
         }
     public void ValidarID()
         {
-
-            IDproducao = ultimoID.ToString().PadLeft(5, '0');
+            
+            IDproducao = ultimoID;
             Console.WriteLine($"ID: " + IDproducao);
             ultimoID++;
         }
@@ -52,7 +52,7 @@ namespace SneezePharma.Models
 
                 ValidarID();
                 Console.WriteLine("Item Cadastrado!");
-                Console.WriteLine($"ID: {IDproducao}, Quantidade: {quantidade}");
+                Console.WriteLine($"ID: {IDproducao.ToString().PadLeft(5, '0')}, Quantidade: {quantidade}");
                 return new ProduceItemModel(IDproducao, quantidade);
             }
             catch (Exception ex)
@@ -78,20 +78,20 @@ namespace SneezePharma.Models
             Console.WriteLine("Manipulações cadastradas: ");
             foreach (var item in listaitens)
             {
-                Console.WriteLine($"ID: {item.IDproducao},Quantidade: {item.QuantidadeItens}");
+                Console.WriteLine(item);
             }
         }
-        public ProduceItemModel LocalizarIDitens(string id)
+        public ProduceItemModel LocalizarIDitens(int idprod)
         {
 
-            return listaitens.Find(i => i.IDproducao == id);
+            return listaitens.Find(i => i.IDproducao == idprod);
         }
 
         public static void AlterarItemManipulado(List<ProduceItemModel> listaitem)
         {
             Console.WriteLine("Informe o ID do item que quer alterar: ");
-            string id = Console.ReadLine() ?? "";
-            ProduceItemModel alterar = listaitem.Find(m => m.IDproducao == id);
+            int idprod = int.Parse(Console.ReadLine() ?? "");
+            ProduceItemModel alterar = listaitem.Find(m => m.IDproducao == idprod);
 
             if (alterar is not null)
             {
@@ -112,9 +112,9 @@ namespace SneezePharma.Models
         public static void LocalizarItemManipulado(List<ProduceItemModel> listaitem)
         {
             Console.WriteLine("Digite o ID que gostaria de localizar: ");
-            string id = Console.ReadLine() ?? "";
+            int idprod = int.Parse(Console.ReadLine() ?? "");
 
-            ProduceItemModel itemencontrado = listaitem.Find(m => m.IDproducao == id);
+            ProduceItemModel itemencontrado = listaitem.Find(m => m.IDproducao == idprod);
             if (itemencontrado is not null)
             {
                 Console.WriteLine("ID Encontrado!");
@@ -128,6 +128,10 @@ namespace SneezePharma.Models
         public override string ToString()
         {
             return $"ID: {IDproducao}, Quantidade: {QuantidadeItens}";
+        }
+        public string SalvarArquivo()
+        {
+            return $"{this.IDproducao:D5}{this.QuantidadeItens:D4}";
         }
     }
 }

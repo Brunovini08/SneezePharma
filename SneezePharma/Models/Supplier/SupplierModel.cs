@@ -134,11 +134,25 @@ namespace SneezePharma.Models
             }
         }
 
+        public string SalvarArquivo()
+        {
+            var cnpj = this.Cnpj;
+            var razaoSocial = this.RazaoSocial.ToString();
+            razaoSocial = razaoSocial.PadRight(50, ' ');
+            var pais = this.Pais.ToString();
+            pais = pais.PadRight(20, ' ');
+            var dataAbertura = this.DataAbertura.ToString();
+            var ultimoFornecimento = this.UltimoFornecimento.ToString();
+            var dataCadastro = this.DataCadastro.ToString();
+
+            return $"{cnpj}{razaoSocial}{pais}{dataAbertura}{ultimoFornecimento}{dataCadastro}";
+        }
         public override string ToString()
         {
             return $"Cnpj: {Cnpj},Razão social: {RazaoSocial},País: {Pais},Data abertura: {DataAbertura}," +
                 $"Ultimo fornecimento: {UltimoFornecimento},Data cadastro: {DataCadastro},Situação: {Situacao}";
         }
+
 
     }
 }
