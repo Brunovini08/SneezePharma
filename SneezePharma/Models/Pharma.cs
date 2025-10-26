@@ -758,8 +758,8 @@ namespace SneezePharma.Models
                 Console.WriteLine("Venda realizada com sucesso!");
                 venda.setValorTotal(valorTotal);
                 this.Vendas.Add(venda);
-                this.SalesManipulate.Gravar(this.Vendas);
-                this.SalesItemManipulate.Gravar(this.ItensDeVenda);
+                this.salesManipulate.Gravar(this.Vendas);
+                this.salesItemManipulate.Gravar(this.ItensDeVenda);
             }
             InputHelper.PressioneEnterParaContinuar();
         }
@@ -779,7 +779,7 @@ namespace SneezePharma.Models
                 11
             );
 
-            var cliente = BuscarPorId(cpf);
+            var cliente = BuscarPorCPF(cpf);
 
             if (cliente is null)
             {
@@ -868,8 +868,8 @@ namespace SneezePharma.Models
                 venda.setValorTotal(itensDeVenda.Sum(iv => iv.TotalItem));
             }
             while (repetir);
-            SalesManipulate.Gravar(this.Vendas);
-            SalesItemManipulate.Gravar(this.ItensDeVenda);
+            salesManipulate.Gravar(this.Vendas);
+            salesItemManipulate.Gravar(this.ItensDeVenda);
         }
 
         private void ExcluirItemDaVenda(List<SalesItemModel> itensDaVenda, SalesModel venda)
@@ -1077,28 +1077,24 @@ namespace SneezePharma.Models
                 string razaoSocial;
                 string pais;
                 DateOnly dataAbertura;
-                DateOnly ultimoFornecimento;
-                DateOnly dataCadastro;
                 do
                 {
-                    try
-                    {
-                        dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do cadastro inválida");
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-
-                } while (dataCadastro == null || dataCadastro.ToString() == String.Empty);
-                Console.Clear();
-
-                this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial, pais, dataAbertura));
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Fornecedor cadastrado com sucesso!");
-                Console.ResetColor();
-                Console.ReadKey();
-                Console.Clear();
+                    cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
+                } while (cnpj.Length != 14);
+                do
+                {
+                    razaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
+                } while (razaoSocial.Length >= 50 || razaoSocial.Length <= 0);
+                do
+                {
+                    pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
+                } while (pais.Length >= 20);
+                do
+                {
+                    dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
+                } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
+                this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial,
+                pais, dataAbertura));
             }
             catch (Exception e)
             {
