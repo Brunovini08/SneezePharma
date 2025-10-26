@@ -1,8 +1,10 @@
 ﻿using SneezePharma.Exceptions;
 using SneezePharma.Helpers;
 using SneezePharma.Models;
-using SneezePharma.Models;
+using SneezePharma.Models.Ingredient;
 using SneezePharma.Models.Sales;
+using SneezePharma.Models.SalesItem;
+using SneezePharma.Models.Supplier_Manipulation_;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
@@ -26,18 +28,25 @@ namespace SneezePharma.Models
         public List<RestrictedSupplier> FornecedoresRestritos { get; private set; }
         public List<SalesModel> Venda { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
-        
-        private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
+        public List<IngredientModel> Ingredientes { get; private set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
+        private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
+        private SupplierManipulate supplierManipulate = new SupplierManipulate();
+        private IngredientManipulation ingredientManipulation = new IngredientManipulation();
+        private RestrictedSupplierManipulation restrictedManipulation = new RestrictedSupplierManipulation();
+
+
         public Pharma()
         {
             this.Clientes = new List<Customer>();
             this.ClientesRestritos = new List<RestrictedCustomer>();
             this.Fornecedores = new List<Supplier>();
             this.FornecedoresRestritos = new List<RestrictedSupplier>();
+            this.Ingredientes= new List<IngredientModel>();
+            this.Fornecedores = supplierManipulate.Ler();
+            this.Ingredientes = ingredientManipulation.Ler();
+            this.FornecedoresRestritos = restrictedManipulation.Ler();
         }
 
         public void Cadastrar()
@@ -52,6 +61,14 @@ namespace SneezePharma.Models
                 {
                     case 1:
                         RegistrarCliente();
+                        break;
+                    case 2:
+                        AdicionarFornecedor();
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        IncluirIngrediente();
                         break;
                 }
             } while (validar == false);
@@ -138,6 +155,111 @@ namespace SneezePharma.Models
         {
 
         }
+
+    # region Operações de CRUD de Ingredient
+
+        int GerarProximoId(List<IngredientModel> ingrediente)
+        {
+            var ingredientes = ingrediente.OrderBy(p => p.Id).ToList();
+            if (ingredientes.Count == 0)
+                return 1;
+            return ingredientes.Last().Id + 1;
+        }
+        public bool VerificarNome(string nome)
+        {
+            foreach (var caractere in nome)
+            {
+                if (!char.IsLetterOrDigit(caractere))
+                {
+
+                    return false;
+                }
+            }
+            return true;
+        }
+        public void IncluirIngrediente()
+        {
+            int novoId = GerarProximoId(Ingredientes);
+            string nome;
+            DateOnly ultimaCompra;
+            do
+            {
+                nome = InputHelper.RetornarString("Digite o nome do ingrediente: ", "Nome do ingrediente inválido, o ingrediente deve ter até 20 caracteres e alfanumericos");
+            } while (nome.Length > 20 || !VerificarNome(nome));
+
+            do
+            {
+                try
+                {
+                    ultimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: "));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+
+            } while (ultimaCompra == null || ultimaCompra.ToString() == String.Empty);
+            Console.Clear();
+
+            Ingredientes.Add(new IngredientModel(novoId, nome, ultimaCompra));
+        }
+        public IngredientModel LocalizarIngrediente(int Id)
+        {
+            return Ingredientes.Find(i => i.Id == Id);
+        }
+       
+        public void AlterarDataUltimaCompra()
+        {
+            Console.WriteLine("Digite o Id da ultima compra feita: ");
+            var Id = int.Parse(Console.ReadLine());
+            IngredientModel ingrediente = LocalizarIngrediente(Id);
+
+            if (Id != null)
+            {
+                DateOnly novaDataUltimaCompra;
+                do
+                {
+                    novaDataUltimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida"));
+                } while (novaDataUltimaCompra.ToString() == string.Empty);
+
+                ingrediente.setUltimaCompra(novaDataUltimaCompra);
+                Console.WriteLine("Data da ultima compra alterada com sucesso!");
+            }
+            else
+            {
+                Console.WriteLine("Id da ultima compra nao encontrado");
+            }
+        }
+        public void AlterarSituacao(List<Supplier> suppliers, char Situacao)
+        {
+
+            Console.WriteLine("Digite o Id que deseja alterar a Situacao: ");
+            var Id = int.Parse(Console.ReadLine());
+            LocalizarIngrediente(Id);
+
+            if (Id != null)
+            {
+                Console.WriteLine("Digite a nova situação: ");
+                Situacao = char.Parse(Console.ReadLine());
+            }
+        }
+
+        public void ListarIngrediente()
+        {
+            if (Ingredientes.Count == 0)
+            {
+                Console.WriteLine("Não há nenhum ingrediente no momento");
+            }
+            else
+            {
+                Console.WriteLine("Lista de ingredientes: ");
+                foreach (var ingrediente in Ingredientes)
+                {
+                    Console.WriteLine(ingrediente.ToString());
+                }
+            }
+        }
+        #endregion
 
         #region Operações de CRUD da classe Customer
         public void RegistrarCliente()
@@ -369,7 +491,7 @@ namespace SneezePharma.Models
                 var quantidade = ConfirmacaoQuantidade();
 
                 //TODO: Puxar o valor unitário direto do Medicamento (Medicamento)
-                decimal valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário do medicamento");
+                decimal valorUnitario = InputHelper.RetornarNumeroDecimal("Digite o valor unitário do medicamento", "Digite um valor válido: ");
 
                 decimal totalItem = quantidade * valorUnitario;
                 GeneralException.VerificarQuantidadeMaximaDecimal(totalItem, 99999.99m, "Valor total ultrapassou limite máximo (R$ 99999,99)");
@@ -515,45 +637,147 @@ namespace SneezePharma.Models
         {
             try
             {
+                bool validar = false;
                 string cnpj;
+                
+                do
+                {
+                    try{
+                        Console.Clear();
+                        cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
+                        if (cnpj.Length != 14)
+                        {
+                            InputHelper.ExibirErro("O Cnpj deve conter 14 caracteres!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                        else if (cnpj.Length == 14)
+                        {
+                            validar = InputHelper.ValidarCnpj(cnpj);
+                            if (!validar)
+                            {
+                                InputHelper.ExibirErro("Cnpj inválido!");
+                                InputHelper.PressioneEnterParaContinuar();
+                                Console.Clear();
+                            }
+                            else
+                            {
+                                Supplier fornecedor = this.Fornecedores.Find(c => c.Cnpj == cnpj);
+                                if (fornecedor != null)
+                                {
+                                    InputHelper.ExibirErro("Cnpj já cadastrado, tente com outro Cnpj!");
+                                    InputHelper.PressioneEnterParaContinuar();
+                                    Console.Clear();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                } while (cnpj.Length != 14 || validar != true);
+                Console.Clear();
                 string razaoSocial;
-                string pais;
+                string padrao = @"^-?[0-9]+(?:\.[0-9]+)?$";
+                Regex regex = new Regex(padrao);
+                 
+                do
+                {
+                    try
+                    {
+                        razaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
+                        
+                        if (regex.IsMatch(razaoSocial))
+                        {
+                            InputHelper.ExibirErro("Razão social não pode conter número!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+
+                } while (razaoSocial.Length >= 50 || razaoSocial.Length <= 0 || regex.IsMatch(razaoSocial) == true);                
+                Console.Clear();
+
                 DateOnly dataAbertura;
+
+                do
+                {
+                    try
+                    {
+                        dataAbertura = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: "));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+
+                } while (dataAbertura == null || dataAbertura.ToString() == String.Empty);
+                Console.Clear();
+
+                string pais;
+                do
+                {
+                    try
+                    {
+                        pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
+
+                        if (regex.IsMatch(pais))
+                        {
+                            InputHelper.ExibirErro("O nome do país não pode conter número!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+
+                } while (pais.Length >= 20 || pais.Length <= 0 || regex.IsMatch(pais) == true);       
+                Console.Clear();
+
                 DateOnly ultimoFornecimento;
+
+                do
+                {
+                    try
+                    {
+                        ultimoFornecimento = DateOnly.Parse(InputHelper.RetornarData("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):", "Data do ultimo fornecimento inválida, digite novamente: "));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+
+                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == String.Empty);
+                Console.Clear();
+
                 DateOnly dataCadastro;
                 do
                 {
-                    cnpj = InputHelper.RetornarString("Digite o Cnpj com 14 dígitos (Apenas numeros e sem caracteres especiais) ", "Cnpj inválido, digite novamente:");
-                } while (cnpj.Length != 14);
-                do
-                {
-                    razaoSocial = InputHelper.RetornarString("Digite a razão social (até 50 caracteres)", "Razao saocial estorou o limite, digite novamente com até 50 caracteres: ");
-                } while (razaoSocial.Length >= 50 || razaoSocial.Length <= 0);
-                do
-                {
-                    pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
-                } while (pais.Length >= 20);
-                do
-                {
-                    dataAbertura = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida"));
-                } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
+                    try
+                    {
+                        dataCadastro = DateOnly.Parse(InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do cadastro inválida"));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
 
-                do
-                {
-                    ultimoFornecimento = DateOnly.Parse(InputHelper.RetornarData("Digite a data do ultimo fornecimento (no modelo: DDMMAAAA):", "Data do ultimo fornecimento inválida"));
-                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
+                } while (dataCadastro == null || dataCadastro.ToString() == String.Empty);
+                Console.Clear();
 
-
-                do
-                {
-                    dataCadastro = DateOnly.Parse(InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do ultimo cadastro inválida"));
-                } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
-
-
-
-                this.Fornecedores.Add(new Supplier(cnpj, razaoSocial,
-                pais, dataAbertura));
-
+                this.Fornecedores.Add(new Supplier(cnpj, razaoSocial, pais, dataAbertura));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Fornecedor cadastrado com sucesso!");
+                Console.ResetColor();
+                Console.ReadKey();
+                Console.Clear();
             }
             catch (Exception e)
             {
@@ -571,7 +795,7 @@ namespace SneezePharma.Models
             Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
             string cnpj = Console.ReadLine();
             var fornecedor = this.LocalizarFornecedor(cnpj);
-
+            
             if (fornecedor is null)
             {
                 Console.WriteLine("Fornecedor não encontrado");

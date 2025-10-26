@@ -1,5 +1,6 @@
 ﻿using SneezePharma.Enums;
-using SneezePharma.Models.RestrictedSupplier;
+using SneezePharma.Helpers;
+using SneezePharma.Models;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.Ingredient
 {
-    public class Ingredient
+    public class IngredientModel
     {
         public int Id { get; private set; }
         public string Nome { get; private set; }
@@ -19,19 +20,27 @@ namespace SneezePharma.Models.Ingredient
         public DateOnly DataCadastro { get; private set; }
         public SituationIngredient Situacao { get; private set; }
 
-        public Ingredient(int id,
-            string nome,
-            DateOnly ultimaCompra,
-            DateOnly dataCadastro)
+
+        int GerarProximoId(List<IngredientModel> ingrediente)
+        {
+            var ingredientes = ingrediente.OrderBy(p => p.Id).ToList();
+            if (ingredientes.Count == 0)
+                return 1;
+            return ingredientes.Last().Id + 1;
+        }
+
+
+        public IngredientModel(int id,
+            string nome, DateOnly ultimaCompra)
         {
             this.Id = id;
             this.Nome = nome;
+            this.DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             this.UltimaCompra = ultimaCompra;
-            this.DataCadastro = dataCadastro;
             this.Situacao = SituationIngredient.A;
         }
 
-        List<Ingredient> ingredientes = new List<Ingredient>();
+        List<IngredientModel> ingredientes = new List<IngredientModel>();
 
         public void setUltimaCompra (DateOnly ultimaCompra)
         {
@@ -50,17 +59,16 @@ namespace SneezePharma.Models.Ingredient
             return true;
         }
 
-        public Ingredient LocalizarIngrediente(int Id)
+        public IngredientModel LocalizarIngrediente(int Id)
         {
             return ingredientes.Find(i => i.Id == Id);
         }
 
         public void IncluirIngrediente()
-        {
-            int id = ingredientes.Count + 1;
+        {          
+            int novoId = GerarProximoId(ingredientes);
             string nome;
             DateOnly ultimaCompra;
-            DateOnly dataCadastro;
             do
             {
                 nome = InputHelper.RetornarString("Digite o nome do ingrediente: ", "Nome do ingrediente inválido, o ingrediente deve ter até 20 caracteres e alfanumericos");
@@ -68,23 +76,27 @@ namespace SneezePharma.Models.Ingredient
 
             do
             {
-                ultimaCompra = InputHelper.RetornarData("Digite a data da ultima compra de ingredientes (DDMMAAAA): ", "Data inválida da ultima compra de ingredientes, digite outra:");
-            } while (ultimaCompra == null || ultimaCompra.ToString() == string.Empty);
+                try
+                {
+                    ultimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: "));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
 
-            do
-            {
-                dataCadastro = InputHelper.RetornarData("Digite a data do cadastro de ingredientes (DDMMAAAA): ", "Data inválida de cadastro de ingredientes, digite outra:");
-            } while (dataCadastro == null || dataCadastro.ToString() == string.Empty);
+            } while (ultimaCompra == null || ultimaCompra.ToString() == String.Empty);
+            Console.Clear();
 
-            ingredientes.Add(new Ingredient(id, nome,
-             ultimaCompra,
-             dataCadastro));
+            ingredientes.Add(new IngredientModel(novoId, nome, ultimaCompra));
         }
 
         public override string ToString()
         {
-            return $"$Id: AI{this.Id.ToString().PadLeft(5, '0')}\n,Nome: {this.Nome.ToString().PadRight(20, ' ')}," +
-                $"Data da ultima compra: {this.UltimaCompra},Data do ultimo cadastro: {this.DataCadastro}";
+            string sufixo = "Ai";
+            string strId = $"{sufixo}{this.Id.ToString().PadLeft(4, '0')}";
+            return $"$Id: {strId}\nNome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
+                $"\nData da ultima compra: {this.UltimaCompra}\nData do ultimo cadastro: {this.DataCadastro}";
         }
 
         public string SalvarArquivo()
@@ -103,17 +115,17 @@ namespace SneezePharma.Models.Ingredient
         {
             Console.WriteLine("Digite o Id da ultima compra feita: ");
             var Id = int.Parse(Console.ReadLine());
-            Ingredient ingrediente = LocalizarIngrediente(Id);
+            IngredientModel localizado = LocalizarIngrediente(Id);
 
             if (Id != null)
             {
                 DateOnly novaDataUltimaCompra;
                 do
                 {
-                    novaDataUltimaCompra = InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida");
+                    novaDataUltimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida"));
                 } while (novaDataUltimaCompra.ToString() == string.Empty);
 
-                ingrediente.setUltimaCompra(novaDataUltimaCompra);
+                localizado.setUltimaCompra(novaDataUltimaCompra);
                 Console.WriteLine("Data da ultima compra alterada com sucesso!");
             }
             else
@@ -150,7 +162,6 @@ namespace SneezePharma.Models.Ingredient
                 }
             }
         }
-
 
     }
 }
