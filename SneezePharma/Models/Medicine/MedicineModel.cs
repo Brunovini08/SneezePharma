@@ -9,7 +9,7 @@ using SneezePharma;
 
 namespace SneezePharma.Models
 {
-    public class Medicine
+    public class MedicineModel
     {
         public string CDB { get; private set; }
         public string Nome { get; private set; }
@@ -18,7 +18,7 @@ namespace SneezePharma.Models
         public DateOnly UltimaVenda { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public char Situacao { get; private set; }
-        public Medicine(string cdb, string nome, char categoria, decimal valorVenda)
+        public MedicineModel(string cdb, string nome, char categoria, decimal valorVenda)
         {
             CDB= cdb;
             Nome = nome;
@@ -28,7 +28,7 @@ namespace SneezePharma.Models
             Situacao = 'A';
         }
 
-        public Medicine(string cdb, string nome, char categoria, decimal valorVenda, DateOnly ultimaVenda, DateOnly dataCadastro, char situacao)
+        public MedicineModel(string cdb, string nome, char categoria, decimal valorVenda, DateOnly ultimaVenda, DateOnly dataCadastro, char situacao)
         {
             CDB = cdb;
             Nome = nome;
