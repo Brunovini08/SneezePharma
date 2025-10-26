@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
-    public class Supplier
+    public class SupplierModel
     {
         public string Cnpj { get; private set; }
         public string RazaoSocial { get; private set; }
@@ -21,7 +21,7 @@ namespace SneezePharma.Models
         public DateOnly DataCadastro { get; private set; }
         public  SituationSupplier Situacao { get; private set; } 
 
-        public Supplier(string cnpj, string razaoSocial,
+        public SupplierModel(string cnpj, string razaoSocial,
             string pais, DateOnly dataAbertura)
         {
             this.DataCadastro = new DateOnly();
@@ -33,7 +33,7 @@ namespace SneezePharma.Models
             this.Situacao = SituationSupplier.A;
         }
 
-        List<Supplier> suppliers = new List<Supplier>();
+        List<SupplierModel> suppliers = new List<SupplierModel>();
 
         public int[] TransformarCnpjEmInt(string Cnpj)
         {
@@ -45,7 +45,7 @@ namespace SneezePharma.Models
             return numeros;
         }
 
-        public void AdicionarFornecedor(List<Supplier> suppliers)
+        public void AdicionarFornecedor(List<SupplierModel> suppliers)
         {
             try
             {
@@ -66,9 +66,9 @@ namespace SneezePharma.Models
                     pais = InputHelper.RetornarString("Digite o país: ", "o nome do país deve ter até 20 caracteres");
                 } while (pais.Length >= 20);
                 do {
-                    dataAbertura = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida"));
+                    dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
                 } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
-                this.suppliers.Add(new Supplier(Cnpj, RazaoSocial,
+                this.suppliers.Add(new SupplierModel(Cnpj, RazaoSocial,
                 Pais, DataAbertura));
 
             }
@@ -78,7 +78,7 @@ namespace SneezePharma.Models
             }
         }
 
-        public Supplier LocalizarFornecedor(string Cnpj)
+        public SupplierModel LocalizarFornecedor(string Cnpj)
         {
             return suppliers.Find(c => c.Cnpj == Cnpj);
         }
@@ -107,7 +107,7 @@ namespace SneezePharma.Models
             }
         }
 
-        public void AlterarSituacao(List<Supplier> suppliers, char Situacao)
+        public void AlterarSituacao(List<SupplierModel> suppliers, char Situacao)
         {
 
             Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
@@ -121,7 +121,7 @@ namespace SneezePharma.Models
             }
         }
 
-        public void AlterarDataUltimoFornecimento(List<Supplier> suppliers, DateOnly UltimoFornecimento)
+        public void AlterarDataUltimoFornecimento(List<SupplierModel> suppliers, DateOnly UltimoFornecimento)
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
             var Cnpj = Console.ReadLine();

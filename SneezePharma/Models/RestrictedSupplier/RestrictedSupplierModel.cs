@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
-    public class RestrictedSupplier
+    public class RestrictedSupplierModel
     {
         public string Cnpj { get; private set; }
-        public RestrictedSupplier(string cnpj)
+        public RestrictedSupplierModel(string cnpj)
         {
             this.Cnpj = cnpj;
         }

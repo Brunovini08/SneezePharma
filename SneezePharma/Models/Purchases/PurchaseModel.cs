@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
-    public class Purchases
+    public class PurchaseModel
     {
         public int IdCompra {  get; private set; }
         public DateOnly DataCompra { get; private set; }
         public string Fornecedor { get; private set; }
         public decimal ValorTotal { get; private set; }
 
-        public Purchases(int idCompra, string fornecedor, DateOnly dataCompra, decimal valorTotal)
+        public PurchaseModel(int idCompra, string fornecedor, DateOnly dataCompra, decimal valorTotal)
         {
             IdCompra = idCompra;
             DataCompra = dataCompra;
@@ -23,7 +23,7 @@ namespace SneezePharma.Models
             ValorTotal = valorTotal;
         }
 
-        public Purchases(string fornecedor)
+        public PurchaseModel(string fornecedor)
         {
             Fornecedor = fornecedor;
             DataCompra = new DateOnly();

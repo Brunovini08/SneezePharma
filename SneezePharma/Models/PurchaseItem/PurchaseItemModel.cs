@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.PurchaseItem
 {
-    public class PurchaseItem
+    public class PurchaseItemModel
     {
         public string IdCompra { get; private set; }
         public string Ingrediente { get; private set; }
@@ -17,7 +17,7 @@ namespace SneezePharma.Models.PurchaseItem
 
         public static int Contador { get; private set; } = 1;
 
-        public PurchaseItem(string ingrediente, int quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
+        public PurchaseItemModel(string ingrediente, int quantidade, decimal valorUnitario, decimal totalItem, int idCompra)
         {
             Ingrediente = ingrediente;
             Quantidade = quantidade;
@@ -25,10 +25,5 @@ namespace SneezePharma.Models.PurchaseItem
             TotalItem = totalItem;
             IdCompra = idCompra.ToString().PadLeft(5, '0');
         }
-
-       
-
-
-
     }
 }

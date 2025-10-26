@@ -39,9 +39,9 @@ namespace SneezePharma.Models.Produce
             }
         }
 
-        public static List<Produce> LerManipulacao()
+        public static List<ProduceModel> LerManipulacao()
         {
-            var manipulacaolida = new List<Produce>();
+            var manipulacaolida = new List<ProduceModel>();
             string fullPath = FullPath();
             var sr = new StreamReader(fullPath);
 
@@ -57,7 +57,7 @@ namespace SneezePharma.Models.Produce
                         var dataProd = contentLine[5..13];
                         var quantidade = contentLine[13..20];
 
-                        manipulacaolida.Add(new Produce (
+                        manipulacaolida.Add(new ProduceModel(
                             int.Parse(id),
                            DateOnly.Parse (dataProd),
                             int.Parse(quantidade)
@@ -70,7 +70,7 @@ namespace SneezePharma.Models.Produce
             return manipulacaolida;
         }
 
-        public void GravarManipulacao(List<Produce> manipulacao)
+        public void GravarManipulacao(List<ProduceModel> manipulacao)
         {
             string Fullpath = FullPath();
             StreamWriter sw = new StreamWriter(Fullpath, true);
