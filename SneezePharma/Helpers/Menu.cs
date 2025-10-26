@@ -40,8 +40,9 @@ namespace SneezePharma.Helpers
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - VENDAS MEDICAMENTO");
             Console.WriteLine("1. MENU - VENDER MEDICAMENTO");
-            Console.WriteLine("2. MENU - LISTAR MEDICAMENTO POR ID");
-            Console.WriteLine("3. MENU - LISTAR TODAS AS VENDAS");
+            Console.WriteLine("2. MENU - ALTERAR ITENS DA VENDA DE MEDICAMENTOS");
+            Console.WriteLine("3. MENU - LISTAR VENDA POR ID");
+            Console.WriteLine("4. MENU - LISTAR TODAS AS VENDAS");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }

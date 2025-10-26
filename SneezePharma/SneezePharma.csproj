@@ -5,7 +5,6 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>SneezePharma.Models.Ingredient.TesteIngredient</StartupObject>
   </PropertyGroup>
 
 </Project>

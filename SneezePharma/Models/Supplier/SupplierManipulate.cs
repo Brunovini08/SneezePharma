@@ -42,10 +42,10 @@ namespace SneezePharma.Models.Supplier_Manipulation_
                         var cnpj = contentLine[0..14];
                         var razaoSocial = contentLine[14..64];
                         var pais = contentLine[64..84];
-                        var ultimoFornecimento = contentLine[84..88];
-                        var dataAbertura = contentLine[88..92];
-                        var dataCadastro = contentLine[92..96];
-                        var situacao = contentLine[96..100];
+                        var ultimoFornecimento = contentLine[84..92];
+                        var dataAbertura = contentLine[92..100];
+                        var dataCadastro = contentLine[100..108];
+                        var situacao = contentLine[108..116];
 
                         suppliers.Add(new SupplierModel(
                             cnpj,

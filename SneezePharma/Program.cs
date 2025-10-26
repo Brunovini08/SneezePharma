@@ -1,7 +1,11 @@
 using SneezePharma.Helpers;
 using SneezePharma.Models;
 
-Pharma pharma = new Pharma();
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Pharma pharma = new Pharma();
 
 
 int opcao;

@@ -39,7 +39,7 @@ namespace SneezePharma.Models.SalesItem
                         var medicamento = contentLine[10..23];
                         var quantidade = contentLine[23..26];
                         var valorUtilitario = contentLine[26..33];
-                        var totalItem = contentLine[33..41];
+                        var totalItem = contentLine[33..44];
 
                         salesItemsLidos.Add(new SalesItemModel(
                             int.Parse(id),
