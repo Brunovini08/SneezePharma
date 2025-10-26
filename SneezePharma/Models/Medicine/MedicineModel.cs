@@ -47,6 +47,10 @@ namespace SneezePharma.Models
         {
             Situacao = situacao;
         }
+        public void setUltimaVenda()
+        {
+            this.UltimaVenda = DateOnly.FromDateTime(DateTime.Now);
+        }
         public bool ValidarCDB(string cdb)
         {
             int[] resultado = new int[13];
