@@ -5,21 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SneezePharma.Models.Produce
+namespace SneezePharma.Models.Produce.Produce
 {
-    public class FileProduceItem : ArchiveManipulator<ProduceItemModel>
+    public class ProduceManipulate : ArchiveManipulator<ProduceModel>
     {
         private static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        private static string FilePath { get; set; } = "ProduceItem.data";
-        public FileProduceItem()
+        private static string FilePath { get; set; } = "Produce.data";
+        public ProduceManipulate() 
         {
             CriarArquivo(DirectoryPath, FilePath);
         }
-        public override List<ProduceItemModel> Ler()
+        public override List<ProduceModel> Ler()
         {
 
 
-            var manipulationitensLidos = new List<ProduceItemModel>();
+            var producaoLista = new List<ProduceModel>();
             string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
@@ -31,12 +31,14 @@ namespace SneezePharma.Models.Produce
                     {
                         var contentLine = sr.ReadLine();
 
-                        var idprod = contentLine[0..5];
-                        // var medicamento = contentLine[14..23];
+                        var id = contentLine[0..5];
+                        var dataProd = contentLine[5..14];
+                        var medicamento = contentLine[14..23];
                         var quantidade = contentLine[23..26];
 
-                        manipulationitensLidos.Add(new ProduceItemModel(
-                            int.Parse(idprod),
+                        producaoLista.Add(new ProduceModel(
+                            int.Parse(id),
+                            DateOnly.Parse(dataProd),
                             int.Parse(quantidade)
                             ));
                     }
@@ -44,21 +46,26 @@ namespace SneezePharma.Models.Produce
                 sr.Close();
             }
 
-            return manipulationitensLidos;
+            return producaoLista;
         }
 
-        public override void Gravar(List<ProduceItemModel> manipulation)
+        public void GravarManipulacao(List<ProduceModel> manipulacao)
         {
             var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
 
             using (sw)
             {
-                foreach (var si in manipulation)
+                foreach (var si in manipulacao)
                 {
                     sw.WriteLine(si.SalvarArquivo());
                 }
                 sw.Close();
             }
+        }
+
+        public override void Gravar(List<ProduceModel> lista)
+        {
+            throw new NotImplementedException();
         }
     }
 }

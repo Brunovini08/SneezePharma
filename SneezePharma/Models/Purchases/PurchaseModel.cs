@@ -5,16 +5,14 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace SneezePharma.Models
 {
     public class PurchaseModel
     {
-        public int IdCompra {  get; private set; }
+        public int IdCompra { get; private set; }
         public DateOnly DataCompra { get; private set; }
         public string Fornecedor { get; private set; }
         public decimal ValorTotal { get; private set; }
-
         public PurchaseModel(int idCompra, string fornecedor, DateOnly dataCompra, decimal valorTotal)
         {
             IdCompra = idCompra;
@@ -22,29 +20,22 @@ namespace SneezePharma.Models
             Fornecedor = fornecedor;
             ValorTotal = valorTotal;
         }
-
         public PurchaseModel(string fornecedor)
         {
             Fornecedor = fornecedor;
             DataCompra = new DateOnly();
         }
-
-        public void CriarPurchase()
+        public void setValorTotal(decimal valorTotal)
         {
-            Console.WriteLine("Digite a data da compra (DD/MM/AAAA): ");
-            DateOnly dataCompra = DateOnly.Parse(Console.ReadLine());
-
-            do
-            {
-              Fornecedor =  InputHelper.RetornarString("Digite o CNPJ do fornecedor:", "O CNPJ é inválido.");
-            }
-            while (Fornecedor.Length != 14);
-            decimal valorTotal = 0;
-            do
-            {
-                valorTotal = InputHelper.RetornarNumeroDecimal("Digite o valor de Total da Compra:", "O valor deve ser maior que R$0,00 e menor que R$10000,00.");
-            } while (valorTotal <= 0 || valorTotal >= 10000);
-
+            ValorTotal = valorTotal;
+        }
+        public override string ToString()
+        {
+            return $"Id da Compra: {IdCompra}\nData da Compra: {DataCompra}\nFornecedor: {Fornecedor}\nValor Total Venda: {ValorTotal}";
+        }
+        public string SalvarArquivo()
+        {
+            return $"{this.IdCompra.ToString().PadLeft(5, '0')}{this.DataCompra}{this.Fornecedor}{this.ValorTotal}";
         }
     }
 }
