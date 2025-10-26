@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.PurchaseItem
 {
-    public class PurchaseItemManipulator : ArchiveManipulator<PurchaseItemModel>
+    public class PurchaseItemManipulate : ArchiveManipulator<PurchaseItemModel>
     {
         private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
         private string FilePath { get; set; } = @"PurchaseItem.data";
 
-        public PurchaseItemManipulator()
+        public PurchaseItemManipulate()
         {
             CriarArquivo(DirectoryPath, FilePath);
         }

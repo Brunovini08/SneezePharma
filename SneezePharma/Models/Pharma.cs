@@ -3,13 +3,16 @@ using SneezePharma.Exceptions;
 using SneezePharma.Helpers;
 using SneezePharma.Models.Customer_Manipulation_;
 using SneezePharma.Models.Ingredient;
+using SneezePharma.Models.Medicine;
 using SneezePharma.Models.Produce;
+using SneezePharma.Models.Produce.Produce;
+using SneezePharma.Models.PurchaseItem;
+using SneezePharma.Models.Purchases;
 using SneezePharma.Models.RestrictedCustomers;
 using SneezePharma.Models.Sales;
 using SneezePharma.Models.SalesItem;
 using SneezePharma.Models.Supplier_Manipulation_;
 using SneezePharma.Utils;
-using System.Text.RegularExpressions;
 
 namespace SneezePharma.Models
 {
@@ -19,14 +22,14 @@ namespace SneezePharma.Models
         public List<SupplierModel> Fornecedores { get; private set; }
         public List<MedicineModel> Medicamentos { get; private set; }
         public List<ProduceModel> Producao { get; set; }
-        public List<ProduceItemModel> ItemProducao { get; private set; }
+        public List<ProduceItemModel> ItensProducao { get; private set; }
         public List<RestrictedCustomerModel> ClientesRestritos { get; private set; }
         public List<RestrictedSupplierModel> FornecedoresRestritos { get; private set; }
-        public List<SalesModel> Venda { get; private set; }
+        public List<SalesModel> Vendas { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
         public List<IngredientModel> Ingredientes { get; private set; }
         public List<PurchaseModel> Compra { get; private set; }
-        public List<PurchaseItemModel> ItemDaCompra { get; private set; }
+        public List<PurchaseItemModel> ItensDaCompra { get; private set; }
 
 
         private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
@@ -41,20 +44,30 @@ namespace SneezePharma.Models
 
         private RestrictedSupplierManipulation restrictedManipulation = new RestrictedSupplierManipulation();
 
-        /// <summary>
-        /// 
-        /// </summary>
+        private SalesManipulate salesManipulate = new SalesManipulate();
+
+        private MedicineManipulate medicineManipulate = new MedicineManipulate();
+
+        private PurchaseItemManipulate purchaseItemManipulate = new PurchaseItemManipulate();
+
+        private PurchaseManipulate purchaseManipulate = new PurchaseManipulate();
+
+        private ProduceManipulate produceManipulate = new ProduceManipulate();
+
+        private ProduceItemManipulate produceItemManipulate = new ProduceItemManipulate();
         public Pharma()
         {
             this.Clientes = new List<CustomerModel>();
-            this.ClientesRestritos = new List<RestrictedCustomerModel>();
-            this.Fornecedores = new List<SupplierModel>();
-            this.FornecedoresRestritos = new List<RestrictedSupplierModel>();
-            this.Ingredientes= new List<IngredientModel>();
-            this.Medicamentos = new List<MedicineModel>();
-            this.ItemDaCompra = new List<PurchaseItemModel>();
-            this.Compra = new List<PurchaseModel>();
             this.Clientes = customerManipulate.Ler();
+
+            this.Medicamentos = new List<MedicineModel>();
+            this.Medicamentos = this.medicineManipulate.Ler();
+
+            this.ItensDaCompra = new List<PurchaseItemModel>();
+            this.ItensDaCompra = this.purchaseItemManipulate.Ler();
+
+            this.Compra = new List<PurchaseModel>();
+            this.Compra = this.purchaseManipulate.Ler();
 
             this.ClientesRestritos = new List<RestrictedCustomerModel>();
             this.ClientesRestritos = restrictedCustomerManipulate.Ler();
@@ -68,12 +81,17 @@ namespace SneezePharma.Models
             this.Ingredientes = new List<IngredientModel>();
             this.Ingredientes = ingredientManipulation.Ler();
 
-            this.ItemDaCompra = new List<PurchaseItemModel>();
+            this.Vendas = new List<SalesModel>();
+            this.Vendas = salesManipulate.Ler();
+
+            this.ItensDeVenda = new List<SalesItemModel>();
             this.ItensDeVenda = salesItemManipulate.Ler();
 
-            this.Compra = new List<PurchaseModel>();
+            this.Producao = new List<ProduceModel>();
+            this.Producao = this.produceManipulate.Ler();
 
-
+            this.ItensProducao = new List<ProduceItemModel>();
+            this.ItensProducao = this.produceItemManipulate.Ler();
         }
 
         public void Cadastrar()
@@ -96,12 +114,11 @@ namespace SneezePharma.Models
                         RegistrarMedicamento();
                         break;
                     case 4:
-                        IncluirIngrediente();
+                        RegistrarIngrediente();
                         break;
                 }
             } while (validar == false);
         }
-
         public void VendasMedicamento()
         {
             var repetir = true;
@@ -136,12 +153,33 @@ namespace SneezePharma.Models
             }
             while (repetir);
         }
-
         public void ComprarPrincipioAtivo()
         {
-
+            int opcao;
+            bool validar;
+            do
+            {
+                Menu.MenuCompraPrincipioAtivo();
+                validar = int.TryParse(Console.ReadLine(), out opcao);
+                switch (opcao)
+                {
+                    case 1:
+                        RegistrarCompra();
+                        break;
+                    case 2:
+                        AlterarCompra();
+                        break;
+                    case 3:
+                        ListarCompras();
+                        break;
+                    case 4:
+                        ListarCompraPorId();
+                        break;
+                    default:
+                        break; 
+                }
+            } while (validar == false);
         }
-
         public void ManipularMedicamentos()
         {
             int opcao;
@@ -151,7 +189,7 @@ namespace SneezePharma.Models
             switch (opcao)
             {
                 case 1:
-                    AlterarMedicamento();
+                    LocalizarMedicamentoAtivo();
                     break;
                 case 2:
                     AlterarSituacaoMedicamento();
@@ -162,13 +200,14 @@ namespace SneezePharma.Models
                 case 4:
                     ListarMedicamentos();
                     break;
+                case 5:
+
                 case 0:
                     break;
                 default:
                     break;
             }
         }
-
         public void ManipularClientes()
         {
             int opcao;
@@ -203,7 +242,6 @@ namespace SneezePharma.Models
                 }
             } while (validar == false);
         }
-
         public void ManipularFornecedores()
         {
             int opcao;
@@ -244,7 +282,6 @@ namespace SneezePharma.Models
                 }
             } while (validar == false);
         }
-
         public void ManipularPrincipioAtivo()
         {
             int opcao;
@@ -256,20 +293,43 @@ namespace SneezePharma.Models
                 switch (opcao)
                 {
                     case 1:
-                        RegistrarCliente();
+                        AlterarNomeIngrediente();
                         break;
                     case 2:
-                        AdicionarFornecedor();
+                        AlterarSituacao();
                         break;
                     case 3:
                         break;
                     case 4:
-                        IncluirIngrediente();
                         break;
                 }
             } while (validar == false);
         }
-
+        public void ManipularProducao()
+        {
+            int opcao;
+            bool validar;
+            do
+            {
+                Menu.MenuProducao();
+                validar = int.TryParse(Console.ReadLine(), out opcao);
+                switch (opcao)
+                {
+                    case 1:
+                       
+                        break;
+                    case 2:
+                        
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        break;
+                }
+            } while (validar == false);
+        }
         public void Relatorios()
         {
             int opcao;
@@ -298,13 +358,9 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD de Ingrediente
 
-        string GerarProximoId(List<IngredientModel> ingrediente)
+        string GerarProximoId()
         {
-            //var ingredientes = ingrediente.OrderBy(p => p.Id).ToList();
-            //if (ingredientes.Count == 0)
-            //    return 1;
-            //return ingredientes.Last().Id + 1;
-            var id = ingrediente.LastOrDefault()?.Id ?? "";
+            var id = this.Ingredientes.LastOrDefault()?.Id ?? "";
             if (id == "")
             {
                 return "AI0001";
@@ -330,9 +386,9 @@ namespace SneezePharma.Models
             }
             return true;
         }
-        public void IncluirIngrediente()
+        public void RegistrarIngrediente()
         {
-            string novoId = GerarProximoId(this.Ingredientes);
+            var id = this.Ingredientes.LastOrDefault().Id ?? "AI0001";
             string nome;
             DateOnly ultimaCompra;
             do
@@ -340,41 +396,76 @@ namespace SneezePharma.Models
                 nome = InputHelper.RetornarString("Digite o nome do ingrediente: ", "Nome do ingrediente inválido, o ingrediente deve ter até 20 caracteres e alfanumericos");
             } while (nome.Length > 20 || !VerificarNome(nome));
 
-            do
-            {
-                try
-                {
-                    ultimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: "));
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
 
-            } while (ultimaCompra == null || ultimaCompra.ToString() == String.Empty);
-            Console.Clear();
 
-            Ingredientes.Add(new IngredientModel(novoId, nome, ultimaCompra));
+            Ingredientes.Add(new IngredientModel(id, nome));
         }
         public IngredientModel LocalizarIngrediente(string Id)
         {
             return Ingredientes.Find(i => i.Id == Id);
         }
-        public void AlterarSituacao(List<SupplierModel> suppliers, char Situacao)
+        public void AlterarNomeIngrediente()
         {
-            Console.WriteLine("Digite o Id da ultima compra feita: ");
-            var Id = Console.ReadLine();
-            IngredientModel ingrediente = LocalizarIngrediente(Id);
-
-            Console.WriteLine("Digite o Id que deseja alterar a Situacao: ");
-            var Id = Console.ReadLine();
-            LocalizarIngrediente(Id);
-
-            if (Id != null)
+            string id;
+            do
             {
-                Console.WriteLine("Digite a nova situação: ");
-                Situacao = char.Parse(Console.ReadLine());
-            }
+                id = InputHelper.RetornarString("Digite o id do ingrediente que deseja alterar: ", "Por favor, digite um id");
+                var ingrediente = LocalizarIngrediente(id);
+                if (id != null)
+                {
+                    string nome;
+                    do
+                    {
+                        nome = InputHelper.RetornarString("Digite o novo nome: ", "Por favor, digite o nome");
+                    } while (nome == string.Empty);
+
+                    ingrediente.setNome(nome);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Nome do ingrediente alterado com sucesso!");
+                    Console.ResetColor();
+                }
+                else
+                    Console.WriteLine("Ingrediente não existe");
+            } while (id == string.Empty);
+        }
+        public void AlterarSituacao()
+        {
+            string id;
+            do
+            {
+                id = InputHelper.RetornarString("Digite o id do ingrediente que deseja alterar a situação: ", "Por favor, digite um id");
+                var ingrediente = LocalizarIngrediente(id);
+                if (id != null)
+                {
+                    string situacao;
+                    do
+                    {
+                        situacao = InputHelper.RetornarString("Digite a nova situação: ", "Por favor, digite a nova situação: A - Ativo | I - Inativo").ToUpper();
+                    } while (situacao != "A" && situacao != "I");
+                    situacao = Console.ReadLine();
+
+                    if (situacao.ToString() == "A" && ingrediente.Situacao == SituationIngredient.A)
+                    {
+                        Console.WriteLine("O ingrediente já está ativo");
+                    }
+                    else if (situacao.ToString() == "I" && ingrediente.Situacao == SituationIngredient.I)
+                    {
+                        Console.WriteLine("O ingrediente já está inativo");
+                    }
+                    else if (situacao.ToString() == "A")
+                        ingrediente.setSituacao(SituationIngredient.A);
+                    else
+                        ingrediente.setSituacao(SituationIngredient.I);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Situação do ingrediente alterado com sucesso!");
+                    Console.ResetColor();
+                }
+                else
+                    Console.WriteLine("Ingrediente não existe");
+            } while (id == string.Empty);
+
+
+
         }
         public void ListarIngrediente()
         {
@@ -526,7 +617,7 @@ namespace SneezePharma.Models
         }
         #endregion
 
-        #region "Operações de CRUD da classe Sales e SalesItem"
+        #region Operações de CRUD da classe Sales e SalesItem
         private string EntradaCdbECpf(string msgEntrada, string msgException, int tamanhoDaString)
         {
             const int TAMANHOCPF = 11;
@@ -577,7 +668,7 @@ namespace SneezePharma.Models
 
         private void RegistrarVenda()
         {
-            var id = this.Venda.LastOrDefault()?.Id ?? 0;
+            var id = this.Vendas.LastOrDefault()?.Id ?? 0;
 
             var cpf = EntradaCdbECpf(
                 "Digite o CPF do Cliente:",
@@ -585,7 +676,7 @@ namespace SneezePharma.Models
                 11
             );
 
-            var cliente = BuscarPorId(cpf);
+            var cliente = BuscarPorCPF(cpf);
 
             if (cliente is null)
             {
@@ -666,8 +757,8 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Venda realizada com sucesso!");
                 venda.setValorTotal(valorTotal);
-                this.Venda.Add(venda);
-                this.SalesManipulate.Gravar(this.Venda);
+                this.Vendas.Add(venda);
+                this.SalesManipulate.Gravar(this.Vendas);
                 this.SalesItemManipulate.Gravar(this.ItensDeVenda);
             }
             InputHelper.PressioneEnterParaContinuar();
@@ -675,7 +766,7 @@ namespace SneezePharma.Models
 
         private void AlterarItensDaVenda()
         {
-            if (this.Venda.Count == 0)
+            if (this.Vendas.Count == 0)
             {
                 Console.WriteLine("Não há vendas realizadas até o momento!");
                 InputHelper.PressioneEnterParaContinuar();
@@ -777,7 +868,7 @@ namespace SneezePharma.Models
                 venda.setValorTotal(itensDeVenda.Sum(iv => iv.TotalItem));
             }
             while (repetir);
-            SalesManipulate.Gravar(this.Venda);
+            SalesManipulate.Gravar(this.Vendas);
             SalesItemManipulate.Gravar(this.ItensDeVenda);
         }
 
@@ -808,7 +899,7 @@ namespace SneezePharma.Models
                     {
                         itensDaVenda.Remove(itemDaVenda);
                         this.ItensDeVenda.Remove(itemDaVenda);
-                        this.Venda.Remove(venda);
+                        this.Vendas.Remove(venda);
                     }
                 }
                 else
@@ -855,12 +946,12 @@ namespace SneezePharma.Models
 
         private SalesModel? BuscarVendaPorId(int id)
         {
-            return this.Venda.Find(v => v.Id == id);
+            return this.Vendas.Find(v => v.Id == id);
         }
 
         private List<SalesModel> BuscarVendasPorCpfDoCliente(string cpf)
         {
-            return this.Venda.FindAll(v => v.Cliente == cpf);
+            return this.Vendas.FindAll(v => v.Cliente == cpf);
         }
 
         private List<SalesItemModel> BuscarItensDeVenda(int idVenda)
@@ -869,7 +960,7 @@ namespace SneezePharma.Models
         }
         private void BuscarVendaPorId()
         {
-            if (this.Venda.Count == 0)
+            if (this.Vendas.Count == 0)
             {
                 Console.WriteLine("Nenhuma venda foi realizada ainda!");
                 InputHelper.PressioneEnterParaContinuar();
@@ -901,10 +992,10 @@ namespace SneezePharma.Models
         }
         private void ListarVendas()
         {
-            if (this.Venda.Count > 0)
+            if (this.Vendas.Count > 0)
             {
                 Console.WriteLine("======= VENDAS =======");
-                foreach (var v in this.Venda)
+                foreach (var v in this.Vendas)
                 {
                     Console.WriteLine(v);
                     Console.WriteLine();
@@ -942,7 +1033,7 @@ namespace SneezePharma.Models
             return quantidade;
         }
 
-        private SalesItemModel CadastrarItemDeVenda(SalesModel venda, Medicine medicamento)
+        private SalesItemModel CadastrarItemDeVenda(SalesModel venda, MedicineModel medicamento)
         {
             var id = this.ItensDeVenda.LastOrDefault()?.Id ?? 0;
 
@@ -1698,7 +1789,7 @@ namespace SneezePharma.Models
             return medicamento;
         }
 
-        private Medicine LocalizarMedicamentoAtivo(string cdb)
+        private void LocalizarMedicamentoAtivo()
         {
             MedicineModel medicine = LocalizarMedicamento();
 
@@ -1758,10 +1849,10 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD da classe Purchase
 
-        public void CriarPurchase()
+        public void RegistrarCompra()
         {
             string cnpj;
-            PurchasesModel compra = null;
+            PurchaseModel compra = null;
             do
             {
                 cnpj = InputHelper.RetornarString("Digite o CNPJ do fornecedor:", "O CNPJ é inválido.");
@@ -1769,40 +1860,55 @@ namespace SneezePharma.Models
                 var fornecedorBloqueado = this.FornecedoresRestritos.Find(fb => fb.Cnpj == cnpj);
                 if (fornecedor != null && fornecedorBloqueado == null && fornecedor.Situacao != SituationSupplier.I)
                 {
-                    compra = new PurchasesModel(fornecedor.Cnpj);
+                    compra = new PurchaseModel(fornecedor.Cnpj);
                 }
             }
             while (cnpj.Length != 14 || compra == null);
 
-            var itensCompra = this.ItemDaCompra.FindAll(i => i.IdCompra == compra.IdCompra);
+            var itensCompra = this.ItensDaCompra.FindAll(i => i.IdCompra == compra.IdCompra);
 
             decimal valorTotal = 0;
 
-            foreach(var itens in itensCompra)
+            foreach (var itens in itensCompra)
             {
                 valorTotal += itens.TotalItem;
             }
-            
+
             compra.setValorTotal(valorTotal);
 
             Compra.Add(compra);
-            
+
         }
-        public PurchasesModel LocalizarCompra()
+        public PurchaseModel BuscarCompra()
         {
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
             var localizadoCompra = Compra.Find(i => i.IdCompra == localizar);
 
-            return localizadoCompra;
+            if (localizadoCompra != null)
+                return localizadoCompra;
+            else
+                return null;
         }
-
-        public PurchasesModel AlterarCompra()
+        public void ListarCompraPorId()
         {
-            PurchasesModel compra = LocalizarCompra();
+            var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
+            var localizadoCompras = Compra.FindAll(i => i.IdCompra == localizar);
 
+            if (localizadoCompras != null)
+                Console.WriteLine("Não existe compra para esse ingrediente");
+            else
+            {
+                foreach(var compra in localizadoCompras)
+                {
+                    Console.WriteLine(compra);
+                }
+            }
+        }
+        public void AlterarCompra()
+        {
+            PurchaseModel compra = BuscarCompra();
             Console.WriteLine("Deseja alterar a quantidade de item? (S , N):");
             char escolha = char.Parse(Console.ReadLine().ToUpper());
-
             if (escolha == 'S')
             {
                 if (compra is not null)
@@ -1812,19 +1918,15 @@ namespace SneezePharma.Models
                         Console.WriteLine("Digite o valor total da compra corrigido (máx: 99999999,99): ");
                         compra.setValorTotal(decimal.Parse(Console.ReadLine()));
                     } while (compra.ValorTotal <= 0 || compra.ValorTotal >= 10000);
-
                     Console.WriteLine("Valor atualizado com sucesso.");
                 }
                 else
                 {
                     Console.WriteLine("Não existe esse item da compra.");
                 }
-
             }
-            return compra;
         }
-
-        public void ListarCompra()
+        public void ListarCompras()
         {
             Console.WriteLine("===Lista de Itens da Compra ===");
             foreach (var compra in Compra)
@@ -1832,8 +1934,6 @@ namespace SneezePharma.Models
                 Console.WriteLine(compra);
             }
         }
-
-
         #endregion
 
         #region Operações de CRUD da classe PurchaseItem
@@ -1844,10 +1944,10 @@ namespace SneezePharma.Models
             int contador = 0;
             string idIngrediente = "";
             decimal totalItem = 0;
-            var id = this.ItemDaCompra.LastOrDefault()?.IdCompra ?? 0;
+            var id = this.ItensDaCompra.LastOrDefault()?.IdCompra ?? 0;
             do
             {
-                IngredientModel localizar ;
+                IngredientModel localizar;
                 do
                 {
                     Console.WriteLine("Digite o ID do principio ativo da compra: ");
@@ -1885,7 +1985,7 @@ namespace SneezePharma.Models
                 }
                 PurchaseItemModel itemDaCompra = new PurchaseItemModel(++id, idIngrediente, quantidade, valorUnitario, totalItem);
 
-                ItemDaCompra.Add(itemDaCompra);
+                ItensDaCompra.Add(itemDaCompra);
 
             } while (opcao != 2 || contador == 3);
 
@@ -1896,7 +1996,7 @@ namespace SneezePharma.Models
         {
 
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
-            var localizadoItemCompra = ItemDaCompra.Find(i => i.IdCompra == localizar);
+            var localizadoItemCompra = ItensDaCompra.Find(i => i.IdCompra == localizar);
 
             return localizadoItemCompra;
         }
@@ -1926,12 +2026,12 @@ namespace SneezePharma.Models
                 }
 
             }
-                return itemCompra;
+            return itemCompra;
         }
         public void ListarItemCompra()
         {
             Console.WriteLine("===Lista de Itens da Compra ===");
-            foreach (var itemCompra in ItemDaCompra)
+            foreach (var itemCompra in ItensDaCompra)
             {
                 Console.WriteLine(itemCompra);
             }
@@ -1951,7 +2051,7 @@ namespace SneezePharma.Models
 
             DateOnly dataFinal = InputHelper.RetornarData("Digite a data final: ", "Digite uma data válida");
 
-            var relatorio = this.Venda.Where(v => v.DataVenda >= dataInicial && v.DataVenda <= dataFinal).ToList();
+            var relatorio = this.Vendas.Where(v => v.DataVenda >= dataInicial && v.DataVenda <= dataFinal).ToList();
 
             foreach (var item in relatorio)
             {
@@ -2003,4 +2103,3 @@ namespace SneezePharma.Models
         #endregion
     }
 }
-//ahhhh

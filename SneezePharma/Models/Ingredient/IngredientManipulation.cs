@@ -1,4 +1,5 @@
-﻿using SneezePharma.Helpers;
+﻿using SneezePharma.Enums;
+using SneezePharma.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,9 +53,11 @@ namespace SneezePharma.Models.Ingredient
                         var situacao = contentLine[42..46];
 
                         ingredientes.Add(new IngredientModel(
-                            int.Parse(id),
+                            id,
                             nome,
-                            DateOnly.Parse(ultimaCompra)
+                            DateOnly.Parse(ultimaCompra),
+                            DateOnly.Parse(dataCadastro),
+                            situacao == "A" ? SituationIngredient.A : SituationIngredient.I
                             ));
                     }
                 }

@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.Purchases
 {
-    public class PurchasesManipulator : ArchiveManipulator<PurchasesModel>
+    public class PurchaseManipulate : ArchiveManipulator<PurchaseModel>
     {
         private string DirectoryPath { get; set; } = @"\Arquivos\SheezePharma\";
         private string FilePath { get; set; } = "Purchases.data";
 
-        public PurchasesManipulator()
+        public PurchaseManipulate()
         {
             CriarArquivo(DirectoryPath, FilePath);
         }
-
-        public override List<PurchasesModel> Ler()
+        public override List<PurchaseModel> Ler()
         {
-            var purchasesLidos = new List<PurchasesModel>();
+            var purchasesLidos = new List<PurchaseModel>();
             string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
@@ -36,7 +35,7 @@ namespace SneezePharma.Models.Purchases
                         var fornecedor = contentLine[19..27];
                         var valorTotal = contentLine[27..38];
 
-                        purchasesLidos.Add(new PurchasesModel(
+                        purchasesLidos.Add(new PurchaseModel(
                             int.Parse(idPurchase),
                             fornecedor,
                             DateOnly.Parse(dataCompra),
@@ -49,8 +48,7 @@ namespace SneezePharma.Models.Purchases
             }
             return purchasesLidos;
         }
-
-        public override void Gravar(List<PurchasesModel> purchases)
+        public override void Gravar(List<PurchaseModel> purchases)
         {
             var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
 

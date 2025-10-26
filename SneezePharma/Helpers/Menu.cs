@@ -55,6 +55,7 @@ namespace SneezePharma.Helpers
             Console.WriteLine("2. MENU - INATIVAR MEDICAMENTO");
             Console.WriteLine("3. MENU - LISTAR MEDICAMENTO POR ID");
             Console.WriteLine("4. MENU - LISTAR TODOS OS MEDICAMENTOS");
+            Console.WriteLine("5. MENU - PRODUÇÃO");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }
@@ -78,7 +79,7 @@ namespace SneezePharma.Helpers
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVO");
             Console.WriteLine("1. MENU - ALTERAR PRINCÍPIO ATIVO");
-            Console.WriteLine("2. MENU - INATIVAR PRINCÍPIO ATIVO");
+            Console.WriteLine("2. MENU - ALTERAR SITUAÇÃO DO PRINCÍPIO ATIVO");
             Console.WriteLine("3. MENU - LISTAR PRINCÍPIO ATIVO POR ID");
             Console.WriteLine("4. MENU - LISTAR TODOS OS PRINCÍPIOS ATIVOS");
             Console.WriteLine("0. SAIR");
@@ -106,8 +107,21 @@ namespace SneezePharma.Helpers
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - COMPRA DE PRINCÍPIO ATIVO");
             Console.WriteLine("1. MENU - COMPRAR PRINCÍPIO ATIVO");
-            Console.WriteLine("2. MENU - LISTAR TODOS OS PRINCÍPIOS ATIVOS");
-            Console.WriteLine("3. MENU - LISTAR PRINCÍPIO ATIVO POR ID");
+            Console.WriteLine("2. MENU - ALTERAR COMPRA");
+            Console.WriteLine("3. MENU - LISTAR TODAS COMPRAS");
+            Console.WriteLine("4. MENU - LISTAR COMPRA POR ID");
+            Console.WriteLine("0. SAIR");
+            Console.WriteLine("--------------------------------------");
+        }
+
+        public static void MenuProducao()
+        {
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("MENU - PRODUÇÃO");
+            Console.WriteLine("1. MENU - REGISTRAR PRODUÇÃO");
+            Console.WriteLine("2. MENU - ALTERAR QUANTIDADE DA PRODUÇÃO");
+            Console.WriteLine("3. MENU - LISTAR PRODUÇÃO POR ID");
+            Console.WriteLine("4. MENU - LISTAR TODAS AS PRODUÇÕES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models.Medicine
 {
-    public class MedicineManipulator : ArchiveManipulator<MedicineModel>
+    public class MedicineManipulate : ArchiveManipulator<MedicineModel>
     {
         private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
 
         private string FilePath { get; set; } = "Medicine.data";
 
-        public MedicineManipulator()
+        public MedicineManipulate()
         {
             CriarArquivo(DirectoryPath, FilePath);
         }
