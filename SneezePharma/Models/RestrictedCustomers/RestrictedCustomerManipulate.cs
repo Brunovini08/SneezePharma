@@ -10,7 +10,12 @@ namespace SneezePharma.Models.RestrictedCustomers
     public class RestrictedCustomerManipulate : ArchiveManipulator<RestrictedCustomerModel>
     {
         private static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        private static string FilePath { get; set; } = " RestrictedCustomers.data";
+        private static string FilePath { get; set; } = "RestrictedCustomers.data";
+
+        public RestrictedCustomerManipulate()
+        {
+            CriarArquivo(DirectoryPath, FilePath);
+        }
 
         public override void Gravar(List<RestrictedCustomerModel> restricteds)
         {

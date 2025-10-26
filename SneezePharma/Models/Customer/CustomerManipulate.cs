@@ -46,19 +46,30 @@ namespace SneezePharma.Models.Customer_Manipulation_
                     {
                         var contentLine = sr.ReadLine();
 
-                        var cpf = contentLine[0..10];
-                        var nome = contentLine[11..49];
-                        var telefone = contentLine[50..60];
-                        var dataNascimento = contentLine[61..69];
-                        var dataUltimaCompra = contentLine[70..77];
-                        var dataCadastro = contentLine[78..85];
-                        var situacao = contentLine[86];
+                        var cpf = contentLine[0..11];
+                        var nome = contentLine[11..61];
+                        var dataNascimento = DateOnly.ParseExact(contentLine[61..69], "ddMMyyyy");
+                        var telefone = contentLine[69..80];
+                        var dataUltimaCompra = contentLine[80..88];
+                        if (dataUltimaCompra == "00000000")
+                        {
+                            dataUltimaCompra = null;
+                        }
+                            var dataCadastro = DateOnly.ParseExact(contentLine[88..96], "ddMMyyyy");
+                        var situacao = contentLine[96];
                         if (situacao.ToString() == "A")
                             situacao = (char)SituationCustomer.A;
                         else
                             situacao = (char)SituationCustomer.I;
 
-                        var customer = new CustomerModel(cpf, nome, DateOnly.Parse(dataNascimento), telefone, DateOnly.Parse(dataUltimaCompra), DateOnly.Parse(dataCadastro), (SituationCustomer)situacao);
+                        var customer = new CustomerModel(
+                            cpf,
+                            nome,
+                            dataNascimento,
+                            telefone,
+                            ultimaCompra: dataUltimaCompra != null ? DateOnly.Parse(dataUltimaCompra) : null,
+                            dataCadastro,
+                            (SituationCustomer)situacao);
                         customerList.Add(customer);
                     }
                 }

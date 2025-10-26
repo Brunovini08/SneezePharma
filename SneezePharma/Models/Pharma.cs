@@ -13,6 +13,7 @@ using SneezePharma.Models.Sales;
 using SneezePharma.Models.SalesItem;
 using SneezePharma.Models.Supplier_Manipulation_;
 using SneezePharma.Utils;
+using System.Text.RegularExpressions;
 
 namespace SneezePharma.Models
 {
@@ -176,7 +177,7 @@ namespace SneezePharma.Models
                         ListarCompraPorId();
                         break;
                     default:
-                        break; 
+                        break;
                 }
             } while (validar == false);
         }
@@ -231,10 +232,10 @@ namespace SneezePharma.Models
                         RemoverClienteRestrito();
                         break;
                     case 5:
-                        ListarClientes();
+                        ListarCliente();
                         break;
                     case 6:
-                        ListarCliente();
+                        ListarClientes();
                         break;
                     case 0:
                         break;
@@ -265,10 +266,10 @@ namespace SneezePharma.Models
                         RemoverFornecedorRestrito();
                         break;
                     case 5:
-                        ListarFornecedores();
+                        ListarFornecedorPorCNPJ();
                         break;
                     case 6:
-                        ListarFornecedorPorCNPJ();
+                        ListarFornecedores();
                         break;
                     case 7:
                         ListarFornecedoresRestritos();
@@ -316,14 +317,16 @@ namespace SneezePharma.Models
                 switch (opcao)
                 {
                     case 1:
-                       
+                        RegistrarProducao();
                         break;
                     case 2:
-                        
+                        AlterarQuantidadeDaProducao();
                         break;
                     case 3:
+                        BuscarProducaoPorId();
                         break;
                     case 4:
+                        ListarProducao();
                         break;
                     default:
                         break;
@@ -487,25 +490,104 @@ namespace SneezePharma.Models
         #region Operações de CRUD da classe Customer
         public void RegistrarCliente()
         {
-            int opcao;
-            bool validar;
-            do
+            try
             {
-                Menu.MenuRelatorio();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
-                switch (opcao)
+                Console.WriteLine("CADASTRANDO CLIENTE: ");
+                Console.WriteLine();
+                string cpf;
+                bool validar = false;
+                do
                 {
-                    case 1:
-                        RelatorioVendasPeriodo();
-                        break;
-                    case 2:
-                        RelatorioComprasFornecedor();
-                        break;
-                    case 3:
-                        RelatorioMedicamentosMaisVendidos();
-                        break;
-                }
-            } while (validar == false);
+                    try
+                    {
+                        Console.Clear();
+                        cpf = InputHelper.RetornarString("Digite o seu CPF (Sem pontuções): ", "Por favor, digite o CPF!");
+                        if (cpf.Length != 11)
+                        {
+                            InputHelper.ExibirErro("CPF deve conter 11 caracteres!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                        else if (cpf.Length == 11)
+                        {
+                            validar = InputHelper.ValidarCpf(cpf);
+                            if (!validar)
+                            {
+                                InputHelper.ExibirErro("CPF inválido!");
+                                InputHelper.PressioneEnterParaContinuar();
+                                Console.Clear();
+                            }
+                            else
+                            {
+                                CustomerModel cliente = this.Clientes.Find(c => c.CPF == cpf);
+                                if (cliente != null)
+                                {
+                                    InputHelper.ExibirErro("CPF já cadastrado, tente com outro CPF!");
+                                    InputHelper.PressioneEnterParaContinuar();
+                                    Console.Clear();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                } while (cpf.Length != 11 || validar != true);
+                Console.Clear();
+                string nome;
+                string padrao = @"^-?[0-9]+(?:\.[0-9]+)?$";
+                Regex regex = new Regex(padrao);
+                do
+                {
+                    try
+                    {
+                        nome = InputHelper.RetornarString("Digite seu nome: ", "Por favor, digite o nome!");
+                        if (regex.IsMatch(nome))
+                        {
+                            InputHelper.ExibirErro("Nome não pode conter número!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                } while (nome.Length > 50 || nome.Length <= 0 || regex.IsMatch(nome) == true);
+                Console.Clear();
+                DateOnly dataNascimento;
+                do
+                {
+                    try
+                    {
+                        dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                } while (dataNascimento == null);
+                Console.Clear();
+                string telefone;
+                do
+                {
+                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefone com DDD!");
+                } while (telefone.Length != 11);
+                Console.Clear();
+                CustomerModel customer = new CustomerModel(cpf, nome, dataNascimento, telefone);
+                this.Clientes.Add(customer);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Cliente cadastrado com sucesso");
+                customerManipulate.Gravar(this.Clientes);
+                Console.ResetColor();
+                Console.ReadKey();
+                Console.Clear();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         public void AtualizarCliente()
         {
@@ -922,7 +1004,7 @@ namespace SneezePharma.Models
             }
             else
             {
-                var novaQuantidade = ConfirmacaoQuantidade();
+                var novaQuantidade = ConfirmacaoQuantidade("Digite a nova quantidade:", 999);
 
                 try
                 {
@@ -1009,7 +1091,7 @@ namespace SneezePharma.Models
             InputHelper.PressioneEnterParaContinuar();
         }
 
-        private int ConfirmacaoQuantidade()
+        private int ConfirmacaoQuantidade(string msgEntrada, int quantidadeMax)
         {
             var quantidade = 0;
             var repetir = true;
@@ -1018,8 +1100,8 @@ namespace SneezePharma.Models
             {
                 try
                 {
-                    quantidade = InputHelper.RetornarNumeroInteiro("Digite a quantidade de medicamentos:");
-                    GeneralException.VerificarQuantidadeInvalidaInteiro(1, 999, quantidade, "Quantidade inválida! A quantidade deve ser 1 a 999");
+                    quantidade = InputHelper.RetornarNumeroInteiro(msgEntrada);
+                    GeneralException.VerificarQuantidadeInvalidaInteiro(1, quantidadeMax, quantidade, "Quantidade inválida! A quantidade deve ser 1 a 999");
 
                     repetir = false;
                 }
@@ -1041,7 +1123,7 @@ namespace SneezePharma.Models
             {
                 var idVenda = venda.Id;
                 var cdbMedicamento = medicamento.CDB;
-                var quantidade = ConfirmacaoQuantidade();
+                var quantidade = ConfirmacaoQuantidade("Digite a quantidade:", 999);
 
                 decimal valorUnitario = medicamento.ValorVenda;
 
@@ -1095,6 +1177,7 @@ namespace SneezePharma.Models
                 } while (dataAbertura == null || dataAbertura.ToString() == string.Empty);
                 this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial,
                 pais, dataAbertura));
+                supplierManipulate.Gravar(this.Fornecedores);
             }
             catch (Exception e)
             {
@@ -1164,7 +1247,7 @@ namespace SneezePharma.Models
         }
         public void ListarFornecedores()
         {
-            foreach (var fornecedor in this.Fornecedores.ToList())
+            foreach (var fornecedor in this.Fornecedores)
             {
                 Console.WriteLine(fornecedor);
             }
@@ -1385,260 +1468,152 @@ namespace SneezePharma.Models
         #endregion
 
         #region  Operações de CRUD da classe Producer
-        //public void MenuProducao()
-        //{
 
-        //    List<ProduceModel> listaManipulacoes = new List<ProduceModel>();
-        //    bool continuar = true;
+        private void RegistrarProducao()
+        {
+            var id = this.Producao.LastOrDefault()?.ID ?? 0;
 
+            var cdb = EntradaCdbECpf(
+                "Digite o CDB do Medicamento:",
+                "Total de dígitos do CDB não bate! (CDB possui 13 dígitos)",
+                13
+            );
 
-        //    while (continuar)
-        //    {
-        //        Console.WriteLine("\n1 - Cadastrar Manipulação");
-        //        Console.WriteLine("2 - Listar Manipulações");
-        //        Console.WriteLine("3 - Alterar Pedido de Manipulação");
-        //        Console.WriteLine("4 - Buscar pelo ID");
-        //        Console.WriteLine("0 - Sair");
-        //        Console.Write("Escolha uma opção: ");
-        //        int opcao = int.Parse(Console.ReadLine());
+            var medicamento = this.Medicamentos.Find(m => m.CDB == cdb && m.Situacao == 'A');
 
-        //        switch (opcao)
-        //        {
-        //            case 1:
-        //                var manipulacao = new ProduceModel().CadastrarManipulacao();
-        //                if (manipulacao is not null)
-        //                {
-        //                    listaManipulacoes.Add(manipulacao);
-        //                    Console.WriteLine("\nManipulação salva com sucesso!");
-        //                }
-        //                break;
+            if (medicamento is null)
+            {
+                Console.WriteLine("Não consta esse medicamento no sistema!");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
 
-        //            case 2:
-        //                //var produtos = manipulador.LerManipulacao();
-        //                ProduceModel.MostrarManipulacao(listaManipulacoes);
-        //                break;
+            var quantidade = ConfirmacaoQuantidade("Digite a quantidade:", 999);
 
-        //            case 3:
+            var producao = new ProduceModel(++id, medicamento.CDB, quantidade);
 
-        //                ProduceModel.AlterarManipulacao(listaManipulacoes);
-        //                break;
-        //            case 4:
-        //                ProduceModel.LocalizarManipulacao(listaManipulacoes);
-        //                break;
-        //            case 0:
-        //                continuar = false;
-        //                break;
+            var idItemDeProducao = ItensProducao.LastOrDefault()?.IdProducao ?? 0; 
+            var ingredientesAtivos = Ingredientes.FindAll(i => i.Situacao == SituationIngredient.A);
+            var repetir = true;
+            do
+            {
+                Console.WriteLine("====== INGREDIENTES ATIVOS ======");
+                foreach (var i in ingredientesAtivos)
+                {
+                    Console.WriteLine(i);
+                    Console.WriteLine();
+                }
 
-        //            default:
-        //                Console.WriteLine("Opção inválida.");
-        //                break;
-        //        }
-        //    }
-        //}
-        //public bool ValidarDataProducao(DateOnly data)
-        //{
-        //    DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
+                Console.WriteLine("Digite o ID do ingrediente para gerar a produção do medicamento:");
+                var idIngrediente = Console.ReadLine() ?? "";
 
+                var localizar = ingredientesAtivos.Find(i => i.Id == idIngrediente);
 
-        //    if (data > hoje)
-        //    {
-        //        Console.WriteLine("Não pode adicionar uma data no futuro.");
-        //        return false;
-        //    }
-        //    if (data < hoje.AddMonths(-1))
-        //    {
-        //        Console.WriteLine("Data de produção muito antiga.");
-        //        return false;
-        //    }
+                if (localizar is null)
+                {
+                    Console.WriteLine("Não existe esse ingrediente em nosso sistema!");
+                    continue;
+                }
+                else
+                {
+                    var quantidadeIngrediente = ConfirmacaoQuantidade("Digite a quantidade:", 9999);
 
-        //    DataProducao = data;
-        //    Console.WriteLine($"Data da produção registrada: {DataProducao: dd/MM/yyyy}");
-        //    return true;
-        //}
-        //public void ValidarID()
-        //{
+                    var itemDeProducao = new ProduceItemModel(
+                        ++idItemDeProducao,
+                        producao.ID,
+                        localizar.Id,
+                        quantidadeIngrediente
+                    );
 
-        //    ID = ultimoID;
-        //    Console.WriteLine($"ID: " + ID);
-        //    ultimoID++;
-        //}
-        //public void CadastrarManipulacao()
-        //{
+                    ItensProducao.Add(itemDeProducao);
+                    ingredientesAtivos.Remove(localizar);
+                }
 
-        //    try
-        //    {
+                repetir = RealizarPerguntaDeConfirmacao("Deseja cadastrar mais um principio ativo? (1 - Sim|0 - Não");
+            }
+            while (repetir);
 
-        //        Console.WriteLine("Digite a data de produção (DD/MM/AAAA): ");
-        //        string Data = Console.ReadLine();
+            //TODO: Salvar no arquivo
+        }
 
+        private void AlterarQuantidadeDaProducao()
+        {
+            if (!TemProducoesCadastradas())
+            {
+                Console.WriteLine("Não há produções cadastradas!");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
 
-        //        if (DateOnly.TryParseExact(Data, "ddMMyyyy", null, System.Globalization.DateTimeStyles.None, out DateOnly data))
-        //        {
-        //            if (ValidarDataProducao(data))
-        //            {
+            ListarProducao();
 
+            var id = InputHelper.RetornarNumeroInteiro("Digite o ID da produção que deseja alterar a quantidade:");
 
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("Falha ao validar a data");
+            var producao = BuscarProducaoPeloId(id);
 
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("Formato de data errado. Use o DDMMAAAA");
+            if (producao is null)
+            {
+                Console.WriteLine($"Não foi encontrada nenhuma produção com este ID: {id}");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
+            else
+            {
+                var quantidade = ConfirmacaoQuantidade("Digite a nova quantidade:", 999);
 
-        //        }
+                producao.setQuantidade(quantidade);
+            }
 
+            //TODO: Salvar no arquivo
+            
+        }
 
+        private void BuscarProducaoPorId()
+        {
+            var id = InputHelper.RetornarNumeroInteiro("Digite o ID da produção que deseja consultar:");
 
-        //        Console.WriteLine("Digite a quantidade que deseja fazer: ");
-        //        string Qntd = Console.ReadLine();
+            var producao = BuscarProducaoPeloId(id);
 
-        //        if (!int.TryParse(Qntd, out int quantidade))
-        //        {
-        //            Console.WriteLine("Quantidade invalida. Digite um numero inteiro");
+            if (producao is null)
+            {
+                Console.WriteLine($"Não foi encontrada nenhuma produção com este ID: {id}");
+            }
+            else
+            {
+                Console.WriteLine("======= PRODUÇÃO =======");
+                Console.WriteLine(producao);
+            }
+            InputHelper.PressioneEnterParaContinuar();
+        }
 
-        //        }
-        //        GeneralException.VerificarQuantidadeInvalidaInteiro(1, 999, quantidade, "Quantidade de medicamento excedida");
+        private ProduceModel BuscarProducaoPeloId(int id)
+        {
+            return Producao.Find(p => p.ID == id);
+        }
 
-        //        ValidarID();
-        //        Console.WriteLine("Manipulação Cadastrada!");
-        //        Console.WriteLine($"ID:ID:{ID.ToString().PadLeft(5, '0')}, Data: {data:dd/MM/yyyy}, Quantidade: {quantidade}");
-        //        ProduceModel produce = new ProduceModel(ID, data, quantidade);
-        //        this.ItemProducao.Add(produce);
+        private void ListarProducao()
+        {
+            if (TemProducoesCadastradas())
+            {
+                Console.WriteLine("========= PRODUÇÕES =========");
+                foreach (var p in Producao)
+                {
+                    Console.WriteLine(p);
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Não há nenhuma produção cadastrada no momento!");
+            }
+            InputHelper.PressioneEnterParaContinuar();
+        }
 
+        private bool TemProducoesCadastradas()
+        {
+            return Producao.Count > 0;
+        }
 
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-
-        //        Console.WriteLine(ex.Message);
-
-
-        //    }
-
-        //}
-
-        //public static void MostrarManipulacao(List<ProduceModel> listaManipulacoes)
-        //{
-        //    if (listaManipulacoes.Count == 0)
-        //    {
-        //        Console.WriteLine("Nenhuma manipulação cadastrada.");
-        //        return;
-        //    }
-        //    Console.WriteLine("Manipulações cadastradas: ");
-        //    foreach (var item in listaManipulacoes)
-        //    {
-        //        Console.WriteLine($"ID: {item.ID}, Data: {item.DataProducao: dd/MM/yyyy}, Quantidade: {item.Quantidade}");
-        //    }
-        //}
-        //public ProduceModel LocalizarIDmanipulacao(string id)
-        //{
-
-        //    return listaManipulacoes.Find(m => m.ID == id);
-
-        //}
-
-        //public static void AlterarManipulacao(List<ProduceModel> lista)
-        //{
-        //    Console.WriteLine("Informe o ID que quer alterar: ");
-        //    int id = Console.ReadLine() ?? "";
-        //    ProduceModel alterar = lista.Find(m => m.ID == id);
-
-        //    if (alterar is not null)
-        //    {
-        //        Console.WriteLine("Informe a quantidade para alterar: ");
-        //        if (int.TryParse(Console.ReadLine(), out int novaQnt))
-        //        {
-        //            alterar.Quantidade = novaQnt;
-        //            Console.WriteLine("Quantidade atualizada");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("ID não encontrado");
-        //    }
-
-        //}
-
-        //public static void LocalizarManipulacao(List<ProduceModel> lista)
-        //{
-        //    Console.WriteLine("Digite o ID que gostaria de localizar: ");
-        //    string id = Console.ReadLine() ?? "";
-
-        //    ProduceModel encontrado = lista.Find(m => m.ID == id);
-        //    if (encontrado is not null)
-        //    {
-        //        Console.WriteLine("ID Encontrado!");
-        //        Console.WriteLine(encontrado);
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("ID não encontrado.");
-        //    }
-        //}
-        //public override string ToString()
-        //{
-        //    return $"ID: {ID}, Data: {DataProducao:dd/MM/yyyy}, Quantidade: {Quantidade}";
-        //}
-        //        using SneezePharma;
-        //using SneezePharma.Models;
-        //using SneezePharma.Models.Produce;
-
-
-
-
-        //List<ProduceModel> listaManipulacoes = new List<ProduceModel>();
-        //    bool continuar = true;
-
-        //    FileProduce manipuladorArquivo = new FileProduce();
-
-        //    listaManipulacoes = manipuladorArquivo.Ler();
-
-        //while (continuar)
-        //{
-        //    Console.WriteLine("\n1 - Cadastrar Manipulação");
-        //    Console.WriteLine("2 - Listar Manipulações");
-        //    Console.WriteLine("3 - Alterar Pedido de Manipulação");
-        //    Console.WriteLine("4 - Buscar pelo ID");
-        //    Console.WriteLine("0 - Sair");
-        //    Console.Write("Escolha uma opção: ");
-        //    int opcao = int.Parse(Console.ReadLine());
-
-        //    switch (opcao)
-        //    {
-        //        case 1:
-        //            var manipulacao = new ProduceModel().CadastrarManipulacao();
-        //            if (manipulacao is not null)
-        //            {
-        //                listaManipulacoes.Add(manipulacao);
-        //                Console.WriteLine("\nManipulação salva com sucesso!");
-        //            }
-        //break;
-
-        //        case 2:
-        //    ProduceModel.MostrarManipulacao(listaManipulacoes);
-        //    break;
-
-        //case 3:
-
-        //    ProduceModel.AlterarManipulacao(listaManipulacoes);
-        //    break;
-        //case 4:
-        //    ProduceModel.LocalizarManipulacao(listaManipulacoes);
-        //    break;
-        //case 0:
-        //    continuar = false;
-        //    manipuladorArquivo.Gravar(listaManipulacoes);
-        //    break;
-
-        //default:
-        //    Console.WriteLine("Opção inválida.");
-        //    break;
-        //}
-        //}
         #endregion
 
         #region Operações de CRUD da classe ProducerItem
@@ -1894,7 +1869,7 @@ namespace SneezePharma.Models
                 Console.WriteLine("Não existe compra para esse ingrediente");
             else
             {
-                foreach(var compra in localizadoCompras)
+                foreach (var compra in localizadoCompras)
                 {
                     Console.WriteLine(compra);
                 }

@@ -36,7 +36,10 @@ namespace SneezePharma.Models
             this.Nome = nome;
             this.CPF = CPF;
             this.Telefone = telefone;
-            this.UltimaCompra = ultimaCompra;
+            if (ultimaCompra != null)
+            {
+                this.UltimaCompra = ultimaCompra;
+            }
             this.DataCadastro = dataCadastro;
             this.Situacao = situacao;
         }

@@ -39,8 +39,9 @@ namespace SneezePharma.Models.Produce.Produce
                         producaoLista.Add(new ProduceModel(
                             int.Parse(id),
                             DateOnly.Parse(dataProd),
+                            medicamento,
                             int.Parse(quantidade)
-                            ));
+                        ));
                     }
                 }
                 sr.Close();

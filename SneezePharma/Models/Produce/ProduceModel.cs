@@ -16,25 +16,21 @@ namespace SneezePharma.Models.Produce
         public string Medicamento { get; private set; }
         public int Quantidade { get; private set; }
 
-        public ProduceModel(int id, DateOnly dataproducao, int quantidade)
+        public ProduceModel(int id, string medicamento, int quantidade)
         {
 
             ID = id;
-            if (ValidarDataProducao(dataproducao))
-            {
-                DataProducao = dataproducao;
-            }
-            else
-            {
-                Console.WriteLine("Data inválida!");
-            }
-            //Medicamento = medicamento;
+            DataProducao = DateOnly.FromDateTime(DateTime.Now);
+            Medicamento = medicamento;
             Quantidade = quantidade;
         }
 
-        public ProduceModel()
+        public ProduceModel(int iD, DateOnly dataProducao, string medicamento, int quantidade)
         {
-
+            ID = iD;
+            DataProducao = dataProducao;
+            Medicamento = medicamento;
+            Quantidade = quantidade;
         }
 
         public void setQuantidade(int quantidade)

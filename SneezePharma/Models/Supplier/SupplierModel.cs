@@ -25,12 +25,19 @@ namespace SneezePharma.Models
             string pais, DateOnly dataAbertura)
         {
             this.DataCadastro = new DateOnly();
-            this.UltimoFornecimento = new DateOnly();
+            this.UltimoFornecimento = DateOnly.Parse("00000000");
             this.Cnpj = cnpj;
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
             this.DataAbertura = dataAbertura;
             this.Situacao = SituationSupplier.A;
+        }
+
+        public SupplierModel(string cnpj, string razaoSocial, string pais, DateOnly dataAbertura, DateOnly ultimoFornecimento, DateOnly dataCadastro, SituationSupplier situacao) : this(cnpj, razaoSocial, pais, dataAbertura)
+        {
+            UltimoFornecimento = ultimoFornecimento;
+            DataCadastro = dataCadastro;
+            Situacao = situacao;
         }
 
         public void setRazaoSocial(string razaoSocial)
@@ -48,9 +55,9 @@ namespace SneezePharma.Models
             razaoSocial = razaoSocial.PadRight(50, ' ');
             var pais = this.Pais.ToString();
             pais = pais.PadRight(20, ' ');
-            var dataAbertura = this.DataAbertura.ToString();
-            var ultimoFornecimento = this.UltimoFornecimento.ToString();
-            var dataCadastro = this.DataCadastro.ToString();
+            var dataAbertura = this.DataAbertura.ToString("ddMMyyyy");
+            var ultimoFornecimento = this.UltimoFornecimento.ToString("ddMMyyyy");
+            var dataCadastro = this.DataCadastro.ToString("ddMMyyyy");
 
             return $"{cnpj}{razaoSocial}{pais}{dataAbertura}{ultimoFornecimento}{dataCadastro}";
         }
