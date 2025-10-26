@@ -265,5 +265,22 @@ namespace SneezePharma.Utils
                 return false;
             }
         }
+        public static bool ValidarDataProducao(DateOnly data)
+        {
+            DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
+
+
+            if (data > hoje)
+            {
+                Console.WriteLine("Não pode adicionar uma data no futuro.");
+                return false;
+            }
+            if (data < hoje.AddMonths(-1))
+            {
+                Console.WriteLine("Data de produção muito antiga.");
+                return false;
+            }
+            return true;
+        }
     }
 }

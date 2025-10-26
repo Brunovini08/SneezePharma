@@ -149,10 +149,8 @@ namespace SneezePharma.Models
         }
         public override string ToString()
         {
-            return $"Cnpj: {Cnpj},Razão social: {RazaoSocial},País: {Pais},Data abertura: {DataAbertura}," +
-                $"Ultimo fornecimento: {UltimoFornecimento},Data cadastro: {DataCadastro},Situação: {Situacao}";
+            return $"Cnpj: {Cnpj}Razão social: {RazaoSocial}País: {Pais}Data abertura: {DataAbertura}" +
+                $"Ultimo fornecimento: {UltimoFornecimento}Data cadastro: {DataCadastro}Situação: {Situacao}";
         }
-
-
     }
 }
