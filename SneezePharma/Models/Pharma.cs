@@ -1,9 +1,10 @@
 ﻿using SneezePharma.Enums;
 using SneezePharma.Exceptions;
 using SneezePharma.Helpers;
-using SneezePharma.Models;
+using SneezePharma.Models.Customer_Manipulation_;
+using SneezePharma.Models.Ingredient;
 using SneezePharma.Models.Produce;
-using SneezePharma.Models.Produce.Produce;
+using SneezePharma.Models.RestrictedCustomers;
 using SneezePharma.Models.Sales;
 using SneezePharma.Models.SalesItem;
 using SneezePharma.Utils;
@@ -13,21 +14,31 @@ namespace SneezePharma.Models
 {
     public class Pharma
     {
-        public List<Customer> Clientes { get; private set; }
-        public List<Supplier> Fornecedores { get; private set; }
+        public List<CustomerModel> Clientes { get; private set; }
+        public List<SupplierModel> Fornecedores { get; private set; }
         public List<MedicineModel> Medicamentos { get; private set; }
         public List<ProduceModel> Producao { get; set; }
         public List<ProduceItemModel> ItemProducao { get; private set; }
-        public List<RestrictedCustomer> ClientesRestritos { get; private set; }
-        public List<RestrictedSupplier> FornecedoresRestritos { get; private set; }
+        public List<RestrictedCustomerModel> ClientesRestritos { get; private set; }
+        public List<RestrictedSupplierModel> FornecedoresRestritos { get; private set; }
         public List<SalesModel> Venda { get; private set; }
         public List<SalesItemModel> ItensDeVenda { get; private set; }
         public List<IngredientModel> Ingredientes { get; private set; }
-        public List<PurchasesModel> Compra {  get; private set; }
+        public List<PurchaseModel> Compra { get; private set; }
         public List<PurchaseItemModel> ItemDaCompra { get; private set; }
 
-        private SalesManipulate SalesManipulate = new SalesManipulate();
-        private SalesItemManipulate SalesItemManipulate = new SalesItemManipulate();
+
+        private SalesItemManipulate salesItemManipulate = new SalesItemManipulate();
+
+        private CustomerManipulate customerManipulate = new CustomerManipulate();
+
+        private RestrictedCustomerManipulate restrictedCustomerManipulate = new RestrictedCustomerManipulate();
+
+        private SupplierManipulate supplierManipulate = new SupplierManipulate();
+
+        private IngredientManipulation ingredientManipulation = new IngredientManipulation();
+
+        private RestrictedSupplierManipulation restrictedManipulation = new RestrictedSupplierManipulation();
 
         /// <summary>
         /// 
@@ -42,9 +53,26 @@ namespace SneezePharma.Models
             this.Medicamentos = new List<MedicineModel>();
             this.ItemDaCompra = new List<PurchaseItemModel>();
             this.Compra = new List<PurchasesModel>();
+            this.Clientes = customerManipulate.Ler();
+
+            this.ClientesRestritos = new List<RestrictedCustomerModel>();
+            this.ClientesRestritos = restrictedCustomerManipulate.Ler();
+
+            this.Fornecedores = new List<SupplierModel>();
             this.Fornecedores = supplierManipulate.Ler();
-            this.Ingredientes = ingredientManipulation.Ler();
+
+            this.FornecedoresRestritos = new List<RestrictedSupplierModel>();
             this.FornecedoresRestritos = restrictedManipulation.Ler();
+
+            this.Ingredientes = new List<IngredientModel>();
+            this.Ingredientes = ingredientManipulation.Ler();
+
+            this.ItemDaCompra = new List<PurchaseItemModel>();
+            this.ItensDeVenda = salesItemManipulate.Ler();
+
+            this.Compra = new List<PurchaseModel>();
+
+
         }
 
         public void Cadastrar()
@@ -151,8 +179,10 @@ namespace SneezePharma.Models
                 switch (opcao)
                 {
                     case 1:
+                        AtualizarCliente();
                         break;
                     case 2:
+                        InativarCliente();
                         break;
                     case 3:
                         AdicionarClienteRestrito();
@@ -161,8 +191,10 @@ namespace SneezePharma.Models
                         RemoverClienteRestrito();
                         break;
                     case 5:
+                        ListarClientes();
                         break;
                     case 6:
+                        ListarCliente();
                         break;
                     case 0:
                         break;
@@ -182,8 +214,10 @@ namespace SneezePharma.Models
                 switch (opcao)
                 {
                     case 1:
+                        AtualizarRazaoSocial();
                         break;
                     case 2:
+                        AlterarSituacaoFornecedor();
                         break;
                     case 3:
                         AdicionarFornecedorRestrito();
@@ -192,8 +226,16 @@ namespace SneezePharma.Models
                         RemoverFornecedorRestrito();
                         break;
                     case 5:
+                        ListarFornecedores();
                         break;
                     case 6:
+                        ListarFornecedorPorCNPJ();
+                        break;
+                    case 7:
+                        ListarFornecedoresRestritos();
+                        break;
+                    case 8:
+                        ListarFornecedorBloqueadoPorCNPJ();
                         break;
                     case 0:
                         break;
@@ -204,10 +246,56 @@ namespace SneezePharma.Models
 
         public void ManipularPrincipioAtivo()
         {
-
+            int opcao;
+            bool validar;
+            do
+            {
+                Menu.MenuManipulacaoPrincipioAtivo();
+                validar = int.TryParse(Console.ReadLine(), out opcao);
+                switch (opcao)
+                {
+                    case 1:
+                        RegistrarCliente();
+                        break;
+                    case 2:
+                        AdicionarFornecedor();
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        IncluirIngrediente();
+                        break;
+                }
+            } while (validar == false);
         }
 
-        #region Operações de CRUD de Ingredient
+        public void Relatorios()
+        {
+            int opcao;
+            bool validar;
+            do
+            {
+                Menu.MenuManipulacaoPrincipioAtivo();
+                validar = int.TryParse(Console.ReadLine(), out opcao);
+                switch (opcao)
+                {
+                    case 1:
+                        RelatorioVendasPeriodo();
+                        break;
+                    case 2:
+                        RelatorioMedicamentosMaisVendidos();
+                        break;
+                    case 3:
+                        RelatorioComprasFornecedor();
+                        break;
+                    default:
+                        Console.WriteLine("Digite um valor do menu!");
+                        break;
+                }
+            } while (validar == false);
+        }
+
+        #region Operações de CRUD de Ingrediente
 
         string GerarProximoId(List<IngredientModel> ingrediente)
         {
@@ -271,31 +359,11 @@ namespace SneezePharma.Models
         {
             return Ingredientes.Find(i => i.Id == Id);
         }
-       
-        public void AlterarDataUltimaCompra()
+        public void AlterarSituacao(List<SupplierModel> suppliers, char Situacao)
         {
             Console.WriteLine("Digite o Id da ultima compra feita: ");
             var Id = Console.ReadLine();
             IngredientModel ingrediente = LocalizarIngrediente(Id);
-
-            if (Id != null)
-            {
-                DateOnly novaDataUltimaCompra;
-                do
-                {
-                    novaDataUltimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida"));
-                } while (novaDataUltimaCompra.ToString() == string.Empty);
-
-                ingrediente.setUltimaCompra(novaDataUltimaCompra);
-                Console.WriteLine("Data da ultima compra alterada com sucesso!");
-            }
-            else
-            {
-                Console.WriteLine("Id da ultima compra nao encontrado");
-            }
-        }
-        public void AlterarSituacao(List<Supplier> suppliers, char Situacao)
-        {
 
             Console.WriteLine("Digite o Id que deseja alterar a Situacao: ");
             var Id = Console.ReadLine();
@@ -307,7 +375,6 @@ namespace SneezePharma.Models
                 Situacao = char.Parse(Console.ReadLine());
             }
         }
-
         public void ListarIngrediente()
         {
             if (Ingredientes.Count == 0)
@@ -328,109 +395,25 @@ namespace SneezePharma.Models
         #region Operações de CRUD da classe Customer
         public void RegistrarCliente()
         {
-            try
+            int opcao;
+            bool validar;
+            do
             {
-                Console.WriteLine("CADASTRANDO CLIENTE: ");
-                Console.WriteLine();
-                string cpf;
-                bool validar = false;
-                do
+                Menu.MenuRelatorio();
+                validar = int.TryParse(Console.ReadLine(), out opcao);
+                switch (opcao)
                 {
-                    try
-                    {
-                        Console.Clear();
-                        cpf = InputHelper.RetornarString("Digite o seu CPF (Sem pontuções): ", "Por favor, digite o CPF!");
-                        if (cpf.Length != 11)
-                        {
-                            InputHelper.ExibirErro("CPF deve conter 11 caracteres!");
-                            InputHelper.PressioneEnterParaContinuar();
-                            Console.Clear();
-                        }
-                        else if (cpf.Length == 11)
-                        {
-                            validar = InputHelper.ValidarCpf(cpf);
-                            if (!validar)
-                            {
-                                InputHelper.ExibirErro("CPF inválido!");
-                                InputHelper.PressioneEnterParaContinuar();
-                                Console.Clear();
-                            }
-                            else
-                            {
-                                Customer cliente = this.Clientes.Find(c => c.CPF == cpf);
-                                if (cliente != null)
-                                {
-                                    InputHelper.ExibirErro("CPF já cadastrado, tente com outro CPF!");
-                                    InputHelper.PressioneEnterParaContinuar();
-                                    Console.Clear();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                } while (cpf.Length != 11 || validar != true);
-                Console.Clear();
-                string nome;
-                string padrao = @"^-?[0-9]+(?:\.[0-9]+)?$";
-                Regex regex = new Regex(padrao);
-                do
-                {
-                    try
-                    {
-                        nome = InputHelper.RetornarString("Digite seu nome: ", "Por favor, digite o nome!");
-                        if (regex.IsMatch(nome))
-                        {
-                            InputHelper.ExibirErro("Nome não pode conter número!");
-                            InputHelper.PressioneEnterParaContinuar();
-                            Console.Clear();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                } while (nome.Length > 50 || nome.Length <= 0 || regex.IsMatch(nome) == true);
-
-                Console.Clear();
-
-                string dataNascimento;
-
-                do
-                {
-                    try
-                    {
-                        dataNascimento = InputHelper.RetornarData("Digite sua Data de Nascimento: ", "Por favor, digite a data de nascimento!");
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-
-                } while (dataNascimento is null || dataNascimento == String.Empty);
-
-                Console.Clear();
-                string telefone;
-                do
-                {
-                    telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefone com DDD!");
-                } while (telefone.Length != 11);
-                Console.Clear();
-
-                Customer customer = new Customer(cpf, nome, DateOnly.Parse(dataNascimento), telefone);
-                this.Clientes.Add(customer);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Cliente cadastrado com sucesso");
-                Console.ResetColor();
-                Console.ReadKey();
-                Console.Clear();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                    case 1:
+                        RelatorioVendasPeriodo();
+                        break;
+                    case 2:
+                        RelatorioComprasFornecedor();
+                        break;
+                    case 3:
+                        RelatorioMedicamentosMaisVendidos();
+                        break;
+                }
+            } while (validar == false);
         }
         public void AtualizarCliente()
         {
@@ -455,13 +438,90 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.Message);
             }
         }
-        public Customer BuscarPorId(string cpf)
+        public CustomerModel BuscarPorCPF(string cpf)
         {
             return this.Clientes.Find(c => c.CPF == cpf);
         }
-        public List<Customer> ListaClientes()
+        public void ListarClientes()
         {
-            return this.Clientes.ToList();
+            Console.WriteLine("LISTAR CLIENTES: ");
+            Console.WriteLine();
+            foreach (var cliente in this.Clientes)
+            {
+                Console.WriteLine(cliente);
+            }
+        }
+        public void InativarCliente()
+        {
+            string cpf;
+            CustomerModel cliente;
+            do
+            {
+                cpf = InputHelper.RetornarString("Digite o CPF do cliente que deseja inativar: ", "Por favor, Digite o CPF!");
+                cliente = this.BuscarPorCPF(cpf);
+                if (cliente is not null)
+                {
+                    cliente.setSituacao(Enums.SituationCustomer.I);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Cliente {cliente.Nome} está inadimplente");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    InputHelper.ExibirErro("Cliente não existe!");
+                    InputHelper.PressioneEnterParaContinuar();
+                    Console.Clear();
+                }
+            } while (cpf is null || cliente is null);
+        }
+        public void ListarCliente()
+        {
+            Console.WriteLine("LISTAR CLIENTE");
+            Console.WriteLine();
+            string cpf;
+            bool validar = false;
+            do
+            {
+                try
+                {
+                    Console.Clear();
+                    cpf = InputHelper.RetornarString("Digite o seu CPF (Sem pontuções): ", "Por favor, digite o CPF!");
+                    if (cpf.Length != 11)
+                    {
+                        InputHelper.ExibirErro("CPF deve conter 11 caracteres!");
+                        InputHelper.PressioneEnterParaContinuar();
+                        Console.Clear();
+                    }
+                    else if (cpf.Length == 11)
+                    {
+                        validar = InputHelper.ValidarCpf(cpf);
+                        if (!validar)
+                        {
+                            InputHelper.ExibirErro("CPF inválido!");
+                            InputHelper.PressioneEnterParaContinuar();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            CustomerModel cliente = this.Clientes.Find(c => c.CPF == cpf);
+                            if (cliente != null)
+                            {
+                                Console.WriteLine(cliente);
+                            }
+                            else
+                            {
+                                InputHelper.ExibirErro("Cliente não encontrado!");
+                                InputHelper.PressioneEnterParaContinuar();
+                                Console.Clear();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            } while (cpf.Length != 11 || validar != true);
         }
         #endregion
 
@@ -931,7 +991,7 @@ namespace SneezePharma.Models
                 {
                     try
                     {
-                        dataCadastro = DateOnly.Parse(InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do cadastro inválida"));
+                        dataCadastro = InputHelper.RetornarData("Digite a data do cadastro (no modelo: DDMMAAAA):", "Data do cadastro inválida");
                     }
                     catch (Exception ex)
                     {
@@ -941,7 +1001,7 @@ namespace SneezePharma.Models
                 } while (dataCadastro == null || dataCadastro.ToString() == String.Empty);
                 Console.Clear();
 
-                this.Fornecedores.Add(new Supplier(cnpj, razaoSocial, pais, dataAbertura));
+                this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial, pais, dataAbertura));
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Fornecedor cadastrado com sucesso!");
                 Console.ResetColor();
@@ -953,18 +1013,16 @@ namespace SneezePharma.Models
                 Console.WriteLine(e.Message);
             }
         }
-
-        public Supplier LocalizarFornecedor(string cnpj)
+        public SupplierModel LocalizarFornecedor(string cnpj)
         {
             return Fornecedores.Find(c => c.Cnpj == cnpj);
         }
-
         public void AtualizarRazaoSocial()
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
             string cnpj = Console.ReadLine();
             var fornecedor = this.LocalizarFornecedor(cnpj);
-            
+
             if (fornecedor is null)
             {
                 Console.WriteLine("Fornecedor não encontrado");
@@ -982,7 +1040,7 @@ namespace SneezePharma.Models
 
             Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
             var Cnpj = Console.ReadLine();
-            LocalizarFornecedor(Cnpj);
+            var fornecedor = LocalizarFornecedor(Cnpj);
 
             if (Cnpj != null)
             {
@@ -993,9 +1051,14 @@ namespace SneezePharma.Models
 
                 } while (situacao != "A" && situacao != "I");
 
+                fornecedor.setSituacao(situacao == "A" ? Enums.SituationSupplier.A : Enums.SituationSupplier.I);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Fornecedor alterado com sucesso!");
+                Console.ResetColor();
+                Console.ReadKey();
+                Console.Clear();
             }
         }
-
         public void AlterarDataUltimoFornecimento()
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
@@ -1007,11 +1070,10 @@ namespace SneezePharma.Models
                 DateOnly ultimoFornecimento;
                 do
                 {
-                    ultimoFornecimento = DateOnly.Parse(InputHelper.RetornarData("Digite a nova data de fornecimento no formato DDMMAAAA: ", "Data do ultimo fornecimento inválida"));
+                    ultimoFornecimento = InputHelper.RetornarData("Digite a nova data de fornecimento no formato DDMMAAAA: ", "Data do ultimo fornecimento inválida");
                 } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
             }
         }
-
         public void ListarFornecedores()
         {
             foreach (var fornecedor in this.Fornecedores.ToList())
@@ -1019,16 +1081,35 @@ namespace SneezePharma.Models
                 Console.WriteLine(fornecedor);
             }
         }
+        public void ListarFornecedorPorCNPJ()
+        {
+            string cnpj;
+            do
+            {
+                Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
+                cnpj = Console.ReadLine();
+                var fornecedor = this.LocalizarFornecedor(cnpj);
+
+                if (fornecedor != null)
+                {
+                    Console.WriteLine(fornecedor);
+                }
+                else
+                {
+                    Console.WriteLine("Fornecedor não encontrado");
+                }
+            } while (cnpj.Length != 14 || cnpj is null);
+        }
         #endregion
 
-        #region Operação de CD da classe RestrictedSupplier
+        #region Operação de CDR da classe RestrictedSupplier
 
         public void AdicionarFornecedorRestrito()
         {
             try
             {
-                RestrictedSupplier fornecedorBloquear;
-                Supplier fornecedor;
+                RestrictedSupplierModel fornecedorBloquear;
+                SupplierModel fornecedor;
                 do
                 {
                     string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja retirar da lista de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
@@ -1057,13 +1138,12 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.ToString());
             }
         }
-
         public void RemoverFornecedorRestrito()
         {
             try
             {
-                RestrictedSupplier fornecedorLiberar;
-                Supplier fornecedor;
+                RestrictedSupplierModel fornecedorLiberar;
+                SupplierModel fornecedor;
                 do
                 {
                     string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja adicionar na lista de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
@@ -1094,7 +1174,7 @@ namespace SneezePharma.Models
                 throw new Exception(ex.Message);
             }
         }
-        public RestrictedSupplier BuscarFornecedorRestrito(string cnpj)
+        public RestrictedSupplierModel BuscarFornecedorRestrito(string cnpj)
         {
             return this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
         }
@@ -1106,15 +1186,33 @@ namespace SneezePharma.Models
                 Console.WriteLine(fornecedor.Cnpj);
             }
         }
+        public void ListarFornecedorBloqueadoPorCNPJ()
+        {
+            string cnpj;
+            do
+            {
+                cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor Bloqueado que deseja buscar :", "CNPJ Inválido");
+                var fornecedor = this.LocalizarFornecedor(cnpj);
+
+                if (fornecedor != null)
+                {
+                    Console.WriteLine(fornecedor);
+                }
+                else
+                {
+                    Console.WriteLine("Fornecedor não encontrado");
+                }
+            } while (cnpj.Length != 14 || cnpj is null);
+        }
         #endregion
 
-        #region Operação de CD da classe RestrictedCustomer
+        #region Operação de CDR da classe RestrictedCustomer
         public void AdicionarClienteRestrito()
         {
             try
             {
-                RestrictedCustomer clienteBloquear;
-                Customer cliente;
+                RestrictedCustomerModel clienteBloquear;
+                CustomerModel cliente;
                 do
                 {
 
@@ -1151,8 +1249,8 @@ namespace SneezePharma.Models
         {
             try
             {
-                RestrictedCustomer clienteLiberar;
-                Customer cliente;
+                RestrictedCustomerModel clienteLiberar;
+                CustomerModel cliente;
                 do
                 {
                     string cpf = InputHelper.RetornarString("Digite o CPF do cliente que deseja retirar da lista de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
@@ -1184,7 +1282,7 @@ namespace SneezePharma.Models
                 Console.WriteLine(ex.ToString());
             }
         }
-        public RestrictedCustomer BuscarClienteRestrito(string cpf)
+        public RestrictedCustomerModel BuscarClienteRestrito(string cpf)
         {
             return this.ClientesRestritos.Find(c => c.CPF == cpf);
         }
@@ -1580,7 +1678,7 @@ namespace SneezePharma.Models
 
         }
 
-        public Medicine LocalizarMedicamento(string id)
+        public MedicineModel LocalizarMedicamento(string id)
         {
             Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
             string localizar = Console.ReadLine();
@@ -1838,6 +1936,69 @@ namespace SneezePharma.Models
             }
         }
 
+        #endregion
+
+        #region Relatorio de Vendas por periodo
+
+        public void RelatorioVendasPeriodo()
+        {
+            Console.WriteLine("RELATÓRIO DE VENDAS POR PERÍODO");
+
+            Console.WriteLine();
+            DateOnly dataInicial = InputHelper.RetornarData("Digite a data inicial: ", "Digite uma data válida");
+            Console.Clear();
+
+            DateOnly dataFinal = InputHelper.RetornarData("Digite a data final: ", "Digite uma data válida");
+
+            var relatorio = this.Venda.Where(v => v.DataVenda >= dataInicial && v.DataVenda <= dataFinal).ToList();
+
+            foreach (var item in relatorio)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        #endregion
+
+        #region Relatorio Medicamentos mais vendidos
+        public void RelatorioMedicamentosMaisVendidos()
+        {
+            Console.WriteLine("RELATÓRIO DE MEDICAMENTOS MAIS VENDIDOS");
+
+
+            var relatorio = this.ItensDeVenda.OrderBy(itens => itens.Medicamento).ToList().Take(3);
+
+            foreach (var item in relatorio)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        #endregion
+
+        #region Relatorio de Compras por fornecedor
+        public void RelatorioComprasFornecedor()
+        {
+            Console.WriteLine("RELATÓRIO DE COMPRAS POR FORNECEDOR");
+            Console.WriteLine();
+
+            string cpnj;
+            do
+            {
+                cpnj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja consultar vendas: ", "CNPJ inválido");
+                if (!InputHelper.ValidarCnpj(cpnj))
+                {
+                    InputHelper.ExibirErro("CNPJ Inválido!");
+                }
+            } while (!InputHelper.ValidarCnpj(cpnj));
+
+            var relatorio = this.Compra.FindAll(c => c.Fornecedor == cpnj).ToList();
+
+            foreach (var item in relatorio)
+            {
+                Console.WriteLine(item);
+            }
+        }
         #endregion
     }
 }

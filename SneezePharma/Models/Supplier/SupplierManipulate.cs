@@ -1,15 +1,8 @@
-﻿using SneezePharma.Enums;
-using SneezePharma.Helpers;
-using SneezePharma.Models.Ingredient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SneezePharma.Helpers;
 
 namespace SneezePharma.Models.Supplier_Manipulation_
 {
-    public class SupplierManipulate : ArchiveManipulator<Supplier>
+    public class SupplierManipulate : ArchiveManipulator<SupplierModel>
     {
         private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
         private string FilePath { get; set; } = "Supplier.data";
@@ -18,7 +11,7 @@ namespace SneezePharma.Models.Supplier_Manipulation_
         {
             CriarArquivo(DirectoryPath, FilePath);
         }
-        public override void Gravar(List<Supplier> suppliers)
+        public override void Gravar(List<SupplierModel> suppliers)
         {
             using var sw = new StreamWriter(FullPath(DirectoryPath, FilePath)); 
             using (sw)
@@ -31,9 +24,9 @@ namespace SneezePharma.Models.Supplier_Manipulation_
             }
         }
 
-        public override List<Supplier> Ler()
+        public override List<SupplierModel> Ler()
         {
-            var suppliers = new List<Supplier>();
+            var suppliers = new List<SupplierModel>();
             string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
@@ -54,7 +47,7 @@ namespace SneezePharma.Models.Supplier_Manipulation_
                         var dataCadastro = contentLine[100..108];
                         var situacao = contentLine[108..116];
 
-                        suppliers.Add(new Supplier(
+                        suppliers.Add(new SupplierModel(
                             cnpj,
                             razaoSocial,
                             pais,

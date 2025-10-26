@@ -3,13 +3,18 @@ using System.Collections.Generic;
 
 namespace SneezePharma.Models
 {
-    public class RestrictedCustomer
+    public class RestrictedCustomerModel
     {
         public string CPF { get; set; }
 
-        public RestrictedCustomer(string cpf)
+        public RestrictedCustomerModel(string cpf)
         {
             this.CPF = cpf;
+        }
+
+        public string SalvarArquivo()
+        {
+            return $"{this.CPF}";
         }
     }
 }

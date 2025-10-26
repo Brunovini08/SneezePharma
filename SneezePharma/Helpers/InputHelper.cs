@@ -103,7 +103,7 @@ namespace SneezePharma.Utils
             Console.ResetColor();
         }
 
-        public static string RetornarData(string msgDeInput, string msgAviso)
+        public static DateOnly RetornarData(string msgDeInput, string msgAviso)
         {
             DateOnly data;
             bool verificar;
@@ -116,8 +116,8 @@ namespace SneezePharma.Utils
                     verificar = DateOnly.TryParse(Console.ReadLine(), out data);
                     if (verificar == false)
                     {
-                        throw new Exception("Data inválida!");
                         InputHelper.PressioneEnterParaContinuar();
+                        InputHelper.ExibirErro("Data Inválida");
                     }
                     if (data == null || Convert.ToString(data) == string.Empty)
                     {
@@ -129,7 +129,7 @@ namespace SneezePharma.Utils
                 throw new Exception(ex.Message);
             }
 
-            return data.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture);
+            return data;
         }
 
         public static bool ValidarCpf(string CPF)

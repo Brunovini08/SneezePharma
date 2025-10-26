@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SneezePharma.Models
 {
-    public class Customer
+    public class CustomerModel
     {
         public string CPF { get; private set; }
         public string Nome { get; private set; }
@@ -21,17 +21,17 @@ namespace SneezePharma.Models
         public DateOnly DataCadastro { get; private set; }
         public SituationCustomer Situacao { get; private set; }
 
-        public Customer(string cpf, string nome, DateOnly dataNascimento, string telefone)
+        public CustomerModel(string cpf, string nome, DateOnly dataNascimento, string telefone)
         {
             this.Nome = nome;
             this.CPF = cpf;
             this.ValidarIdade(dataNascimento);
             Telefone = telefone;
-            DataCadastro = new DateOnly();
+            DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             Situacao = SituationCustomer.A;
         }
 
-        public Customer(string CPF, string nome, DateOnly dataNascimento, string telefone, DateOnly? ultimaCompra, DateOnly dataCadastro, SituationCustomer situacao)
+        public CustomerModel(string CPF, string nome, DateOnly dataNascimento, string telefone, DateOnly? ultimaCompra, DateOnly dataCadastro, SituationCustomer situacao)
         {
             this.Nome = nome;
             this.CPF = CPF;
@@ -45,7 +45,6 @@ namespace SneezePharma.Models
         {
             DateOnly dataAtual = new DateOnly();
             int idade = dataNascimento.Year - dataAtual.Year;
-            Console.WriteLine(idade);
             if (idade >= 18)
             {
                 this.DataNascimento = dataNascimento;
@@ -57,7 +56,30 @@ namespace SneezePharma.Models
         }
         public string SalvarArquivo()
         {
-            return $"{this.CPF}{this.Nome.PadRight(50, ' ')}{this.DataNascimento}{this.Telefone}{this.UltimaCompra}{this.DataCadastro}{this.Situacao}";
+            return $"{this.CPF}{this.Nome.PadRight(50, ' ')}{this.DataNascimento.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}{this.Telefone}{this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}{this.DataCadastro.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}{this.Situacao}";
+        }
+
+        public override string ToString()
+        {
+            return $"CPF: {this.CPF}\n" +
+                $"NOME: {this.Nome}\n" +
+                $"DataNascimento: {this.DataNascimento}\n" +
+                $"Telefone:{this.Telefone}\nData de Cadastro: {this.DataCadastro}\nUltima Compra: {this.UltimaCompra}\nSituação: {this.Situacao}";
+        }
+
+        public void setNome(string nome)
+        {
+            this.Nome = nome;
+        } 
+
+        public void setTelefone(string telefone)
+        {
+            this.Telefone = telefone;
+        }
+
+        public void setSituacao(SituationCustomer situacao)
+        {
+            this.Situacao = situacao;
         }
     }
 }

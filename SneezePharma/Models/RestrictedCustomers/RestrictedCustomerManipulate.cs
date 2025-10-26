@@ -4,22 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SneezePharma.Models;
 
-
-namespace SneezePharma.Models
+namespace SneezePharma.Models.RestrictedCustomers
 {
-    public class RestrictedSupplierManipulation : ArchiveManipulator<RestrictedSupplierModel>
+    public class RestrictedCustomerManipulate : ArchiveManipulator<RestrictedCustomerModel>
     {
-        private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
-        private string FilePath { get; set; } = "RestrictedSupplier.data";
-        public RestrictedSupplierManipulation()
-        {
-            CriarArquivo(DirectoryPath, FilePath);
-        }
+        private static string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
+        private static string FilePath { get; set; } = " RestrictedCustomers.data";
 
-
-        public override void Gravar(List<RestrictedSupplierModel> restricteds)
+        public override void Gravar(List<RestrictedCustomerModel> restricteds)
         {
             using var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
             using (sw)
@@ -32,9 +25,10 @@ namespace SneezePharma.Models
             }
         }
 
-        public override List<RestrictedSupplierModel> Ler()
+
+        public override List<RestrictedCustomerModel> Ler()
         {
-            var restricteds = new List<RestrictedSupplierModel>();
+            var restricteds = new List<RestrictedCustomerModel>();
             string fullPath = FullPath(DirectoryPath, FilePath);
             var sr = new StreamReader(fullPath);
 
@@ -47,9 +41,9 @@ namespace SneezePharma.Models
                     {
                         var contentLine = sr.ReadLine();
 
-                        var cnpj = contentLine[0..14];
-                       
-                        restricteds.Add(new RestrictedSupplierModel(cnpj));
+                        var cpf = contentLine[0..11];
+
+                        restricteds.Add(new RestrictedCustomerModel(cpf));
                     }
                 }
                 sr.Close();
@@ -59,4 +53,3 @@ namespace SneezePharma.Models
         }
     }
 }
-

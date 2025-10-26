@@ -91,7 +91,7 @@ namespace SneezePharma.Models
             {
                 try
                 {
-                    ultimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: "));
+                    ultimaCompra = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA):: ", "Data inválida, digite a data de abertura novamente: ");
                 }
                 catch (Exception ex)
                 {
@@ -135,7 +135,7 @@ namespace SneezePharma.Models
                 DateOnly novaDataUltimaCompra;
                 do
                 {
-                    novaDataUltimaCompra = DateOnly.Parse(InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida"));
+                    novaDataUltimaCompra = InputHelper.RetornarData("Digite a nova data da ultima compra no formato DDMMAAAA:", "Data da ultimo compra inválida");
                 } while (novaDataUltimaCompra.ToString() == string.Empty);
 
                 localizado.setUltimaCompra(novaDataUltimaCompra);
@@ -146,7 +146,7 @@ namespace SneezePharma.Models
                 Console.WriteLine("Id da ultima compra nao encontrado");
             }
         }
-        public void AlterarSituacao(List<Supplier> suppliers, char Situacao)
+        public void AlterarSituacao(List<SupplierModel> suppliers, char Situacao)
         {
 
             Console.WriteLine("Digite o Id que deseja alterar a Situacao: ");
