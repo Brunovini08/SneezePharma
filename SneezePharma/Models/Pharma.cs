@@ -89,7 +89,7 @@ namespace SneezePharma.Models
                         repetir = false;
                         break;
                     default:
-                        Console.WriteLine("Opção inválida! Escolha uma das opções do menu!"); 
+                        Console.WriteLine("Opção inválida! Escolha uma das opções do menu!");
                         break;
                 }
             }
@@ -313,7 +313,7 @@ namespace SneezePharma.Models
         }
         #endregion
 
-        #region "Operações de CRUD da classe Sales"
+        #region "Operações de CRUD da classe Sales e SalesItem"
         private string EntradaCdbECpf(string msgEntrada, string msgException, int tamanhoDaString)
         {
             const int TAMANHOCPF = 11;
@@ -362,7 +362,7 @@ namespace SneezePharma.Models
             return opcao == "1";
         }
 
-        public void RegistrarVenda()
+        private void RegistrarVenda()
         {
             var id = this.Venda.LastOrDefault()?.Id ?? 0;
 
@@ -606,7 +606,6 @@ namespace SneezePharma.Models
             InputHelper.PressioneEnterParaContinuar();
         }
 
-
         private void AlterarItemDaVenda(List<SalesItemModel> itensDaVenda)
         {
             var id = InputHelper.RetornarNumeroInteiro("Digite o Id do item que deseja alterar a quantidade:");
@@ -636,7 +635,6 @@ namespace SneezePharma.Models
                 }
             }
         }
-
         private SalesItemModel? BuscarItemDaVenda(int id, List<SalesItemModel> itensDaVenda)
         {
             return itensDaVenda.Find(iv => iv.Id == id);
@@ -656,8 +654,7 @@ namespace SneezePharma.Models
         {
             return this.ItensDeVenda.FindAll(iv => iv.IdVenda == idVenda);
         }
-
-        public void BuscarVendaPorId()
+        private void BuscarVendaPorId()
         {
             if (this.Venda.Count == 0)
             {
@@ -689,8 +686,7 @@ namespace SneezePharma.Models
             }
             InputHelper.PressioneEnterParaContinuar();
         }
-
-        public void ListarVendas()
+        private void ListarVendas()
         {
             if (this.Venda.Count > 0)
             {
@@ -708,10 +704,6 @@ namespace SneezePharma.Models
 
             InputHelper.PressioneEnterParaContinuar();
         }
-
-        #endregion
-
-        #region "Operações de CRUD do SalesItem"
 
         private int ConfirmacaoQuantidade()
         {
@@ -769,27 +761,7 @@ namespace SneezePharma.Models
             }
         }
 
-        public void ListarItensDeVenda()
-        {
-            if (this.ItensDeVenda.Count > 0)
-            {
-                Console.WriteLine("===== Itens de Vendas =====");
-                foreach (var iv in this.ItensDeVenda)
-                {
-                    Console.WriteLine(iv);
-                    Console.WriteLine();
-                }
-            }
-            else
-            {
-                Console.WriteLine("Não há itens de venda cadastrados!");
-            }
-
-            InputHelper.PressioneEnterParaContinuar();
-        }
-
         #endregion
-
 
         #region Operações de CRUD da classe Supplier
         //Fornecedor CRUD
