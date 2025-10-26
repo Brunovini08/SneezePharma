@@ -33,7 +33,7 @@ namespace SneezePharma.Models
 
         List<Ingredient> ingredientes = new List<Ingredient>();
 
-        public void setUltimaCompra (DateOnly ultimaCompra)
+        public void setUltimaCompra(DateOnly ultimaCompra)
         {
             this.UltimaCompra = ultimaCompra;
         }
@@ -41,9 +41,9 @@ namespace SneezePharma.Models
         {
             foreach (var caractere in nome)
             {
-                if(!char.IsLetterOrDigit(caractere))
+                if (!char.IsLetterOrDigit(caractere))
                 {
-                    
+
                     return false;
                 }
             }
@@ -90,7 +90,7 @@ namespace SneezePharma.Models
             nome = nome.PadRight(20, ' ');
             var ultimaCompra = this.UltimaCompra.ToString();
             var dataCadastro = this.DataCadastro.ToString();
-            
+
             return $"AI{id}{nome}{ultimaCompra}{dataCadastro}";
         }
 
