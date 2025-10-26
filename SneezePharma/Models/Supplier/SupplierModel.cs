@@ -3,6 +3,7 @@ using SneezePharma.Exceptions;
 using SneezePharma.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
@@ -17,15 +18,14 @@ namespace SneezePharma.Models
         public string RazaoSocial { get; private set; }
         public string Pais { get; private set; }
         public DateOnly DataAbertura { get; private set; }
-        public DateOnly UltimoFornecimento { get; private set; }
+        public DateOnly? UltimoFornecimento { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public  SituationSupplier Situacao { get; private set; } 
 
         public SupplierModel(string cnpj, string razaoSocial,
             string pais, DateOnly dataAbertura)
         {
-            this.DataCadastro = new DateOnly();
-            this.UltimoFornecimento = DateOnly.Parse("00000000");
+            this.DataCadastro = DateOnly.FromDateTime(new DateTime());
             this.Cnpj = cnpj;
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
@@ -33,11 +33,19 @@ namespace SneezePharma.Models
             this.Situacao = SituationSupplier.A;
         }
 
-        public SupplierModel(string cnpj, string razaoSocial, string pais, DateOnly dataAbertura, DateOnly ultimoFornecimento, DateOnly dataCadastro, SituationSupplier situacao) : this(cnpj, razaoSocial, pais, dataAbertura)
+        public SupplierModel(string cnpj, string razaoSocial, string pais, DateOnly dataAbertura, DateOnly ultimoFornecimento, DateOnly dataCadastro, SituationSupplier situacao)
         {
             UltimoFornecimento = ultimoFornecimento;
+            if(ultimoFornecimento != null)
+            {
+                UltimoFornecimento = ultimoFornecimento;
+            }
             DataCadastro = dataCadastro;
             Situacao = situacao;
+            Cnpj = cnpj;
+            RazaoSocial = razaoSocial;
+            Pais = pais; 
+            DataAbertura = dataAbertura;
         }
 
         public void setRazaoSocial(string razaoSocial)
@@ -56,7 +64,7 @@ namespace SneezePharma.Models
             var pais = this.Pais.ToString();
             pais = pais.PadRight(20, ' ');
             var dataAbertura = this.DataAbertura.ToString("ddMMyyyy");
-            var ultimoFornecimento = this.UltimoFornecimento.ToString("ddMMyyyy");
+            var ultimoFornecimento = this.UltimoFornecimento?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000";
             var dataCadastro = this.DataCadastro.ToString("ddMMyyyy");
 
             return $"{cnpj}{razaoSocial}{pais}{dataAbertura}{ultimoFornecimento}{dataCadastro}";

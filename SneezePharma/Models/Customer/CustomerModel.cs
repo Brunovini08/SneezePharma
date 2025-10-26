@@ -42,6 +42,7 @@ namespace SneezePharma.Models
             }
             this.DataCadastro = dataCadastro;
             this.Situacao = situacao;
+            this.DataNascimento = dataNascimento;
         }
         
         private void ValidarIdade(DateOnly dataNascimento)
@@ -59,15 +60,24 @@ namespace SneezePharma.Models
         }
         public string SalvarArquivo()
         {
-            return $"{this.CPF}{this.Nome.PadRight(50, ' ')}{this.DataNascimento.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}{this.Telefone}{this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}{this.DataCadastro.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}{this.Situacao}";
+            return $"" +
+                $"{this.CPF}" +
+                $"{this.Nome.PadRight(50, ' ')}" +
+                $"{this.DataNascimento.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}" +
+                $"{this.Telefone}" +
+                $"{this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}" +
+                $"{this.DataCadastro.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}{this.Situacao}";
         }
 
         public override string ToString()
         {
-            return $"CPF: {this.CPF}\n" +
+            return 
+                $"CPF: {this.CPF}\n" +
                 $"NOME: {this.Nome}\n" +
                 $"DataNascimento: {this.DataNascimento}\n" +
-                $"Telefone:{this.Telefone}\nData de Cadastro: {this.DataCadastro}\nUltima Compra: {this.UltimaCompra}\nSituação: {this.Situacao}";
+                $"Telefone:{this.Telefone}\nData de Cadastro: {this.DataCadastro}\n" +
+                $"Ultima Compra: {this.UltimaCompra}\n" +
+                $"Situação: {this.Situacao}";
         }
 
         public void setNome(string nome)
