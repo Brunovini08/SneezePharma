@@ -511,12 +511,14 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Ingrediente não existe");
             }
+            Console.ReadKey();
         }
         public void ListarIngrediente()
         {
             if (Ingredientes.Count == 0)
             {
                 Console.WriteLine("Não há nenhum ingrediente no momento");
+                Console.ReadKey();
             }
             else
             {
@@ -524,6 +526,7 @@ namespace SneezePharma.Models
                 foreach (var ingrediente in Ingredientes)
                 {
                     Console.WriteLine(ingrediente.ToString());
+                    Console.ReadKey();
                 }
             }
         }
