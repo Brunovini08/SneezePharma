@@ -83,7 +83,7 @@ namespace SneezePharma.Utils
             do
             {
                 Console.WriteLine();
-                Console.Write(msgDeInput);
+                Console.WriteLine(msgDeInput);
                 nome = Console.ReadLine();
                 if (nome == null || nome == string.Empty)
                 {

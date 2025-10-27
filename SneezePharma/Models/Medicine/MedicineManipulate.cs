@@ -36,18 +36,22 @@ namespace SneezePharma.Models.Medicine
                         var nome = contentLine[13..53];
                         var categoria = contentLine[53..54];
                         var valorVenda = contentLine[54..61];
-                        var ultimaVenda = contentLine[61..69];
-                        var dataCadastro = contentLine[69..77];
-                        var situacao = contentLine[77..78];
+                        var dataUltimaCompra = contentLine[61..69];
+                        if (dataUltimaCompra == "00000000")
+                        {
+                            dataUltimaCompra = null;
+                        }
+                        var dataCadastro = DateOnly.ParseExact(contentLine[69..77], "ddMMyyyy");
+                        var situacao = contentLine[77];
 
                         medicineLidos.Add(new MedicineModel(
                             cdb,
                             nome,
                             char.Parse(categoria),
                             decimal.Parse(valorVenda),
-                            DateOnly.Parse(ultimaVenda),
-                            DateOnly.Parse(dataCadastro),
-                            char.Parse(situacao)
+                            ultimaVenda: dataUltimaCompra != null ? DateOnly.Parse(dataUltimaCompra) : null,
+                            dataCadastro,
+                            situacao
                             ));
                             
                     }

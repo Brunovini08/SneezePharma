@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SneezePharma;
+using System.Globalization;
 
 namespace SneezePharma.Models
 {
@@ -15,29 +16,32 @@ namespace SneezePharma.Models
         public string Nome { get; private set; }
         public char Categoria { get; private set; }
         public decimal ValorVenda { get; private set; }
-        public DateOnly UltimaVenda { get; private set; }
+        public DateOnly? UltimaVenda { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public char Situacao { get; private set; }
+        public MedicineModel(string cdb, string nome, char categoria, decimal valorVenda, DateOnly? ultimaVenda, DateOnly dataCadastro, char situacao)
+        {
+            CDB = cdb;
+            Nome = nome;
+            Categoria = categoria;
+            ValorVenda = valorVenda;
+            if(ultimaVenda != null)
+            {
+                UltimaVenda = ultimaVenda;
+            }
+            DataCadastro = dataCadastro;
+            Situacao = situacao;
+        }
         public MedicineModel(string cdb, string nome, char categoria, decimal valorVenda)
         {
             CDB= cdb;
             Nome = nome;
             Categoria = categoria;
             ValorVenda = valorVenda;
-            DataCadastro = DateOnly.FromDateTime(new DateTime());
+            DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             Situacao = 'A';
         }
 
-        public MedicineModel(string cdb, string nome, char categoria, decimal valorVenda, DateOnly ultimaVenda, DateOnly dataCadastro, char situacao)
-        {
-            CDB = cdb;
-            Nome = nome;
-            Categoria = categoria;
-            ValorVenda = valorVenda;
-            UltimaVenda = ultimaVenda;
-            DataCadastro = dataCadastro;
-            Situacao = situacao;
-        }
 
         public void setNome(string nome)
         {
@@ -100,7 +104,13 @@ namespace SneezePharma.Models
 
         public string SalvarArquivo()
         {
-            return $"{this.CDB}{this.Nome.PadRight(40, ' ')}{this.Categoria}{this.ValorVenda}{this.UltimaVenda}{this.DataCadastro}{this.Situacao}";
+            return $"{this.CDB}" +
+                $"{this.Nome.PadRight(40, ' ')}" +
+                $"{this.Categoria}" +
+                $"{this.ValorVenda.ToString().PadLeft(7 ,'0')}" +
+                $"{this.UltimaVenda?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}" +
+                $"{this.DataCadastro.ToString("ddMMyyyy", CultureInfo.InvariantCulture)}" +
+                $"{this.Situacao}";
         }
     }
 }
