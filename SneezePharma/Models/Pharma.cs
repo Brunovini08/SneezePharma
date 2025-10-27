@@ -109,8 +109,8 @@ namespace SneezePharma.Models
                     case "1":
                         RegistrarCliente();
                         break;
-                    case "2":
-                        AdicionarFornecedor();
+                    case 2:
+                        RegistrarFornecedor();
                         break;
                     case "3":
                         RegistrarMedicamento();
@@ -207,7 +207,7 @@ namespace SneezePharma.Models
                     LocalizarMedicamentoAtivo();
                     break;
                 case 2:
-                    AlterarSituacaoMedicamento();
+                    AtualizarSituacaoMedicamento();
                     break;
                 case 3:
                     LocalizarMedicamento();
@@ -246,8 +246,8 @@ namespace SneezePharma.Models
                     case "4":
                         RemoverClienteRestrito();
                         break;
-                    case "5":
-                        ListarCliente();
+                    case 5:
+                        ListarClientePorCPF();
                         break;
                     case "6":
                         ListarClientes();
@@ -673,6 +673,8 @@ namespace SneezePharma.Models
                         cliente.setTelefone(telefone);
                     if (nome != string.Empty)
                         cliente.setNome(nome);
+
+                    customerManipulate.Gravar(Clientes);
                     Console.Clear();
 
                 }
@@ -720,7 +722,34 @@ namespace SneezePharma.Models
                 }
             } while (cpf is null || cliente is null);
         }
-        public void ListarCliente()
+        public void AtivarCliente()
+        {
+            string cpf;
+            CustomerModel cliente;
+            do
+            {
+                cpf = InputHelper.RetornarString("Digite o CPF do cliente que deseja ativar: ", "Por favor, Digite o CPF!");
+                cliente = this.BuscarPorCPF(cpf);
+                if (cliente is not null)
+                {
+                    if(cliente.Situacao == SituationCustomer.A)
+                    {
+                        Console.WriteLine("O cliente já está ativo");
+                    }
+                    cliente.setSituacao(Enums.SituationCustomer.A);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"Cliente {cliente.Nome} está liberado para compras");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    InputHelper.ExibirErro("Cliente não existe!");
+                    InputHelper.PressioneEnterParaContinuar();
+                    Console.Clear();
+                }
+            } while (cpf is null || cliente is null);
+        }
+        public void ListarClientePorCPF()
         {
             Console.WriteLine("LISTAR CLIENTE");
             Console.WriteLine();
@@ -1230,7 +1259,7 @@ namespace SneezePharma.Models
         #endregion
 
         #region Operações de CRUD da classe Supplier
-        public void AdicionarFornecedor()
+        public void RegistrarFornecedor()
         {
             try
             {
@@ -1265,7 +1294,7 @@ namespace SneezePharma.Models
                 Console.WriteLine(e.Message);
             }
         }
-        public SupplierModel LocalizarFornecedor(string cnpj)
+        public SupplierModel BuscarPorCNPJ(string cnpj)
         {
             return Fornecedores.Find(c => c.Cnpj == cnpj);
         }
@@ -1273,7 +1302,7 @@ namespace SneezePharma.Models
         {
             Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
             string cnpj = Console.ReadLine();
-            var fornecedor = this.LocalizarFornecedor(cnpj);
+            var fornecedor = this.BuscarPorCNPJ(cnpj);
 
             if (fornecedor is null)
             {
@@ -1292,7 +1321,7 @@ namespace SneezePharma.Models
 
             Console.WriteLine("Digite o Cnpj que deseja alterar a Situacao: ");
             var Cnpj = Console.ReadLine();
-            var fornecedor = LocalizarFornecedor(Cnpj);
+            var fornecedor = BuscarPorCNPJ(Cnpj);
 
             if (Cnpj != null)
             {
@@ -1311,21 +1340,6 @@ namespace SneezePharma.Models
                 Console.Clear();
             }
         }
-        public void AlterarDataUltimoFornecimento()
-        {
-            Console.WriteLine("Digite o Cnpj que deseja alterar a data do ultimo fornecimento: ");
-            var Cnpj = Console.ReadLine();
-            LocalizarFornecedor(Cnpj);
-
-            if (Cnpj != null)
-            {
-                DateOnly ultimoFornecimento;
-                do
-                {
-                    ultimoFornecimento = InputHelper.RetornarData("Digite a nova data de fornecimento no formato DDMMAAAA: ", "Data do ultimo fornecimento inválida");
-                } while (ultimoFornecimento == null || ultimoFornecimento.ToString() == string.Empty);
-            }
-        }
         public void ListarFornecedores()
         {
             Console.Clear();
@@ -1342,7 +1356,7 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine("Digite o Cnpj que deseja alterar a razão social:");
                 cnpj = Console.ReadLine();
-                var fornecedor = this.LocalizarFornecedor(cnpj);
+                var fornecedor = this.BuscarPorCNPJ(cnpj);
 
                 if (fornecedor != null)
                 {
@@ -1455,7 +1469,7 @@ namespace SneezePharma.Models
             do
             {
                 cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor Bloqueado que deseja buscar :", "CNPJ Inválido");
-                var fornecedor = this.LocalizarFornecedor(cnpj);
+                var fornecedor = this.BuscarPorCNPJ(cnpj);
 
                 if (fornecedor != null)
                 {
@@ -1684,18 +1698,18 @@ namespace SneezePharma.Models
 
         private void AlterarQuantidadeDaProducao()
         {
-            if (!TemProducoesCadastradas())
+            if (!ExisteProducoes())
             {
                 Console.WriteLine("Não há produções cadastradas!");
                 InputHelper.PressioneEnterParaContinuar();
                 return;
             }
 
-            ListarProducao();
+            ListarProducoes();
 
             var id = InputHelper.RetornarNumeroInteiro("Digite o ID da produção que deseja alterar a quantidade:");
 
-            var producao = BuscarProducaoPeloId(id);
+            var producao = BuscarProducaoPorId(id);
 
             if (producao is null)
             {
@@ -1714,11 +1728,11 @@ namespace SneezePharma.Models
             produceManipulate.Gravar(Producao);
         }
 
-        private void BuscarProducaoPorId()
+        private void ListarProducaoPorId()
         {
             var id = InputHelper.RetornarNumeroInteiro("Digite o ID da produção que deseja consultar:");
 
-            var producao = BuscarProducaoPeloId(id);
+            var producao = BuscarProducaoPorId(id);
 
             if (producao is null)
             {
@@ -1732,14 +1746,14 @@ namespace SneezePharma.Models
             InputHelper.PressioneEnterParaContinuar();
         }
 
-        private ProduceModel BuscarProducaoPeloId(int id)
+        private ProduceModel BuscarProducaoPorId(int id)
         {
             return Producao.Find(p => p.ID == id);
         }
 
-        private void ListarProducao()
+        private void ListarProducoes ()
         {
-            if (TemProducoesCadastradas())
+            if (ExisteProducoes())
             {
                 Console.WriteLine("========= PRODUÇÕES =========");
                 foreach (var p in Producao)
@@ -1755,9 +1769,9 @@ namespace SneezePharma.Models
             InputHelper.PressioneEnterParaContinuar();
         }
 
-        private bool TemProducoesCadastradas()
+        private bool ExisteProducoes()
         {
-            return Producao.Count > 0;
+            return this.Producao.Count > 0 ? true : false;
         }
 
         #endregion
@@ -1831,7 +1845,6 @@ namespace SneezePharma.Models
         #endregion
 
         #region Operações de CRUD da classe Medicine
-        /*Medicamento CRUD*/
         public void RegistrarMedicamento()
         {
             bool validadeCDB = false, validadeNome = false, validadeCategoria = false, validadeSituacao = false;
@@ -1869,7 +1882,6 @@ namespace SneezePharma.Models
                 {
                     Exceptions.GeneralException.VerificarTamanhoMaiorString(nome, 40, "O nome do medicamento deve ter no máximo 100 caracteres.");
                     Exceptions.GeneralException.VerificarTamanhoMenorString(nome, 3, "O nome do medicamento deve ter no mínimo 3 caracteres.");
-
                 }
                 catch (ArgumentException ex)
                 {
@@ -1908,14 +1920,6 @@ namespace SneezePharma.Models
             Console.ReadKey();
             Console.Clear();
         }
-
-        public MedicineModel LocalizarMedicamento(string id)
-        {
-            Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
-            string localizar = Console.ReadLine();
-            return Medicamentos.Find(m => m.CDB == localizar);
-        }
-
         public MedicineModel LocalizarMedicamento()
         {
             Console.WriteLine("Digite o código de barras do medicamento que deseja procurar: ");
@@ -1929,7 +1933,6 @@ namespace SneezePharma.Models
 
             return medicamento;
         }
-
         private void LocalizarMedicamentoAtivo()
         {
             MedicineModel medicine = LocalizarMedicamento();
@@ -1953,8 +1956,7 @@ namespace SneezePharma.Models
             }
             InputHelper.PressioneEnterParaContinuar();
         }
-
-        public void AlterarSituacaoMedicamento()
+        public void AtualizarSituacaoMedicamento()
         {
             MedicineModel medicineSituacao = LocalizarMedicamento();
 
@@ -1978,7 +1980,6 @@ namespace SneezePharma.Models
             }
             InputHelper.PressioneEnterParaContinuar();
         }
-
         public void ListarMedicamentos()
         {
             Console.WriteLine("===Lista de medicamentos ===");
@@ -1988,7 +1989,6 @@ namespace SneezePharma.Models
             }
             InputHelper.PressioneEnterParaContinuar();
         }
-
         #endregion
 
         #region Operações de CRUD da classe Purchase
@@ -2119,7 +2119,7 @@ namespace SneezePharma.Models
 
         #region Operações de CRUD da classe PurchaseItem
 
-        public void CriarItemCompra(int idCompra)
+        public void RegistrarItemCompra()
         {
             int opcao = 0;
             int contador = 0;
@@ -2179,7 +2179,7 @@ namespace SneezePharma.Models
 
         }
 
-        public PurchaseItemModel LocalizarItemCompra()
+        public PurchaseItemModel BuscarItemCompraPorId()
         {
 
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
@@ -2191,7 +2191,7 @@ namespace SneezePharma.Models
 
         public PurchaseItemModel AlterarItemCompra()
         {
-            PurchaseItemModel itemCompra = LocalizarItemCompra();
+            PurchaseItemModel itemCompra = BuscarItemCompraPorId();
 
             Console.WriteLine("Deseja alterar a quantidade de item? (S , N):");
             char escolha = char.Parse(Console.ReadLine().ToUpper());
