@@ -77,7 +77,7 @@ namespace SneezePharma.Models
                 $"DataNascimento: {this.DataNascimento}\n" +
                 $"Telefone:{this.Telefone}\nData de Cadastro: {this.DataCadastro}\n" +
                 $"Ultima Compra: {this.UltimaCompra}\n" +
-                $"Situação: {this.Situacao}";
+                $"Situação: {this.Situacao}\n";
         }
 
         public void setNome(string nome)
