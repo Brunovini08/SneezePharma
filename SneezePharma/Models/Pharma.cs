@@ -1298,71 +1298,79 @@ namespace SneezePharma.Models
         {
             try
             {
-                RestrictedSupplierModel fornecedorBloquear;
                 SupplierModel fornecedor;
-                do
+                RestrictedSupplierModel fornecedorBloquear;
+
+                while(true)
                 {
-                    string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja retirar da lista de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
+                    string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja adicionar de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
                     fornecedor = this.Fornecedores.Find(c => c.Cnpj == cnpj);
-                    fornecedorBloquear = this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
-                    if (fornecedor != null)
+                    if (fornecedor == null)
                     {
-                        if (fornecedorBloquear is not null)
-                        {
-                            this.FornecedoresRestritos.Remove(fornecedorBloquear);
-                            Console.WriteLine($"Fornecedor retirado da lista de restritos: {fornecedor.RazaoSocial}");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Fornecedor não está na lista de bloqueado!");
-                        }
+                        Console.WriteLine("Fornecedor não encontrado! Tente novamente: ");
+                        continue;
+                    }
+                    fornecedorBloquear = this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
+
+                    if(fornecedorBloquear != null)
+                    {
+                        Console.WriteLine("Forecedor já está na lista de restritor!");
                     }
                     else
                     {
-                        Console.WriteLine("Fornecedor não encontrado");
+                        this.FornecedoresRestritos.Add(new RestrictedSupplierModel(cnpj)
+                        {
+                            Cnpj = fornecedor.Cnpj
+                        });
+                        Console.WriteLine($"Fornecedor foi adicionado à lista de restritos!");
                     }
-                } while (fornecedor == null || fornecedorBloquear is null);
+                    break;
+                } 
+                InputHelper.PressioneEnterParaContinuar();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
+            restrictedManipulation.Gravar(this.FornecedoresRestritos);
         }
         public void RemoverFornecedorRestrito()
         {
             try
             {
-                RestrictedSupplierModel fornecedorLiberar;
                 SupplierModel fornecedor;
+                RestrictedSupplierModel fornecedorRestrito;
+
                 do
                 {
-                    string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja adicionar na lista de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
+                    string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja remover da lista de bloqueados: ", "Cnpj inválido, digite outro CNPJ para Fornecedor");
                     fornecedor = this.Fornecedores.Find(c => c.Cnpj == cnpj);
-                    fornecedorLiberar = this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
-                    if (fornecedor != null)
+
+                    if (fornecedor == null)
                     {
-                        if (fornecedorLiberar is null)
-                        {
-                            this.FornecedoresRestritos.Add(fornecedorLiberar);
-                            Console.WriteLine($"Fornecedor adicionado da lista de restritos: {fornecedor.RazaoSocial}");
-                            InputHelper.PressioneEnterParaContinuar();
-                        }
-                        else
-                        {
-                            Console.WriteLine("Fornecedor está na lista de bloqueado!");
-                            InputHelper.PressioneEnterParaContinuar();
-                        }
+                        Console.WriteLine("Fornecedor não encontrado!");
+                        continue;
+                    }
+
+                    fornecedorRestrito = this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
+
+                    if (fornecedorRestrito == null)
+                    {
+                        Console.WriteLine("Fornecedor não está na lista de restritos!");
                     }
                     else
                     {
-                        Console.WriteLine("Fornecedor não encontrado");
+                        this.FornecedoresRestritos.Remove(fornecedorRestrito);
+                        Console.WriteLine("Fornecedor foi removido de restritos com sucesso!");
                     }
-                } while (fornecedor is null || fornecedorLiberar is null);
+                } while (fornecedor is null);
+                InputHelper.PressioneEnterParaContinuar();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            restrictedManipulation.Gravar(this.FornecedoresRestritos);
         }
         public RestrictedSupplierModel BuscarFornecedorRestrito(string cnpj)
         {

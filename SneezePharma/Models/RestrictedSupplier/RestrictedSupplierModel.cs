@@ -8,7 +8,7 @@ namespace SneezePharma.Models
 {
     public class RestrictedSupplierModel
     {
-        public string Cnpj { get; private set; }
+        public string Cnpj { get; set; }
         public RestrictedSupplierModel(string cnpj)
         {
             this.Cnpj = cnpj;
@@ -16,7 +16,6 @@ namespace SneezePharma.Models
 
         public string SalvarArquivo()
         {
-            
             return $"{this.Cnpj}";
         }
     }
