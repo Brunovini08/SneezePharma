@@ -30,14 +30,15 @@ namespace SneezePharma.Models.PurchaseItem
                     while(sr.Peek() != -1)
                     {
                         var contentLine = sr.ReadLine();
-
-                        var idCompraItem = contentLine[0..5];
-                        var ingrediente = contentLine[5..11];
-                        var quantidade = contentLine[11..18];
-                        var valorUnitario = contentLine[18..24];
-                        var totalItem = contentLine[24..35];
+                        var id = contentLine[0..5];
+                        var idCompraItem = contentLine[5..10];
+                        var ingrediente = contentLine[10..16];
+                        var quantidade = contentLine[16..20];
+                        var valorUnitario = contentLine[20..25];
+                        var totalItem = contentLine[25..33];
 
                         purchaseItemsLidos.Add(new PurchaseItemModel(
+                            int.Parse(id),
                             int.Parse(idCompraItem),
                             ingrediente,
                             decimal.Parse(quantidade),

@@ -31,14 +31,14 @@ namespace SneezePharma.Models.Purchases
                         var contentLine = sr.ReadLine();
 
                         var idPurchase = contentLine[0..5];
-                        var dataCompra = contentLine[5..19];
-                        var fornecedor = contentLine[19..27];
+                        var dataCompra = DateOnly.ParseExact(contentLine[5..13], "ddMMyyyy");
+                        var fornecedor = contentLine[13..27];
                         var valorTotal = contentLine[27..38];
 
                         purchasesLidos.Add(new PurchaseModel(
                             int.Parse(idPurchase),
                             fornecedor,
-                            DateOnly.Parse(dataCompra),
+                            dataCompra,
                             decimal.Parse(valorTotal)
                             ));
                     }
