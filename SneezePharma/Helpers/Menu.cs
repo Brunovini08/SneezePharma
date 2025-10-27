@@ -70,11 +70,12 @@ namespace SneezePharma.Helpers
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE CLIENTES");
             Console.WriteLine("1. MENU - ALTERAR CLIENTE");
-            Console.WriteLine("2. MENU - INATIVAR CLIENTE");
+            Console.WriteLine("2. MENU - ALTERAR SITUAÇÃO DO CLIENTE");
             Console.WriteLine("3. MENU - BLOQUEAR CLIENTE");
             Console.WriteLine("4. MENU - DESBLOQUEAR CLIENTE");
             Console.WriteLine("5. MENU - LISTAR CLIENTE POR ID");
             Console.WriteLine("6. MENU - LISTAR TODOS OS CLIENTES");
+            Console.WriteLine("7. MENU - LISTAR TODOS OS CLIENTES BLOQUEADOS");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }
@@ -101,7 +102,7 @@ namespace SneezePharma.Helpers
             Console.WriteLine("2. MENU - ALTERAR SITUAÇÃO FORNECEDOR");
             Console.WriteLine("3. MENU - BLOQUEAR FORNECEDOR");
             Console.WriteLine("4. MENU - DESBLOQUEAR FORNECEDOR");
-            Console.WriteLine("5. MENU - LISTAR FORNECEDOR POR ID");
+            Console.WriteLine("5. MENU - LISTAR FORNECEDOR POR CNPJ");
             Console.WriteLine("6. MENU - LISTAR TODOS OS FORNECEDORES");
             Console.WriteLine("7. MENU - LISTAR TODOS OS FORNECEDORES BLOQUEADOS");
             Console.WriteLine("8. MENU - LISTAR FORNECEDOR BLOQUEADO POR CNPJ");

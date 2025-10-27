@@ -22,6 +22,7 @@ namespace SneezePharma.Models
         public override void Gravar(List<RestrictedSupplierModel> restricteds)
         {
             using var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
+
             using (sw)
             {
                 foreach (var restricted in restricteds)

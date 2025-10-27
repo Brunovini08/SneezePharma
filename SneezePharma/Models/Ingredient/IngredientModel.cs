@@ -1,4 +1,5 @@
 ﻿using SneezePharma.Enums;
+using System.Globalization;
 
 namespace SneezePharma.Models
 {
@@ -7,7 +8,7 @@ namespace SneezePharma.Models
 
         public string Id { get; private set; }
         public string Nome { get; private set; }
-        public DateOnly UltimaCompra { get; private set; }
+        public DateOnly? UltimaCompra { get; private set; }
         public DateOnly DataCadastro { get; private set; }
         public SituationIngredient Situacao { get; private set; }
 
@@ -15,7 +16,6 @@ namespace SneezePharma.Models
         {
             Id = id;
             Nome = nome;
-            UltimaCompra = DateOnly.ParseExact("01010001", "ddMMyyyy");
             DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             Situacao = SituationIngredient.A;
         }
@@ -23,7 +23,10 @@ namespace SneezePharma.Models
         {
             Id = id;
             Nome = nome;
-            UltimaCompra = ultimaCompra;
+            if (ultimaCompra != null)
+            {
+                this.UltimaCompra = ultimaCompra;
+            }
             DataCadastro = dataCadastro;
             Situacao = situacao;
         }
@@ -32,8 +35,10 @@ namespace SneezePharma.Models
 
         public override string ToString()
         {
-            return $"Id: {this.Id}\nNome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
-                $"\nData da ultima compra: {this.UltimaCompra}\nData do ultimo cadastro: {this.DataCadastro}" +
+            return $"Id: {this.Id}\n" +
+                $"Nome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
+                $"\nData da ultima compra: {this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}\n" +
+                $"Data de cadastro: {this.DataCadastro}" +
                 $"\nSituação: {this.Situacao}";
         }
 
@@ -43,7 +48,7 @@ namespace SneezePharma.Models
             id = id.PadLeft(5, '0');
             var nome = this.Nome.ToString();
             nome = nome.PadRight(20, ' ');
-            var ultimaCompra = this.UltimaCompra.ToString() ?? "00000000";
+            var ultimaCompra = this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000";
             var dataCadastro = this.DataCadastro.ToString();
 
             return $"{id}{nome}{ultimaCompra}{dataCadastro}{Situacao}";
