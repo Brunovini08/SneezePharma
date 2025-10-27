@@ -1698,10 +1698,12 @@ namespace SneezePharma.Models
 
             do
             {
+                Console.Clear();
                 Console.WriteLine("Digite o código de barras do medicamento:");
                 cdb = Console.ReadLine();
 
                 validadeCDB = InputHelper.ValidarCDB(cdb);
+                InputHelper.PressioneEnterParaContinuar();
             } while (!validadeCDB);
             do
             {
@@ -1712,6 +1714,7 @@ namespace SneezePharma.Models
                     if (validadeNome == false)
                     {
                         Console.WriteLine("O nome do medicamento deve conter apenas letras e números.");
+                        InputHelper.PressioneEnterParaContinuar();
                     }
                 } while (!validadeNome);
                 try
@@ -1723,13 +1726,22 @@ namespace SneezePharma.Models
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine(ex.Message);
+                    InputHelper.PressioneEnterParaContinuar();
+                    Console.Clear();
                 }
+                
             } while (nome is null);
 
             do
             {
                 Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
                 validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
+                if(validadeCategoria == false)
+                {
+                    Console.WriteLine("A categoria de remédio deve ser (A, B, I , V): ");
+                    InputHelper.PressioneEnterParaContinuar();
+                    Console.Clear();
+                }
 
             } while (categoria != 'A' && categoria != 'B' && categoria != 'I' && categoria != 'V');
 
@@ -1742,7 +1754,12 @@ namespace SneezePharma.Models
             MedicineModel medicamento = new MedicineModel(cdb, nome, categoria, valorVenda);
 
             this.Medicamentos.Add(medicamento);
-
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Medicamento cadastrado com sucesso");
+            medicineManipulate.Gravar(this.Medicamentos);
+            Console.ResetColor();
+            Console.ReadKey();
+            Console.Clear();
         }
 
         public MedicineModel LocalizarMedicamento(string id)
@@ -1833,6 +1850,11 @@ namespace SneezePharma.Models
                 cnpj = InputHelper.RetornarString("Digite o CNPJ do fornecedor:", "O CNPJ é inválido.");
                 var fornecedor = this.Fornecedores.Find(f => f.Cnpj == cnpj);
                 var fornecedorBloqueado = this.FornecedoresRestritos.Find(fb => fb.Cnpj == cnpj);
+
+                TimeSpan tempoEmpresa = fornecedor.DataAbertura - DateOnly.FromDateTime(DateTime.Now);
+
+                //aaaa
+
                 if (fornecedor != null && fornecedorBloqueado == null && fornecedor.Situacao != SituationSupplier.I)
                 {
                     compra = new PurchaseModel(fornecedor.Cnpj);
@@ -1851,7 +1873,14 @@ namespace SneezePharma.Models
 
             compra.setValorTotal(valorTotal);
 
-            Compra.Add(compra);
+
+            Compra.Add(compra); 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Compra cadastrada com sucesso");
+            purchaseManipulate.Gravar(this.Compra);
+            Console.ResetColor();
+            Console.ReadKey();
+            Console.Clear();
 
         }
         public PurchaseModel BuscarCompra()
@@ -1964,6 +1993,12 @@ namespace SneezePharma.Models
 
             } while (opcao != 2 || contador == 3);
 
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Item da compra cadastrado com sucesso");
+            purchaseItemManipulate.Gravar(this.ItensDaCompra);
+            Console.ResetColor();
+            Console.ReadKey();
+            Console.Clear();
 
         }
 
