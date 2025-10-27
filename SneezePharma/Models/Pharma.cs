@@ -1851,6 +1851,8 @@ namespace SneezePharma.Models
 
                 TimeSpan tempoEmpresa = fornecedor.DataAbertura - DateOnly.FromDateTime(DateTime.Now);
 
+                //aaaa
+
                 if (fornecedor != null && fornecedorBloqueado == null && fornecedor.Situacao != SituationSupplier.I)
                 {
                     compra = new PurchaseModel(fornecedor.Cnpj);
