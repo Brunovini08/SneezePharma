@@ -47,8 +47,8 @@ namespace SneezePharma.Models
                     {
                         var contentLine = sr.ReadLine();
 
-                        var cnpj = contentLine[0..14];
-                       
+                        var cnpj = contentLine.Length >= 14 ? contentLine.Substring(0, 14) : contentLine;
+
                         restricteds.Add(new RestrictedSupplierModel(cnpj));
                     }
                 }
