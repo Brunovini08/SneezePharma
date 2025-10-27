@@ -102,7 +102,7 @@ namespace SneezePharma.Models
             do
             {
                 Menu.MenuCadastros();
-                var opcao = Console.ReadLine()??"-1";
+                var opcao = Console.ReadLine() ?? "-1";
 
                 switch (opcao)
                 {
@@ -170,7 +170,7 @@ namespace SneezePharma.Models
             {
                 Menu.MenuCompraPrincipioAtivo();
                 var opcao = Console.ReadLine() ?? "-1";
-                
+
                 switch (opcao)
                 {
                     case "1":
@@ -231,7 +231,7 @@ namespace SneezePharma.Models
             {
                 Menu.MenuManipulacaoCliente();
                 var opcao = Console.ReadLine() ?? "-1";
-                
+
                 switch (opcao)
                 {
                     case "1":
@@ -261,7 +261,7 @@ namespace SneezePharma.Models
                         break;
                 }
             }
-            while (repetir) ;
+            while (repetir);
         }
         public void ManipularFornecedores()
         {
@@ -269,7 +269,7 @@ namespace SneezePharma.Models
             do
             {
                 Menu.MenuManipulacaoFornecedor();
-                var opcao = Console.ReadLine()??"-1";
+                var opcao = Console.ReadLine() ?? "-1";
                 switch (opcao)
                 {
                     case "1":
@@ -312,7 +312,7 @@ namespace SneezePharma.Models
             do
             {
                 Menu.MenuManipulacaoPrincipioAtivo();
-                var opcao = Console.ReadLine()??"-1";
+                var opcao = Console.ReadLine() ?? "-1";
                 switch (opcao)
                 {
                     case "1":
@@ -343,7 +343,7 @@ namespace SneezePharma.Models
             do
             {
                 Menu.MenuProducao();
-                var opcao = Console.ReadLine()??"-1";
+                var opcao = Console.ReadLine() ?? "-1";
                 switch (opcao)
                 {
                     case "1":
@@ -353,13 +353,16 @@ namespace SneezePharma.Models
                         AlterarQuantidadeDaProducao();
                         break;
                     case "3":
-                        BuscarProducaoPorId();
+                        AlterarQuantidadeDeItensProduzidos();
                         break;
                     case "4":
+                        BuscarProducaoPorId();
+                        break;
+                    case "5":
                         ListarProducao();
                         break;
-                    case 5: 
-                        AlterarQuantidadeDeItensProduzidos();
+                    case "0":
+                        repetir = false;
                         break;
                     default:
                         Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
@@ -374,8 +377,8 @@ namespace SneezePharma.Models
             do
             {
                 Menu.MenuRelatorio();
-                var opcao = Console.ReadLine() ?? "-1";       
-                
+                var opcao = Console.ReadLine() ?? "-1";
+
                 switch (opcao)
                 {
                     case "1":
@@ -538,6 +541,7 @@ namespace SneezePharma.Models
                     Console.WriteLine(ingrediente.ToString());
                 }
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
         #endregion
 
@@ -574,7 +578,7 @@ namespace SneezePharma.Models
                             }
                             else
                             {
-                                 cliente =this.Clientes.Find(c => c.CPF == cpf);
+                                cliente = this.Clientes.Find(c => c.CPF == cpf);
                                 if (cliente != null)
                                 {
                                     InputHelper.ExibirErro("CPF já cadastrado, tente com outro CPF!");
@@ -665,7 +669,7 @@ namespace SneezePharma.Models
                     string telefone;
                     telefone = InputHelper.RetornarString("Digite seu telefone com DDD: ", "Por favor, digite o número de telefon com DDD!");
 
-                    if(telefone != string.Empty) 
+                    if (telefone != string.Empty)
                         cliente.setTelefone(telefone);
                     if (nome != string.Empty)
                         cliente.setNome(nome);
@@ -900,7 +904,7 @@ namespace SneezePharma.Models
                     }
                 }
 
-                if (listaDeCdbs.Count == 3)
+                if (medicamentosDisponiveisParaVenda.Count == 0)
                     continue;
 
                 repetir = RealizarPerguntaDeConfirmacao("Deseja continuar vendendo? (1 - SIM|0 - NÃO)");
@@ -1362,7 +1366,7 @@ namespace SneezePharma.Models
                 SupplierModel fornecedor;
                 RestrictedSupplierModel fornecedorBloquear;
 
-                while(true)
+                while (true)
                 {
                     string cnpj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja adicionar de bloqueados: ", "Por favor, digite o CNPJ do Fornecedor");
                     fornecedor = this.Fornecedores.Find(c => c.Cnpj == cnpj);
@@ -1373,7 +1377,7 @@ namespace SneezePharma.Models
                     }
                     fornecedorBloquear = this.FornecedoresRestritos.Find(f => f.Cnpj == cnpj);
 
-                    if(fornecedorBloquear != null)
+                    if (fornecedorBloquear != null)
                     {
                         Console.WriteLine("Forecedor já está na lista de restritor!");
                     }
@@ -1386,7 +1390,7 @@ namespace SneezePharma.Models
                         Console.WriteLine($"Fornecedor foi adicionado à lista de restritos!");
                     }
                     break;
-                } 
+                }
                 InputHelper.PressioneEnterParaContinuar();
             }
             catch (Exception ex)
@@ -1615,11 +1619,16 @@ namespace SneezePharma.Models
 
                     ItensProducao.Add(itemDeProducao);
                     ingredientesAtivos.Remove(localizar);
+                    
+                    if (ingredientesAtivos.Count == 0)
+                        break;
                 }
+
 
                 repetir = RealizarPerguntaDeConfirmacao("Deseja cadastrar mais um principio ativo? (1 - Sim|0 - Não");
             }
             while (repetir);
+
             Producao.Add(producao);
             produceItemManipulate.Gravar(ItensProducao);
             produceManipulate.Gravar(Producao);
@@ -1639,14 +1648,14 @@ namespace SneezePharma.Models
             var idProd = InputHelper.RetornarNumeroInteiro("Digite o ID do item manipulado que deseja alterar: ");
             var producao = BuscarProducaoPeloId(idProd);
 
-            if (producao == null) 
+            if (producao == null)
             {
                 Console.WriteLine($"Não foi encontrada nenhuma produção com este ID: {idProd}");
                 InputHelper.PressioneEnterParaContinuar();
                 return;
             }
             var itensProducao = this.ItensProducao.FindAll(i => i.IdProducao == idProd);
-            foreach(var item in itensProducao)
+            foreach (var item in itensProducao)
             {
                 Console.WriteLine(item);
             }
@@ -1666,13 +1675,13 @@ namespace SneezePharma.Models
                 return;
             }
             itemProducao.SetQuantidade(novaQuantidade);
-            
+
             Console.WriteLine("Quantidade de princípio ativo atualizada com sucesso!");
             InputHelper.PressioneEnterParaContinuar();
 
             produceItemManipulate.Gravar(ItensProducao);
         }
-        
+
         private void AlterarQuantidadeDaProducao()
         {
             if (!TemProducoesCadastradas())
@@ -2243,11 +2252,17 @@ namespace SneezePharma.Models
 
             var relatorio = this.Compra.FindAll(c => c.Fornecedor == cpnj).ToList();
 
-            foreach (var item in relatorio)
+            if (relatorio.Count == 0)
             {
-                Console.WriteLine(item);
+                Console.WriteLine("Não há compras desse fornecedor!");
             }
-
+            else
+            {
+                foreach (var item in relatorio)
+                {
+                    Console.WriteLine(item);
+                }
+            }
             InputHelper.PressioneEnterParaContinuar();
         }
         #endregion
