@@ -12,6 +12,7 @@ internal class Program
         {
             Menu.MenuPrincipal();
             validar = int.TryParse(Console.ReadLine(), out opcao);
+
             switch (opcao)
             {
                 case 1:
@@ -38,8 +39,14 @@ internal class Program
                 case 8:
                     pharma.Relatorios();
                     break;
-
+                case 0:
+                    Console.WriteLine("Saindo do sistema...");
+                    return;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
             }
-        } while (validar == false);
+        } while (true);
+
     }
 }

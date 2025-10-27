@@ -55,7 +55,7 @@ namespace SneezePharma.Models.Customer_Manipulation_
                         {
                             dataUltimaCompra = null;
                         }
-                            var dataCadastro = DateOnly.ParseExact(contentLine[88..96], "ddMMyyyy");
+                        var dataCadastro = DateOnly.ParseExact(contentLine[88..96], "ddMMyyyy");
                         var situacao = contentLine[96];
                         if (situacao.ToString() == "A")
                             situacao = (char)SituationCustomer.A;

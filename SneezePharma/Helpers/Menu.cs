@@ -10,6 +10,7 @@ namespace SneezePharma.Helpers
     {
         public static void MenuPrincipal()
         {
+            Console.Clear();
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("1. MENU - CADASTROS");
             Console.WriteLine("2. MENU - VENDAS MEDICAMENTOS");
@@ -25,6 +26,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuCadastros()
         {
+            Console.Clear();
             Console.WriteLine("---------------------------------------");
             Console.WriteLine("MENU - CADASTROS");
             Console.WriteLine("1. MENU - CADASTRO CLIENTE");
@@ -37,6 +39,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuVendasMedicamentos()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - VENDAS MEDICAMENTO");
             Console.WriteLine("1. MENU - VENDER MEDICAMENTO");
@@ -48,7 +51,8 @@ namespace SneezePharma.Helpers
         }
 
         public static void MenuManipulacaoMedicamentos()
-        { 
+        {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE MEDICAMENTOS");
             Console.WriteLine("1. MENU - ALTERAR MEDICAMENTO");
@@ -62,6 +66,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuManipulacaoCliente()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE CLIENTES");
             Console.WriteLine("1. MENU - ALTERAR CLIENTE");
@@ -76,6 +81,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuManipulacaoPrincipioAtivo()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE PRINCÍPIO ATIVO");
             Console.WriteLine("1. MENU - ALTERAR PRINCÍPIO ATIVO");
@@ -88,6 +94,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuManipulacaoFornecedor()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - MANIPULAÇÃO DE FORNECEDORES");
             Console.WriteLine("1. MENU - ALTERAR FORNECEDOR");
@@ -104,6 +111,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuCompraPrincipioAtivo()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - COMPRA DE PRINCÍPIO ATIVO");
             Console.WriteLine("1. MENU - COMPRAR PRINCÍPIO ATIVO");
@@ -116,6 +124,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuProducao()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - PRODUÇÃO");
             Console.WriteLine("1. MENU - REGISTRAR PRODUÇÃO");
@@ -128,6 +137,7 @@ namespace SneezePharma.Helpers
 
         public static void MenuRelatorio()
         {
+            Console.Clear();
             Console.WriteLine("--------------------------------------");
             Console.WriteLine("MENU - RELATÓRIOS");
             Console.WriteLine("1. MENU - RELATÓRIO DE VENDAS POR PERÍODO");
