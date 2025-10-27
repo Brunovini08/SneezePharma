@@ -215,7 +215,6 @@ namespace SneezePharma.Utils
             for (int i = 0; i < pesoVerificador1.Length; i++)
             {
                 soma += numeros[i] * pesoVerificador1[i];
-                Console.WriteLine(soma);
             }
             resto = soma % 11;
 

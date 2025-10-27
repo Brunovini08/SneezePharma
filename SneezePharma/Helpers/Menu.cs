@@ -129,8 +129,9 @@ namespace SneezePharma.Helpers
             Console.WriteLine("MENU - PRODUÇÃO");
             Console.WriteLine("1. MENU - REGISTRAR PRODUÇÃO");
             Console.WriteLine("2. MENU - ALTERAR QUANTIDADE DA PRODUÇÃO");
-            Console.WriteLine("3. MENU - LISTAR PRODUÇÃO POR ID");
-            Console.WriteLine("4. MENU - LISTAR TODAS AS PRODUÇÕES");
+            Console.WriteLine("3. MENU - ALTERAR QUANTIDADE DE ITEM DA PRODUÇÃO");
+            Console.WriteLine("4. MENU - LISTAR PRODUÇÃO POR ID");
+            Console.WriteLine("5. MENU - LISTAR TODAS AS PRODUÇÕES");
             Console.WriteLine("0. SAIR");
             Console.WriteLine("--------------------------------------");
         }
