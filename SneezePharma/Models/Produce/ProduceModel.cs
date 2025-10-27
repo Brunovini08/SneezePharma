@@ -61,11 +61,11 @@ namespace SneezePharma.Models.Produce
 
         public override string ToString()
         {
-            return $"ID: {ID.ToString().PadLeft(5, '0')}, Data: {DataProducao:dd/MM/yyyy}, Quantidade: {Quantidade}";
+            return $"ID: {ID.ToString().PadLeft(5, '0')}, CDB: {Medicamento}, Data: {DataProducao:dd/MM/yyyy}, Quantidade: {Quantidade}";
         }
         public string SalvarArquivo()
         {
-            return $"{this.ID:D5}{this.DataProducao:ddMMyyyy}{this.Quantidade:D4}";
+            return $"{this.ID.ToString().PadLeft(5, '0')}{this.DataProducao:ddMMyyyy}{this.Medicamento}{this.Quantidade.ToString().PadLeft(3, '0')}";
         }
 
 
