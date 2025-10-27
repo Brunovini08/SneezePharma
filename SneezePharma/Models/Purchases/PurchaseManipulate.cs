@@ -9,7 +9,7 @@ namespace SneezePharma.Models.Purchases
 {
     public class PurchaseManipulate : ArchiveManipulator<PurchaseModel>
     {
-        private string DirectoryPath { get; set; } = @"\Arquivos\SheezePharma\";
+        private string DirectoryPath { get; set; } = @"\Arquivos\SneezePharma\";
         private string FilePath { get; set; } = "Purchases.data";
 
         public PurchaseManipulate()
