@@ -1762,8 +1762,14 @@ namespace SneezePharma.Models
                 Console.WriteLine("Digite o código de barras do medicamento:");
                 cdb = Console.ReadLine();
 
+                if(Medicamentos.Exists(m => m.CDB == cdb))
+                {
+                    Console.WriteLine("Esse medicamento ja existe no sistema");
+                    InputHelper.PressioneEnterParaContinuar();
+                    return;
+                }
+
                 validadeCDB = InputHelper.ValidarCDB(cdb);
-                InputHelper.PressioneEnterParaContinuar();
             } while (!validadeCDB);
             do
             {
@@ -1786,7 +1792,6 @@ namespace SneezePharma.Models
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    InputHelper.PressioneEnterParaContinuar();
                     Console.Clear();
                 }
                 
@@ -1838,6 +1843,8 @@ namespace SneezePharma.Models
 
             Console.WriteLine(medicamento);
 
+            InputHelper.PressioneEnterParaContinuar();
+
             return medicamento;
         }
 
@@ -1862,6 +1869,7 @@ namespace SneezePharma.Models
                     Console.WriteLine("Não existe esse medicamento.");
                 }
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         public void AlterarSituacaoMedicamento()
@@ -1886,6 +1894,7 @@ namespace SneezePharma.Models
                     }
                 }
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         public void ListarMedicamentos()
@@ -1895,6 +1904,7 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(medicine);
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         #endregion
@@ -1905,24 +1915,37 @@ namespace SneezePharma.Models
         {
             string cnpj;
             PurchaseModel compra = null;
+            int id = this.Compra.LastOrDefault()?.Id ?? 0;
             do
             {
                 cnpj = InputHelper.RetornarString("Digite o CNPJ do fornecedor:", "O CNPJ é inválido.");
                 var fornecedor = this.Fornecedores.Find(f => f.Cnpj == cnpj);
                 var fornecedorBloqueado = this.FornecedoresRestritos.Find(fb => fb.Cnpj == cnpj);
 
-                TimeSpan tempoEmpresa = fornecedor.DataAbertura - DateOnly.FromDateTime(DateTime.Now);
+                var date = DateOnly.FromDateTime(DateTime.Now);
 
-                //aaaa
+                int tempoEmpresa = date.Year - fornecedor.DataAbertura.Year;
 
-                if (fornecedor != null && fornecedorBloqueado == null && fornecedor.Situacao != SituationSupplier.I)
+                if (fornecedor != null && fornecedorBloqueado == null && fornecedor.Situacao != SituationSupplier.I && tempoEmpresa >= 2)
                 {
-                    compra = new PurchaseModel(fornecedor.Cnpj);
+                    Console.WriteLine("Fornecedor disponível para compra");
+
+                    
+                    compra = new PurchaseModel(++id, cnpj);
+
+                    CriarItemCompra(compra.Id);
+
+                }
+                else
+                {
+                    Console.WriteLine("Não é possível comprar com esse fornecedor");
                 }
             }
             while (cnpj.Length != 14 || compra == null);
 
-            var itensCompra = this.ItensDaCompra.FindAll(i => i.IdCompra == compra.IdCompra);
+            
+
+            var itensCompra = this.ItensDaCompra.FindAll(i => i.IdCompra == compra.Id);
 
             decimal valorTotal = 0;
 
@@ -1946,20 +1969,29 @@ namespace SneezePharma.Models
         public PurchaseModel BuscarCompra()
         {
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
-            var localizadoCompra = Compra.Find(i => i.IdCompra == localizar);
+            var localizadoCompra = Compra.Find(i => i.Id == localizar);
 
             if (localizadoCompra != null)
+            {
+                InputHelper.PressioneEnterParaContinuar();
                 return localizadoCompra;
+            }
             else
+            {
+                InputHelper.PressioneEnterParaContinuar();
                 return null;
+            }
+
         }
         public void ListarCompraPorId()
         {
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
-            var localizadoCompras = Compra.FindAll(i => i.IdCompra == localizar);
+            var localizadoCompras = Compra.FindAll(i => i.Id == localizar);
 
             if (localizadoCompras != null)
+            {
                 Console.WriteLine("Não existe compra para esse ingrediente");
+            }
             else
             {
                 foreach (var compra in localizadoCompras)
@@ -1967,6 +1999,7 @@ namespace SneezePharma.Models
                     Console.WriteLine(compra);
                 }
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
         public void AlterarCompra()
         {
@@ -1989,6 +2022,7 @@ namespace SneezePharma.Models
                     Console.WriteLine("Não existe esse item da compra.");
                 }
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
         public void ListarCompras()
         {
@@ -1997,18 +2031,19 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(compra);
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
         #endregion
 
         #region Operações de CRUD da classe PurchaseItem
 
-        public void CriarItemCompra()
+        public void CriarItemCompra(int idCompra)
         {
             int opcao = 0;
             int contador = 0;
             string idIngrediente = "";
             decimal totalItem = 0;
-            var id = this.ItensDaCompra.LastOrDefault()?.IdCompra ?? 0;
+            var id = this.ItensDaCompra.LastOrDefault()?.Id ?? 0;
             do
             {
                 IngredientModel localizar;
@@ -2030,7 +2065,7 @@ namespace SneezePharma.Models
                 do
                 {
                     quantidade = InputHelper.RetornarNumeroDecimal("Digite a quantidade de itens em gramas (máx: 999,99): ", "O valor deve ser maior que 0 e menor que 10000");
-                } while (quantidade <= 0 || quantidade >= 10000);
+                } while (quantidade <= 0 || quantidade >= 1000);
 
                 decimal valorUnitario = 0;
                 do
@@ -2047,7 +2082,7 @@ namespace SneezePharma.Models
                 {
                     Console.WriteLine("O limite de compras (3 itens) foi atingido!");
                 }
-                PurchaseItemModel itemDaCompra = new PurchaseItemModel(++id, idIngrediente, quantidade, valorUnitario, totalItem);
+                PurchaseItemModel itemDaCompra = new PurchaseItemModel(++id, idCompra, idIngrediente, quantidade, valorUnitario, totalItem);
 
                 ItensDaCompra.Add(itemDaCompra);
 
@@ -2068,6 +2103,7 @@ namespace SneezePharma.Models
             var localizar = InputHelper.RetornarNumeroInteiro("Digite o ID da compra que deseja procurar:");
             var localizadoItemCompra = ItensDaCompra.Find(i => i.IdCompra == localizar);
 
+
             return localizadoItemCompra;
         }
 
@@ -2086,7 +2122,7 @@ namespace SneezePharma.Models
                     {
                         Console.WriteLine("Digite a quantidade que deseja alterar em gramas (máx: 9999,99): ");
                         itemCompra.setQuantidade(decimal.Parse(Console.ReadLine()));
-                    } while (itemCompra.Quantidade <= 0 || itemCompra.Quantidade >= 10000);
+                    } while (itemCompra.Quantidade <= 0 || itemCompra.Quantidade >= 1000);
 
                     Console.WriteLine("Quantidade alterada com sucesso.");
                 }
@@ -2096,6 +2132,7 @@ namespace SneezePharma.Models
                 }
 
             }
+            InputHelper.PressioneEnterParaContinuar();
             return itemCompra;
         }
         public void ListarItemCompra()
@@ -2105,6 +2142,7 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(itemCompra);
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         #endregion
