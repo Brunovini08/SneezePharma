@@ -25,7 +25,7 @@ namespace SneezePharma.Models
         public SupplierModel(string cnpj, string razaoSocial,
             string pais, DateOnly dataAbertura)
         {
-            this.DataCadastro = DateOnly.FromDateTime(new DateTime());
+            this.DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             this.Cnpj = cnpj;
             this.RazaoSocial = razaoSocial;
             this.Pais = pais;
@@ -66,8 +66,9 @@ namespace SneezePharma.Models
             var dataAbertura = this.DataAbertura.ToString("ddMMyyyy");
             var ultimoFornecimento = this.UltimoFornecimento?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000";
             var dataCadastro = this.DataCadastro.ToString("ddMMyyyy");
+            var situacao = this.Situacao.ToString();
 
-            return $"{cnpj}{razaoSocial}{pais}{dataAbertura}{ultimoFornecimento}{dataCadastro}";
+            return $"{cnpj}{razaoSocial}{pais}{dataAbertura}{ultimoFornecimento}{dataCadastro}{situacao}";
         }
         public override string ToString()
         {

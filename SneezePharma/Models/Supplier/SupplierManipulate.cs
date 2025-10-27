@@ -1,4 +1,5 @@
-﻿using SneezePharma.Helpers;
+﻿using SneezePharma.Enums;
+using SneezePharma.Helpers;
 
 namespace SneezePharma.Models.Supplier_Manipulation_
 {
@@ -38,20 +39,31 @@ namespace SneezePharma.Models.Supplier_Manipulation_
                     while (sr.Peek() != -1)
                     {
                         var contentLine = sr.ReadLine();
+                        if (string.IsNullOrWhiteSpace(contentLine) || contentLine.Length < 109)
+                            continue;
 
                         var cnpj = contentLine[0..14];
                         var razaoSocial = contentLine[14..64];
                         var pais = contentLine[64..84];
-                        var ultimoFornecimento = contentLine[84..92];
-                        var dataAbertura = contentLine[92..100];
+                        var dataAbertura = contentLine[84..92];
+                        var ultimoFornecimento = contentLine[92..100];
                         var dataCadastro = contentLine[100..108];
-                        var situacao = contentLine[108..116];
+                        var situacao = contentLine[108..109];
+
+                        DateOnly? ultimoForn = null;
+                        if (ultimoFornecimento != "00000000")
+                        {
+                            ultimoForn = DateOnly.ParseExact(ultimoFornecimento, "ddMMyyyy");
+                        }
 
                         suppliers.Add(new SupplierModel(
                             cnpj,
                             razaoSocial,
                             pais,
-                            DateOnly.Parse(dataAbertura)
+                            DateOnly.ParseExact(dataAbertura, "ddMMyyyy"),
+                            ultimoForn ?? DateOnly.MinValue, 
+                            DateOnly.ParseExact(dataCadastro, "ddMMyyyy"),
+                            (SituationSupplier)Enum.Parse(typeof(SituationSupplier), situacao)
                             ));
                     }
                 }

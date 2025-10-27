@@ -391,7 +391,8 @@ namespace SneezePharma.Models
         }
         public void RegistrarIngrediente()
         {
-            var id = this.Ingredientes.LastOrDefault().Id ?? "AI0001";
+            var ultimoIngrediente = this.Ingredientes.LastOrDefault();
+            var id = GerarProximoId();
             string nome;
             DateOnly ultimaCompra;
             do
@@ -402,6 +403,7 @@ namespace SneezePharma.Models
 
 
             Ingredientes.Add(new IngredientModel(id, nome));
+            ingredientManipulation.Gravar(this.Ingredientes);
         }
         public IngredientModel LocalizarIngrediente(string Id)
         {

@@ -45,19 +45,21 @@ namespace SneezePharma.Models.Ingredient
                     while (sr.Peek() != -1)
                     {
                         var contentLine = sr.ReadLine();
+                        if (string.IsNullOrWhiteSpace(contentLine) || contentLine.Length < 46)
+                            continue; 
 
                         var id = contentLine[0..6];
                         var nome = contentLine[6..26];
-                        var ultimaCompra = contentLine[26..34];
-                        var dataCadastro = contentLine[34..42];
-                        var situacao = contentLine[42..46];
+                        var ultimaCompra = contentLine[26..36];
+                        var dataCadastro = contentLine[36..46];
+                        var situacao = contentLine[46];
 
                         ingredientes.Add(new IngredientModel(
                             id,
                             nome,
                             DateOnly.Parse(ultimaCompra),
                             DateOnly.Parse(dataCadastro),
-                            situacao == "A" ? SituationIngredient.A : SituationIngredient.I
+                            situacao == 'A' ? SituationIngredient.A : SituationIngredient.I
                             ));
                     }
                 }

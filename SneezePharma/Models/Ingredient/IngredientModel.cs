@@ -15,7 +15,8 @@ namespace SneezePharma.Models
         {
             Id = id;
             Nome = nome;
-            DataCadastro = DateOnly.FromDateTime(new DateTime());
+            UltimaCompra = DateOnly.ParseExact("01010001", "ddMMyyyy");
+            DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             Situacao = SituationIngredient.A;
         }
         public IngredientModel(string id, string nome, DateOnly ultimaCompra, DateOnly dataCadastro, SituationIngredient situacao)
@@ -46,7 +47,7 @@ namespace SneezePharma.Models
             var ultimaCompra = this.UltimaCompra.ToString() ?? "00000000";
             var dataCadastro = this.DataCadastro.ToString();
 
-            return $"AI{id}{nome}{ultimaCompra}{dataCadastro}";
+            return $"{id}{nome}{ultimaCompra}{dataCadastro}{Situacao}";
         }
 
         public void setSituacao(SituationIngredient situacao)
