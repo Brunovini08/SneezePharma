@@ -32,10 +32,9 @@ namespace SneezePharma.Models
 
         public override string ToString()
         {
-            string sufixo = "AI";
-            string strId = $"{sufixo}{this.Id.ToString().PadLeft(4, '0')}";
-            return $"$Id: {strId}\nNome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
-                $"\nData da ultima compra: {this.UltimaCompra}\nData do ultimo cadastro: {this.DataCadastro}";
+            return $"Id: {this.Id}\nNome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
+                $"\nData da ultima compra: {this.UltimaCompra}\nData do ultimo cadastro: {this.DataCadastro}" +
+                $"\nSituação: {this.Situacao}";
         }
 
         public string SalvarArquivo()

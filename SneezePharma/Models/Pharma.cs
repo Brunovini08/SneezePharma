@@ -300,8 +300,10 @@ namespace SneezePharma.Models
                         AlterarSituacao();
                         break;
                     case 3:
+                        BuscarIngredientePorId();
                         break;
                     case 4:
+                        ListarIngrediente();
                         break;
                 }
             } while (validar == false);
@@ -416,7 +418,7 @@ namespace SneezePharma.Models
             {
                 id = InputHelper.RetornarString("Digite o id do ingrediente que deseja alterar: ", "Por favor, digite um id");
                 var ingrediente = LocalizarIngrediente(id);
-                if (id != null)
+                if (ingrediente != null)
                 {
                     string nome;
                     do
@@ -432,6 +434,7 @@ namespace SneezePharma.Models
                 else
                     Console.WriteLine("Ingrediente não existe");
             } while (id == string.Empty);
+            ingredientManipulation.Gravar(this.Ingredientes);
         }
         public void AlterarSituacao()
         {
@@ -440,14 +443,14 @@ namespace SneezePharma.Models
             {
                 id = InputHelper.RetornarString("Digite o id do ingrediente que deseja alterar a situação: ", "Por favor, digite um id");
                 var ingrediente = LocalizarIngrediente(id);
-                if (id != null)
+                if (ingrediente != null)
                 {
                     string situacao;
                     do
                     {
                         situacao = InputHelper.RetornarString("Digite a nova situação: ", "Por favor, digite a nova situação: A - Ativo | I - Inativo").ToUpper();
                     } while (situacao != "A" && situacao != "I");
-                    situacao = Console.ReadLine();
+                    //situacao = Console.ReadLine();
 
                     if (situacao.ToString() == "A" && ingrediente.Situacao == SituationIngredient.A)
                     {
@@ -464,13 +467,25 @@ namespace SneezePharma.Models
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Situação do ingrediente alterado com sucesso!");
                     Console.ResetColor();
+                    ingredientManipulation.Gravar(this.Ingredientes);
                 }
                 else
                     Console.WriteLine("Ingrediente não existe");
             } while (id == string.Empty);
-
-
-
+        }
+        private void BuscarIngredientePorId()
+        {
+            var id = InputHelper.RetornarString("Digite o id do ingrediente que deseja consultar: ", "Por favor, digite um id");
+            var ingrediente = LocalizarIngrediente(id);
+            if (ingrediente != null)
+            {
+                Console.WriteLine("Ingrediente localizado:");
+                Console.WriteLine(ingrediente);
+            }
+            else
+            {
+                Console.WriteLine("Ingrediente não existe");
+            }
         }
         public void ListarIngrediente()
         {
@@ -1178,7 +1193,7 @@ namespace SneezePharma.Models
                     dataAbertura = InputHelper.RetornarData("Digite a data de abertura (no modelo: DDMMAAAA): ", "Data de abertura inválida");
                 } while (dataAbertura == null);
 
-                
+
                 this.Fornecedores.Add(new SupplierModel(cnpj, razaoSocial,
                 pais, dataAbertura));
                 supplierManipulate.Gravar(this.Fornecedores);
