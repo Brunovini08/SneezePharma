@@ -24,8 +24,12 @@ namespace SneezePharma.Models.RestrictedCustomers
             {
                 foreach (var restricted in restricteds)
                 {
+                    if (restricted == null)
+                        continue; 
+
                     sw.WriteLine(restricted.SalvarArquivo());
                 }
+
                 sw.Close();
             }
         }
