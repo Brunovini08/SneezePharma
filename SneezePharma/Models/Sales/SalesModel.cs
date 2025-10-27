@@ -47,7 +47,7 @@ namespace SneezePharma.Models.Sales
             return $"Id: {this.Id.ToString().PadLeft(5, '0')}\n" +
                 $"Data de venda: {this.DataVenda.ToString()}\n" +
                 $"CPF do cliente: {this.Cliente}\n" +
-                $"Valor total: {this.ValorTotal.ToString().PadLeft(11, '0'):C}";
+                $"Valor total: {this.ValorTotal:C}";
         }
 
         public string SalvarArquivo()

@@ -50,7 +50,7 @@ public class SalesItemModel
             $"Medicamento: {Medicamento}\n" +
             $"Quantidade: {this.Quantidade.ToString().PadLeft(3, '0')}\n" +
             $"Valor Unitário: {this.ValorUnitario.ToString().PadLeft(7, '0')}\n" +
-            $"Total Item: {this.TotalItem.ToString().PadLeft(11, '0'):C}";
+            $"Total Item: {this.TotalItem:C}";
     }
 
     public string SalvarArquivo()

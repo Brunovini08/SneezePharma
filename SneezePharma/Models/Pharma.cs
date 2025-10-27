@@ -99,38 +99,34 @@ namespace SneezePharma.Models
         {
             bool repetir = true;
 
-            while (repetir)
+            do
             {
                 Menu.MenuCadastros();
-
-                if (!int.TryParse(Console.ReadLine(), out int opcao))
-                {
-                    Console.WriteLine("Opção inválida!");
-                    continue;
-                }
+                var opcao = Console.ReadLine()??"-1";
 
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         RegistrarCliente();
                         break;
-                    case 2:
+                    case "2":
                         AdicionarFornecedor();
                         break;
-                    case 3:
+                    case "3":
                         RegistrarMedicamento();
                         break;
-                    case 4:
+                    case "4":
                         RegistrarIngrediente();
                         break;
-                    case 0:
+                    case "0":
                         repetir = false; // Voltar para o menu principal
                         break;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
-            }
+            } while (repetir);
         }
         public void VendasMedicamento()
         {
@@ -160,7 +156,8 @@ namespace SneezePharma.Models
                         repetir = false;
                         break;
                     default:
-                        Console.WriteLine("Opção inválida! Escolha uma das opções do menu!");
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
             }
@@ -168,30 +165,35 @@ namespace SneezePharma.Models
         }
         public void ComprarPrincipioAtivo()
         {
-            int opcao;
-            bool validar;
+            bool repetir = true;
             do
             {
                 Menu.MenuCompraPrincipioAtivo();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
+                var opcao = Console.ReadLine() ?? "-1";
+                
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         RegistrarCompra();
                         break;
-                    case 2:
+                    case "2":
                         AlterarCompra();
                         break;
-                    case 3:
+                    case "3":
                         ListarCompras();
                         break;
-                    case 4:
+                    case "4":
                         ListarCompraPorId();
                         break;
+                    case "0":
+                        repetir = false;
+                        break;
                     default:
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
-            } while (validar == false);
+            } while (repetir);
         }
         public void ManipularMedicamentos()
         {
@@ -225,165 +227,175 @@ namespace SneezePharma.Models
         public void ManipularClientes()
         {
             bool repetir = true;
-
-            while (repetir)
+            do
             {
                 Menu.MenuManipulacaoCliente();
-
-                if (!int.TryParse(Console.ReadLine(), out int opcao))
-                {
-                    Console.WriteLine("Opção inválida!");
-                    continue;
-                }
-
+                var opcao = Console.ReadLine() ?? "-1";
+                
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         AtualizarCliente();
                         break;
-                    case 2:
+                    case "2":
                         InativarCliente();
                         break;
-                    case 3:
+                    case "3":
                         AdicionarClienteRestrito();
                         break;
-                    case 4:
+                    case "4":
                         RemoverClienteRestrito();
                         break;
-                    case 5:
+                    case "5":
                         ListarCliente();
                         break;
-                    case 6:
+                    case "6":
                         ListarClientes();
                         break;
-                    case 0:
+                    case "0":
                         repetir = false; // Sai do menu de clientes
                         break;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
             }
+            while (repetir) ;
         }
         public void ManipularFornecedores()
         {
-            int opcao;
-            bool validar;
+            bool repetir = true;
             do
             {
                 Menu.MenuManipulacaoFornecedor();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
+                var opcao = Console.ReadLine()??"-1";
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         AtualizarRazaoSocial();
                         break;
-                    case 2:
+                    case "2":
                         AlterarSituacaoFornecedor();
                         break;
-                    case 3:
+                    case "3":
                         AdicionarFornecedorRestrito();
                         break;
-                    case 4:
+                    case "4":
                         RemoverFornecedorRestrito();
                         break;
-                    case 5:
+                    case "5":
                         ListarFornecedorPorCNPJ();
                         break;
-                    case 6:
+                    case "6":
                         ListarFornecedores();
                         break;
-                    case 7:
+                    case "7":
                         ListarFornecedoresRestritos();
                         break;
-                    case 8:
+                    case "8":
                         ListarFornecedorBloqueadoPorCNPJ();
                         break;
-                    case 0:
+                    case "0":
+                        repetir = false;
                         break;
-
+                    default:
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
+                        break;
                 }
-            } while (validar == false);
+            } while (repetir);
         }
         public void ManipularPrincipioAtivo()
         {
-            int opcao;
-            bool validar;
+            bool repetir = true;
             do
             {
                 Menu.MenuManipulacaoPrincipioAtivo();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
+                var opcao = Console.ReadLine()??"-1";
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         AlterarNomeIngrediente();
                         break;
-                    case 2:
+                    case "2":
                         AlterarSituacao();
                         break;
-                    case 3:
+                    case "3":
                         BuscarIngredientePorId();
                         break;
-                    case 4:
+                    case "4":
                         ListarIngrediente();
                         break;
+                    case "0":
+                        repetir = false;
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
+                        break;
                 }
-            } while (validar == false);
+            } while (repetir);
         }
         public void ManipularProducao()
         {
-            int opcao;
-            bool validar;
+            bool repetir = true;
             do
             {
                 Menu.MenuProducao();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
+                var opcao = Console.ReadLine()??"-1";
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         RegistrarProducao();
                         break;
-                    case 2:
+                    case "2":
                         AlterarQuantidadeDaProducao();
                         break;
-                    case 3:
+                    case "3":
                         BuscarProducaoPorId();
                         break;
-                    case 4:
+                    case "4":
                         ListarProducao();
                         break;
                     case 5: 
                         AlterarQuantidadeDeItensProduzidos();
                         break;
                     default:
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
-            } while (validar == false);
+            } while (repetir);
         }
         public void Relatorios()
         {
-            int opcao;
-            bool validar;
+            bool repetir = true;
             do
             {
-                Menu.MenuManipulacaoPrincipioAtivo();
-                validar = int.TryParse(Console.ReadLine(), out opcao);
+                Menu.MenuRelatorio();
+                var opcao = Console.ReadLine() ?? "-1";       
+                
                 switch (opcao)
                 {
-                    case 1:
+                    case "1":
                         RelatorioVendasPeriodo();
                         break;
-                    case 2:
+                    case "2":
                         RelatorioMedicamentosMaisVendidos();
                         break;
-                    case 3:
+                    case "3":
                         RelatorioComprasFornecedor();
                         break;
+                    case "0":
+                        repetir = false;
+                        break;
                     default:
-                        Console.WriteLine("Digite um valor do menu!");
+                        Console.WriteLine("Opção inválida! Selecione uma opção do menu!");
+                        InputHelper.PressioneEnterParaContinuar();
                         break;
                 }
-            } while (validar == false);
+            } while (repetir);
         }
 
         #region Operações de CRUD de Ingrediente
@@ -840,13 +852,19 @@ namespace SneezePharma.Models
             var listaDeCdbs = new List<string>(3);
             var valorTotal = 0.0m;
             var repetir = false;
-            var medicamentosAtivos = this.Medicamentos.FindAll(m => m.Situacao == 'A');
+            var medicamentosDisponiveisParaVenda = this.Medicamentos.FindAll(m => m.Situacao == 'A' && Producao.Exists(p => p.Medicamento == m.CDB));
+            if (medicamentosDisponiveisParaVenda.Count == 0)
+            {
+                Console.WriteLine("Não medicamentos disponíveis para venda!");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
             do
             {
                 Console.Clear();
 
                 Console.WriteLine("======= MEDICAMENTOS DISPONÍVEIS =======");
-                foreach (var m in medicamentosAtivos)
+                foreach (var m in medicamentosDisponiveisParaVenda)
                 {
                     Console.WriteLine(m);
                     Console.WriteLine();
@@ -859,7 +877,7 @@ namespace SneezePharma.Models
                     13
                 );
 
-                var medicamento = medicamentosAtivos.Find(m => m.CDB == cdbDoMedicamento);
+                var medicamento = medicamentosDisponiveisParaVenda.Find(m => m.CDB == cdbDoMedicamento);
 
                 if (medicamento is null)
                 {
@@ -876,7 +894,7 @@ namespace SneezePharma.Models
 
                         valorTotal += itemDeVenda.TotalItem;
 
-                        medicamentosAtivos.Remove(medicamento);
+                        medicamentosDisponiveisParaVenda.Remove(medicamento);
 
                         this.ItensDeVenda.Add(itemDeVenda);
                     }
@@ -891,6 +909,8 @@ namespace SneezePharma.Models
 
             if (listaDeCdbs.Count == 0)
                 Console.WriteLine("Venda cancelada!!");
+            else if (valorTotal > 99999999.99m)
+                Console.WriteLine("Esta venda passou do valor limite! Portanto a venda será cancelada!");
             else
             {
                 Console.WriteLine("Venda realizada com sucesso!");
@@ -1948,6 +1968,7 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(medicine);
             }
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         #endregion
@@ -1964,7 +1985,7 @@ namespace SneezePharma.Models
                 var fornecedor = this.Fornecedores.Find(f => f.Cnpj == cnpj);
                 var fornecedorBloqueado = this.FornecedoresRestritos.Find(fb => fb.Cnpj == cnpj);
 
-                int tempoEmpresa = fornecedor.DataAbertura.DayOfYear - DateOnly.FromDateTime(DateTime.Now).DayOfYear;
+                var tempoEmpresa = fornecedor.DataAbertura.Year - DateOnly.FromDateTime(DateTime.Now).Year;
 
                 //aaaa
 
@@ -2180,6 +2201,8 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(item);
             }
+
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         #endregion
@@ -2196,6 +2219,8 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(item);
             }
+
+            InputHelper.PressioneEnterParaContinuar();
         }
 
         #endregion
@@ -2209,7 +2234,7 @@ namespace SneezePharma.Models
             string cpnj;
             do
             {
-                cpnj = InputHelper.RetornarString("Digite o CNPJ do Fornecedor que deseja consultar vendas: ", "CNPJ inválido");
+                cpnj = InputHelper.RetornarSomenteNumeros("Digite o CNPJ do Fornecedor que deseja consultar vendas: ");
                 if (!InputHelper.ValidarCnpj(cpnj))
                 {
                     InputHelper.ExibirErro("CNPJ Inválido!");
@@ -2222,6 +2247,8 @@ namespace SneezePharma.Models
             {
                 Console.WriteLine(item);
             }
+
+            InputHelper.PressioneEnterParaContinuar();
         }
         #endregion
     }
