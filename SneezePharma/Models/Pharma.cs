@@ -942,7 +942,7 @@ namespace SneezePharma.Models
                 }
 
                 if (medicamentosDisponiveisParaVenda.Count == 0)
-                    continue;
+                    break;
 
                 repetir = RealizarPerguntaDeConfirmacao("Deseja continuar vendendo? (1 - SIM|0 - NÃO)");
             }

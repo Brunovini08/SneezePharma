@@ -19,14 +19,11 @@ namespace SneezePharma.Models
             DataCadastro = DateOnly.FromDateTime(DateTime.Now);
             Situacao = SituationIngredient.A;
         }
-        public IngredientModel(string id, string nome, DateOnly ultimaCompra, DateOnly dataCadastro, SituationIngredient situacao)
+        public IngredientModel(string id, string nome, DateOnly? ultimaCompra, DateOnly dataCadastro, SituationIngredient situacao)
         {
             Id = id;
             Nome = nome;
-            if (ultimaCompra != null)
-            {
-                this.UltimaCompra = ultimaCompra;
-            }
+            UltimaCompra = ultimaCompra;
             DataCadastro = dataCadastro;
             Situacao = situacao;
         }
@@ -37,7 +34,7 @@ namespace SneezePharma.Models
         {
             return $"Id: {this.Id}\n" +
                 $"Nome: {this.Nome.ToString().PadRight(20, ' ')}\n" +
-                $"\nData da ultima compra: {this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000"}\n" +
+                $"\nData da ultima compra: {this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? null}\n" +
                 $"Data de cadastro: {this.DataCadastro}" +
                 $"\nSituação: {this.Situacao}";
         }
@@ -49,7 +46,7 @@ namespace SneezePharma.Models
             var nome = this.Nome.ToString();
             nome = nome.PadRight(20, ' ');
             var ultimaCompra = this.UltimaCompra?.ToString("ddMMyyyy", CultureInfo.InvariantCulture) ?? "00000000";
-            var dataCadastro = this.DataCadastro.ToString();
+            var dataCadastro = this.DataCadastro.ToString("ddMMyyyy");
 
             return $"{id}{nome}{ultimaCompra}{dataCadastro}{Situacao}";
         }
