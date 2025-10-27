@@ -32,13 +32,13 @@ namespace SneezePharma.Models.Produce.Produce
                         var contentLine = sr.ReadLine();
 
                         var id = contentLine[0..5];
-                        var dataProd = contentLine[5..14];
-                        var medicamento = contentLine[14..23];
-                        var quantidade = contentLine[23..26];
+                        var dataProd = contentLine[5..13];
+                        var medicamento = contentLine[13..26];
+                        var quantidade = contentLine[26..29];
 
                         producaoLista.Add(new ProduceModel(
                             int.Parse(id),
-                            DateOnly.Parse(dataProd),
+                            DateOnly.ParseExact(dataProd, "ddMMyyyy"),
                             medicamento,
                             int.Parse(quantidade)
                         ));
@@ -50,23 +50,20 @@ namespace SneezePharma.Models.Produce.Produce
             return producaoLista;
         }
 
-        public void GravarManipulacao(List<ProduceModel> manipulacao)
+       
+
+        public override void Gravar(List<ProduceModel> manipulation)
         {
             var sw = new StreamWriter(FullPath(DirectoryPath, FilePath));
 
             using (sw)
             {
-                foreach (var si in manipulacao)
+                foreach (var si in manipulation)
                 {
                     sw.WriteLine(si.SalvarArquivo());
                 }
                 sw.Close();
             }
-        }
-
-        public override void Gravar(List<ProduceModel> lista)
-        {
-            throw new NotImplementedException();
         }
     }
 }

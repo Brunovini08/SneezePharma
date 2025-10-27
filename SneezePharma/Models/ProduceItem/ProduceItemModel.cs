@@ -13,14 +13,14 @@ namespace SneezePharma.Models
         public int Id { get; private set; }
         public int IdProducao { get; set; }
         public string Principio { get; set; }
-        public int QuantidadeItens { get; set; }
+        public int QuantidadePrincipio { get; set; }
 
         public ProduceItemModel(int id, int idProducao, string idPrincipio, int quantidade)
         {
             Id = id;
             IdProducao = idProducao;
             Principio = idPrincipio;
-            QuantidadeItens = quantidade;
+            QuantidadePrincipio = quantidade;
         }
         public ProduceItemModel()
         {
@@ -28,14 +28,18 @@ namespace SneezePharma.Models
         }
         public override string ToString()
         {
-            return $"ID: {IdProducao}, Quantidade: {QuantidadeItens}";
+            return $"ID: {IdProducao}, Quantidade: {QuantidadePrincipio}";
+        }
+        public void SetQuantidade(int quantidade)
+        {
+            QuantidadePrincipio = quantidade;
         }
         public string SalvarArquivo()
         {
             return $"{this.Id.ToString().PadLeft(5, '0')}" +
                 $"{this.IdProducao.ToString().PadLeft(5, '0')}" +
                 $"{this.Principio}" +
-                $"{this.QuantidadeItens.ToString().PadLeft(4, '0')}";
+                $"{this.QuantidadePrincipio.ToString().PadLeft(4, '0')}";
         }
     }
 }
