@@ -214,7 +214,8 @@ namespace SneezePharma.Models
                     ListarMedicamentos();
                     break;
                 case 5:
-
+                    ManipularProducao();
+                    break;
                 case 0:
                     break;
                 default:
@@ -350,6 +351,9 @@ namespace SneezePharma.Models
                         break;
                     case 4:
                         ListarProducao();
+                        break;
+                    case 5: 
+                        AlterarQuantidadeDeItensProduzidos();
                         break;
                     default:
                         break;
@@ -1596,10 +1600,59 @@ namespace SneezePharma.Models
                 repetir = RealizarPerguntaDeConfirmacao("Deseja cadastrar mais um principio ativo? (1 - Sim|0 - Não");
             }
             while (repetir);
+            Producao.Add(producao);
+            produceItemManipulate.Gravar(ItensProducao);
+            produceManipulate.Gravar(Producao);
 
             //TODO: Salvar no arquivo
         }
+        private void AlterarQuantidadeDeItensProduzidos()
+        {
+            if (!TemProducoesCadastradas())
+            {
+                Console.WriteLine("Não há produções cadastradas!");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
+            ListarProducao();
 
+            var idProd = InputHelper.RetornarNumeroInteiro("Digite o ID do item manipulado que deseja alterar: ");
+            var producao = BuscarProducaoPeloId(idProd);
+
+            if (producao == null) 
+            {
+                Console.WriteLine($"Não foi encontrada nenhuma produção com este ID: {idProd}");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
+            var itensProducao = this.ItensProducao.FindAll(i => i.IdProducao == idProd);
+            foreach(var item in itensProducao)
+            {
+                Console.WriteLine(item);
+            }
+
+            int iditemProducao = InputHelper.RetornarNumeroInteiro("Digite o ID do item da produção que deseja alterar: ");
+            if (this.ItensProducao.Find(i => i.Id == iditemProducao) == null)
+            {
+                Console.WriteLine("O ID do item da produção não existe");
+            }
+            var itemProducao = this.ItensProducao.Find(i => i.Id == iditemProducao);
+            int novaQuantidade = InputHelper.RetornarNumeroInteiro("Digite a nova quantidade de princípio ativo (máximo 9999): ");
+
+            if (novaQuantidade <= 0 || novaQuantidade > 9999)
+            {
+                Console.WriteLine("Valor inválido! A quantidade deve estar entre 0 e 9999 gramas.");
+                InputHelper.PressioneEnterParaContinuar();
+                return;
+            }
+            itemProducao.SetQuantidade(novaQuantidade);
+            
+            Console.WriteLine("Quantidade de princípio ativo atualizada com sucesso!");
+            InputHelper.PressioneEnterParaContinuar();
+
+            produceItemManipulate.Gravar(ItensProducao);
+        }
+        
         private void AlterarQuantidadeDaProducao()
         {
             if (!TemProducoesCadastradas())
@@ -1629,7 +1682,7 @@ namespace SneezePharma.Models
             }
 
             //TODO: Salvar no arquivo
-
+            produceManipulate.Gravar(Producao);
         }
 
         private void BuscarProducaoPorId()
@@ -1794,14 +1847,14 @@ namespace SneezePharma.Models
                     Console.WriteLine(ex.Message);
                     Console.Clear();
                 }
-                
+
             } while (nome is null);
 
             do
             {
                 Console.WriteLine("Digite a categoria do medicamento (A , B, I, V):");
                 validadeCategoria = char.TryParse(Console.ReadLine().ToUpper(), out categoria);
-                if(validadeCategoria == false)
+                if (validadeCategoria == false)
                 {
                     Console.WriteLine("A categoria de remédio deve ser (A, B, I , V): ");
                     InputHelper.PressioneEnterParaContinuar();
@@ -1957,7 +2010,7 @@ namespace SneezePharma.Models
             compra.setValorTotal(valorTotal);
 
 
-            Compra.Add(compra); 
+            Compra.Add(compra);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Compra cadastrada com sucesso");
             purchaseManipulate.Gravar(this.Compra);
